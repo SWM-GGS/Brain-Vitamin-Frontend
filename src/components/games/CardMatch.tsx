@@ -8,10 +8,6 @@ const Container = styled.div`
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
   }
-  @media screen and (max-width: 479px) {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-  }
   grid-gap: 2rem;
 `;
 
@@ -66,7 +62,7 @@ const Back = styled.div<{ $status: boolean }>`
 `;
 
 const RestartBtn = styled.button`
-  font-size: 8rem;
+  font-size: 4rem;
   padding: 2rem;
   margin: 2rem 0 0 0;
 `;

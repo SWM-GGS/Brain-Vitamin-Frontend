@@ -18,7 +18,7 @@ const Container1 = styled.div<{ $gameFlag: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 5rem;
+  font-size: 4rem;
 `;
 
 type CellProps = {
@@ -63,7 +63,7 @@ function Board({ numbers, handleClick, $gameFlag }: BoardProps) {
 }
 
 const StartBtn = styled.button`
-  font-size: 8rem;
+  font-size: 4rem;
   padding: 2rem;
   margin: 2rem 0 0 0;
 `;
