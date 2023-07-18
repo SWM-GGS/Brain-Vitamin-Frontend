@@ -1,5 +1,20 @@
 import styled from 'styled-components';
 
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  @media screen and (max-width: 767px) {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+  @media screen and (max-width: 479px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+  grid-gap: 2rem;
+`;
+
 const Card = styled.div`
   width: 100%;
   height: 100%;
@@ -8,16 +23,26 @@ const Card = styled.div`
   transform-style: preserve-3d;
 `;
 
+const FlipWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 150%;
+`;
+
 const Flip = styled.div<{ $status: boolean; $clickable: boolean }>`
-  width: 30rem;
-  height: 35rem;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   perspective: 110rem;
-  margin: 1rem;
   &:active ${Card} {
     transform: rotateY(180deg);
   }
   pointer-events: ${(props) =>
     props.$status || !props.$clickable ? 'none' : 'auto'};
+  cursor: pointer;
 `;
 
 const Front = styled.div<{ $status: boolean; $background: string }>`
@@ -41,9 +66,9 @@ const Back = styled.div<{ $status: boolean }>`
 `;
 
 const RestartBtn = styled.button`
-  width: 80rem;
-  height: 30rem;
-  font-size: 10rem;
+  font-size: 8rem;
+  padding: 2rem;
+  margin: 2rem 0 0 0;
 `;
 
-export { Card, Flip, Front, Back, RestartBtn };
+export { Container, Card, FlipWrapper, Flip, Front, Back, RestartBtn };

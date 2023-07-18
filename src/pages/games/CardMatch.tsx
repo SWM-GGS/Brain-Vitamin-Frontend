@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import Container from '../components/Container.tsx';
 import {
+  Container,
   Card,
+  FlipWrapper,
   Flip,
   Front,
   Back,
   RestartBtn,
-} from '../components/cardMatch.tsx';
+} from '../../components/games/CardMatch.tsx';
 
 export default function CardMatch() {
   const [clickedCards, setClickedCards] = useState<number[]>([]);
@@ -23,8 +24,8 @@ export default function CardMatch() {
     { idx: 8, color: '#ED4C67', status: false },
     { idx: 9, color: '#FDA7DF', status: false },
     { idx: 10, color: '#FDA7DF', status: false },
-    // { idx: 11, color: '#833471', status: false },
-    // { idx: 12, color: '#833471', status: false },
+    { idx: 11, color: '#833471', status: false },
+    { idx: 12, color: '#833471', status: false },
   ];
   const cards = [...initialCards]; // 카드 복제
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
@@ -76,24 +77,27 @@ export default function CardMatch() {
   };
 
   return (
-    <Container>
-      {mixedCards.map((card) => (
-        <Flip
-          key={card.idx}
-          $status={card.status}
-          $clickable={clickable}
-          onClick={() => {
-            !card.status ? handleClick(card.idx) : null;
-          }}>
-          <Card>
-            <Front $status={card.status} $background={card.color} />
-            <Back $status={card.status} />
-          </Card>
-        </Flip>
-      ))}
+    <>
+      <Container>
+        {mixedCards.map((card) => (
+          <FlipWrapper key={card.idx}>
+            <Flip
+              $status={card.status}
+              $clickable={clickable}
+              onClick={() => {
+                !card.status ? handleClick(card.idx) : null;
+              }}>
+              <Card>
+                <Front $status={card.status} $background={card.color} />
+                <Back $status={card.status} />
+              </Card>
+            </Flip>
+          </FlipWrapper>
+        ))}
+      </Container>
       <RestartBtn type="button" onClick={() => setRestarted((prev) => !prev)}>
         다시 시작하기
       </RestartBtn>
-    </Container>
+    </>
   );
 }
