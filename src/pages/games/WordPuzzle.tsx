@@ -8,29 +8,49 @@ let originalY = 0;
 let posX = 0;
 let posY = 0;
 
-const targetsState = [
-  { id: 1, letter: '단' },
-  { id: 2, letter: '어' },
-  { id: 3, letter: '퍼' },
-  { id: 4, letter: '즐' },
-];
+const word = '단어퍼즐';
+const letters = word.split('');
 
 export default function WordPuzzle() {
-  const dropContainer = useRef<HTMLDivElement>(null);
-  const [targets, setTargets] = useState(targetsState);
-  const [box, setBox] = useState({ top: 0, left: 0, bottom: 0, right: 0 });
+  const dragRefs = useRef<null[] | HTMLLIElement[]>([]);
+  const dropRefs = useRef<null[] | HTMLDivElement[]>([]);
+  type BoxProps = {
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
+  };
+  const [boxs, setBoxs] = useState<BoxProps[]>([]);
 
   useEffect(() => {
-    const box = dropContainer?.current?.getBoundingClientRect();
-    if (typeof box?.top === 'number') {
-      setBox({
-        top: box?.top,
-        left: box?.left,
-        bottom: box?.top + box?.height,
-        right: box?.left + box?.width,
-      });
+    for (let i = 0; i < letters.length; i++) {
+      const box = dropRefs?.current[i]?.getBoundingClientRect();
+      if (typeof box?.top === 'number') {
+        setBoxs((prev) => [
+          ...prev,
+          {
+            top: box?.top,
+            left: box?.left,
+            bottom: box?.top + box?.height,
+            right: box?.left + box?.width,
+          },
+        ]);
+      }
     }
   }, []);
+
+  const checkWord = () => {
+    // 방법 1: 드래그한 요소와 box id를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
+    // 방법 2: 요소를 드래그한 후 드롭했을 때 박스의 터치 감지
+    for (let i = 0; i < dragRefs.current.length; i++) {
+      let el = dragRefs.current[i];
+      let boxId = el?.getAttribute('boxId');
+      if (!boxId || el?.innerText !== letters[+boxId]) {
+        return;
+      }
+    }
+    alert('축하드립니다! 단어 조합 성공!');
+  };
 
   // onDragStart : Item을 잡기 시작했을 때 발생
   // onDrag : onDragStart 직후부터 onDragEnd 직전까지 계속 발생
@@ -59,22 +79,33 @@ export default function WordPuzzle() {
   };
 
   const dragEndHandler = (e: React.DragEvent<HTMLElement>) => {
-    if (
-      box.left < e.clientX &&
-      e.clientX < box.right &&
-      box.top < e.clientY &&
-      e.clientY < box.bottom
-    ) {
-      (e.target as HTMLElement).style.left = `${
-        (e.target as HTMLElement).offsetLeft + e.clientX - posX
-      }px`;
-      (e.target as HTMLElement).style.top = `${
-        (e.target as HTMLElement).offsetTop + e.clientY - posY
-      }px`;
-    } else {
-      (e.target as HTMLElement).style.left = `${originalX}px`;
-      (e.target as HTMLElement).style.top = `${originalY}px`;
+    for (let i = 0; i < letters.length; i++) {
+      const box = boxs[i];
+      // 드래그한 글자가 박스에 안착했을 경우
+      if (
+        box.left < e.clientX &&
+        e.clientX < box.right &&
+        box.top < e.clientY &&
+        e.clientY < box.bottom
+      ) {
+        (e.target as HTMLElement).style.left = `${
+          (box.left + box.right) / 2
+        }px`;
+        (e.target as HTMLElement).style.top = `${(box.top + box.bottom) / 2}px`;
+
+        (e.target as HTMLElement).setAttribute('boxId', `${i}`);
+        checkWord();
+        return;
+      }
     }
+    // 박스를 벗어났을 경우
+    (e.target as HTMLElement).style.left = `${
+      (e.target as HTMLElement).offsetLeft + e.clientX - posX
+    }px`;
+    (e.target as HTMLElement).style.top = `${
+      (e.target as HTMLElement).offsetTop + e.clientY - posY
+    }px`;
+    (e.target as HTMLElement).setAttribute('boxId', 'null');
   };
 
   const dragOverHandler = (e: React.DragEvent<HTMLElement>) => {
@@ -84,30 +115,36 @@ export default function WordPuzzle() {
   return (
     <>
       <ul>
-        {targets.map((item) => (
+        {letters.map((letter, index) => (
           <li
             style={{
               position: 'absolute',
               top: Math.ceil(Math.random() * 500),
               left: Math.ceil(Math.random() * 500),
             }}
-            key={item.id}
+            key={index}
+            ref={(el) => (dragRefs.current[index] = el)}
             draggable
             onDragStart={dragStartHandler}
             onDragEnd={dragEndHandler}
             onDrag={dragHandler}
             onDragOver={dragOverHandler}>
-            {item.letter}
+            {letter}
           </li>
         ))}
       </ul>
-      <div
-        ref={dropContainer}
-        style={{
-          width: '50px',
-          height: '50px',
-          border: '1px solid black',
-        }}></div>
+      <div style={{ display: 'flex' }}>
+        {letters.map((_, index) => (
+          <div
+            style={{
+              width: '50px',
+              height: '50px',
+              border: '1px solid black',
+            }}
+            key={index}
+            ref={(el) => (dropRefs.current[index] = el)}></div>
+        ))}
+      </div>
     </>
   );
 }
