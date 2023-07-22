@@ -4,6 +4,7 @@ import OneToFifty from '../pages/games/OneToFifty.tsx';
 import WhackAMole from '../pages/games/WhackAMole.tsx';
 import WordPuzzle from '../pages/games/WordPuzzle.tsx';
 import Calendar from '../pages/Calendar.tsx';
+import DateQuiz from '../pages/games/DateQuiz.tsx';
 
 export default function Router() {
   return (
@@ -13,6 +14,7 @@ export default function Router() {
       <Route path="/whackAMole" element={<WhackAMole />} />
       <Route path="/wordPuzzle" element={<WordPuzzle />} />
       <Route path="/calendar" element={<Calendar />} />
+      <Route path="/dateQuiz" element={<DateQuiz />} />
     </Routes>
   );
 }
