@@ -25,6 +25,12 @@ li {
   list-style: none;
 }
 
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
 #root {
   max-width: 1920px;
   margin: 0 auto;
