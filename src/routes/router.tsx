@@ -7,6 +7,7 @@ import Calendar from '../pages/Calendar.tsx';
 import DateQuiz from '../pages/games/DateQuiz.tsx';
 import Coloring from '../pages/games/Coloring.tsx';
 import Overlapping from '../pages/games/Overlapping.tsx';
+import Maze from '../pages/games/Maze.tsx';
 
 export default function Router() {
   return (
@@ -19,6 +20,7 @@ export default function Router() {
       <Route path="/dateQuiz" element={<DateQuiz />} />
       <Route path="/coloring" element={<Coloring />} />
       <Route path="/overlapping" element={<Overlapping />} />
+      <Route path="/maze" element={<Maze />} />
     </Routes>
   );
 }
