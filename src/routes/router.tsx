@@ -8,6 +8,7 @@ import DateQuiz from '../pages/games/DateQuiz.tsx';
 import Coloring from '../pages/games/Coloring.tsx';
 import Overlapping from '../pages/games/Overlapping.tsx';
 import Maze from '../pages/games/Maze.tsx';
+import Market from '../pages/games/Market.tsx';
 
 export default function Router() {
   return (
@@ -21,6 +22,7 @@ export default function Router() {
       <Route path="/coloring" element={<Coloring />} />
       <Route path="/overlapping" element={<Overlapping />} />
       <Route path="/maze" element={<Maze />} />
+      <Route path="/market" element={<Market />} />
     </Routes>
   );
 }
