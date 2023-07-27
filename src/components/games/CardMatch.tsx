@@ -1,14 +1,28 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Container = styled.div<{ $difficulty: number }>`
   display: grid;
+  grid-gap: 2rem;
+  ${(props) =>
+    props.$difficulty === 1
+      ? `
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  max-width: 100rem;
+  margin: 0 auto;`
+      : props.$difficulty === 2
+      ? `
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  max-width: 140rem;
+  margin: 0 auto;`
+      : `
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(2, 1fr);
   @media screen and (max-width: 767px) {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
-  }
-  grid-gap: 2rem;
+  }`}
 `;
 
 const Card = styled.div`

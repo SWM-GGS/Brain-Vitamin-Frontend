@@ -9,30 +9,36 @@ import {
   RestartBtn,
 } from '../../components/games/CardMatch.tsx';
 
+/**
+ * 난도
+ * 하 : 2 * 3
+ * 중 : 2 * 4
+ * 상 : 3 * 4
+ */
 export default function CardMatch() {
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [restarted, setRestarted] = useState<boolean>(false);
   const [clickable, setClickable] = useState<boolean>(true);
-  const initialCards = [
-    { idx: 1, color: '#FFC312', status: false },
-    { idx: 2, color: '#FFC312', status: false },
-    { idx: 3, color: '#C4E538', status: false },
-    { idx: 4, color: '#C4E538', status: false },
-    { idx: 5, color: '#12CBC4', status: false },
-    { idx: 6, color: '#12CBC4', status: false },
-    { idx: 7, color: '#ED4C67', status: false },
-    { idx: 8, color: '#ED4C67', status: false },
-    { idx: 9, color: '#FDA7DF', status: false },
-    { idx: 10, color: '#FDA7DF', status: false },
-    { idx: 11, color: '#833471', status: false },
-    { idx: 12, color: '#833471', status: false },
-  ];
-  const cards = [...initialCards]; // 카드 복제
+  let difficulty = 3;
+  let cardCnt;
+
+  if (difficulty === 1) {
+    cardCnt = 6;
+  } else if (difficulty === 2) {
+    cardCnt = 8;
+  } else {
+    cardCnt = 12;
+  }
+
+  const colors = Array.from(
+    { length: cardCnt / 2 },
+    () => '#' + Math.floor(Math.random() * 0xffffff).toString(16),
+  );
+  const cards = [...colors, ...colors].map((color, i) => {
+    return { idx: i, color: color, status: false };
+  });
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
   const mixedCards = useMemo(() => shuffle(), [restarted]);
-
-  // 처음에 잠시 동안 카드 보여주고 뒤집기
-  // useEffect(() => {});
 
   // 모든 카드의 상태가 true면 게임 종료
   useEffect(() => {
@@ -78,7 +84,7 @@ export default function CardMatch() {
 
   return (
     <>
-      <Container>
+      <Container $difficulty={difficulty}>
         {mixedCards.map((card) => (
           <FlipWrapper key={card.idx}>
             <Flip
