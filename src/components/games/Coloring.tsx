@@ -1,11 +1,20 @@
 import { styled } from 'styled-components';
 
-const Container = styled.div`
+const PaperWrapper = styled.div`
+  @media screen and (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+  }
+`;
+
+const Paper = styled.div`
   display: grid;
   grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(6, 1fr);
-  border-top: 2px solid #aaa;
-  border-left: 2px solid #aaa;
+  border-top: 0.2rem solid #aaa;
+  border-left: 0.2rem solid #aaa;
+  margin: 0 0 2rem 0;
 `;
 
 const CellWrapper = styled.div`
@@ -27,9 +36,14 @@ const Cell = styled.div<{ color?: string }>`
 `;
 
 const Palette = styled.button<{ color: string }>`
-  width: 10rem;
-  height: 10rem;
+  border: 0.2rem solid #aaa;
+  border-radius: 50%;
   background: ${(props) => props.color};
+  margin: 1rem;
+  padding: 2.8rem;
+  @media screen and (min-width: 768px) {
+    padding: 3.2rem;
+  }
 `;
 
-export { Container, CellWrapper, Cell, Palette };
+export { PaperWrapper, Paper, CellWrapper, Cell, Palette };
