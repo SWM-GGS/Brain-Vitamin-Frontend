@@ -6,8 +6,9 @@ import {
   Flip,
   Front,
   Back,
-  RestartBtn,
 } from '../../components/games/CardMatch.tsx';
+import { useLocation, useNavigate } from 'react-router';
+import Timer from '../../modules/Timer.tsx';
 
 /**
  * 난도
@@ -16,10 +17,22 @@ import {
  * 상 : 3 * 4
  */
 export default function CardMatch() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const gameData = location.state.gameData;
+  const gameIndex = location.state.gameIndex;
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isGameEnded, setIsGameEnded] = useState(false);
+
+  type Props = {
+    imgUrl: string;
+  };
+  const [problemPool, setProblemPool] = useState<Props[]>(
+    gameData[gameIndex].problemPool,
+  );
   const [clickedCards, setClickedCards] = useState<number[]>([]);
-  const [restarted, setRestarted] = useState<boolean>(false);
   const [clickable, setClickable] = useState<boolean>(true);
-  let difficulty = 3;
+  let difficulty = gameData[gameIndex].difficulty;
   let cardCnt;
 
   if (difficulty === 1) {
@@ -30,29 +43,30 @@ export default function CardMatch() {
     cardCnt = 12;
   }
 
-  const colors = Array.from(
-    { length: cardCnt / 2 },
-    () => '#' + Math.floor(Math.random() * 0xffffff).toString(16),
-  );
-  const cards = [...colors, ...colors].map((color, i) => {
-    return { idx: i, color: color, status: false };
+  // const deck = Array.from(
+  //   { length: cardCnt / 2 },
+  //   () => '#' + Math.floor(Math.random() * 0xffffff).toString(16),
+  // );
+  const deck = problemPool.map((v) => v.imgUrl);
+  const cards = [...deck, ...deck].map((card, i) => {
+    return { idx: i, type: card, status: false };
   });
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
-  const mixedCards = useMemo(() => shuffle(), [restarted]);
+  const mixedCards = useMemo(() => shuffle(), []);
 
   // 모든 카드의 상태가 true면 게임 종료
   useEffect(() => {
     if (mixedCards.every((card) => card.status === true)) {
-      console.log('축하합니다! 모두 맞추셔서 게임이 종료되었습니다!');
+      setIsGameEnded(true);
     }
     // 클릭된 카드가 두 장인 경우, 매칭 여부 검사
     setClickable(false);
     setTimeout(() => {
       if (clickedCards.length === 2) {
         let firstCard = mixedCards.find((card) => card.idx === clickedCards[0])
-          ?.color;
+          ?.type;
         let secondCard = mixedCards.find((card) => card.idx === clickedCards[1])
-          ?.color;
+          ?.type;
         // 두 카드가 같지 않은 경우, 클릭된 두 장의 카드 다시 뒤집기
         if (firstCard !== secondCard) {
           mixedCards.forEach((card) => {
@@ -82,28 +96,56 @@ export default function CardMatch() {
     });
   };
 
+  useEffect(() => {
+    if (isGameEnded) {
+      alert('게임이 종료되었습니다.');
+      const nextGamePath = gameData[gameIndex + 1].pathUri;
+      if (nextGamePath) {
+        navigate(nextGamePath, {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      } else {
+        // navigate('/cogTraining');
+        navigate('/coloring', {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      }
+    }
+  }, [isGameEnded, gameData, navigate]);
+
+  const handleTimeUp = () => {
+    setIsGameEnded(true);
+  };
+
   return (
     <>
-      <Container $difficulty={difficulty}>
-        {mixedCards.map((card) => (
-          <FlipWrapper key={card.idx}>
-            <Flip
-              $status={card.status}
-              $clickable={clickable}
-              onClick={() => {
-                !card.status ? handleClick(card.idx) : null;
-              }}>
-              <Card>
-                <Front $status={card.status} $background={card.color} />
-                <Back $status={card.status} />
-              </Card>
-            </Flip>
-          </FlipWrapper>
-        ))}
-      </Container>
-      <RestartBtn type="button" onClick={() => setRestarted((prev) => !prev)}>
-        다시 시작하기
-      </RestartBtn>
+      {isGameStarted ? (
+        <>
+          <Timer
+            timeLimit={gameData[gameIndex].timeLimit}
+            onTimeUp={handleTimeUp}
+          />
+          <Container $difficulty={difficulty}>
+            {mixedCards.map((card) => (
+              <FlipWrapper key={card.idx}>
+                <Flip
+                  $status={card.status}
+                  $clickable={clickable}
+                  onClick={() => {
+                    !card.status ? handleClick(card.idx) : null;
+                  }}>
+                  <Card>
+                    <Front $status={card.status} $background={card.type} />
+                    <Back $status={card.status} />
+                  </Card>
+                </Flip>
+              </FlipWrapper>
+            ))}
+          </Container>
+        </>
+      ) : (
+        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
+      )}
     </>
   );
 }

@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import Body from '../../components/games/DateQuiz';
+import { useLocation, useNavigate } from 'react-router';
+import Timer from '../../modules/Timer.tsx';
 
 export default function DateQuiz() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const gameData = location.state.gameData;
+  const gameIndex = location.state.gameIndex;
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isGameEnded, setIsGameEnded] = useState(false);
+
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
   const MONTH = DATE.getMonth() + 1;
@@ -45,10 +54,38 @@ export default function DateQuiz() {
     setTotalDate(changeDate(YEAR, MONTH));
   }, []);
 
+  useEffect(() => {
+    if (isGameEnded) {
+      alert('게임이 종료되었습니다.');
+      const nextGamePath = gameData[gameIndex + 1].pathUri;
+      if (nextGamePath) {
+        navigate(nextGamePath, {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      } else {
+        navigate('/cogTraining');
+      }
+    }
+  }, [isGameEnded, gameData, navigate]);
+
+  const handleTimeUp = () => {
+    setIsGameEnded(true);
+  };
+
   return (
     <>
-      <h1>{`${YEAR}년 ${MONTH}월 달력을 보고 있습니다. 아래 달력에서 오늘의 날짜를 터치해주세요.`}</h1>
-      <Body totalDate={totalDate} today={TODAY} />
+      {isGameStarted ? (
+        <>
+          <Timer
+            timeLimit={gameData[gameIndex].timeLimit}
+            onTimeUp={handleTimeUp}
+          />
+          <h1>{`${YEAR}년 ${MONTH}월 달력을 보고 있습니다. 아래 달력에서 오늘의 날짜를 터치해주세요.`}</h1>
+          <Body totalDate={totalDate} today={TODAY} onTimeUp={handleTimeUp} />
+        </>
+      ) : (
+        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
+      )}
     </>
   );
 }

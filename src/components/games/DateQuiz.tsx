@@ -5,15 +5,16 @@ const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 type BodyProps = {
   totalDate: number[];
   today: number;
+  onTimeUp: () => void;
 };
 
-const Body = ({ totalDate, today }: BodyProps) => {
+const Body = ({ totalDate, today, onTimeUp }: BodyProps) => {
   const lastDate = totalDate.indexOf(1);
   const firstDate = totalDate.indexOf(1, 7);
 
   const checkToday = (date: number) => {
     if (date === today) {
-      alert(`정답입니다! 오늘은 ${today}일입니다.`);
+      onTimeUp();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
     }

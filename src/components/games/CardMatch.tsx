@@ -60,7 +60,8 @@ const Front = styled.div<{ $status: boolean; $background: string }>`
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  background: ${(props) => props.$background};
+  background: url(${(props) => props.$background});
+  background-size: cover;
   transform: ${(props) =>
     props.$status ? 'rotateY(0deg)' : 'rotateY(180deg)'};
 `;

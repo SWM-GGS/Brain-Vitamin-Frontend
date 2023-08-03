@@ -1,17 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-
-// 드래그하던 요소를 드랍했을 때 원래 위치로 돌려놓기 위한 초기 위치값
-let originalX = 0;
-let originalY = 0;
-
-// 드래그 시 요소를 실제로 이동시키기 위해 필요
-let posX = 0;
-let posY = 0;
-
-const word = '단어퍼즐';
-const letters = word.split('');
+import { useLocation, useNavigate } from 'react-router';
+import Timer from '../../modules/Timer.tsx';
 
 export default function WordPuzzle() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const gameData = location.state.gameData;
+  const gameIndex = location.state.gameIndex;
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isGameEnded, setIsGameEnded] = useState(false);
+
+  type Props = {
+    contents: string;
+    answer: boolean;
+    imgUrl: string;
+  };
+  const [problemPool, setProblemPool] = useState<Props[]>(
+    gameData[gameIndex].problemPool,
+  );
   const dragRefs = useRef<null[] | HTMLLIElement[]>([]);
   const dropRefs = useRef<null[] | HTMLDivElement[]>([]);
   type BoxProps = {
@@ -21,6 +27,17 @@ export default function WordPuzzle() {
     right: number;
   };
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
+
+  // 드래그하던 요소를 드랍했을 때 원래 위치로 돌려놓기 위한 초기 위치값
+  let originalX = 0;
+  let originalY = 0;
+
+  // 드래그 시 요소를 실제로 이동시키기 위해 필요
+  let posX = 0;
+  let posY = 0;
+
+  const word = '단어퍼즐';
+  const letters = word.split('');
 
   useEffect(() => {
     for (let i = 0; i < letters.length; i++) {
@@ -49,7 +66,7 @@ export default function WordPuzzle() {
         return;
       }
     }
-    alert('축하드립니다! 단어 조합 성공!');
+    setIsGameEnded(true);
   };
 
   // onDragStart : Item을 잡기 시작했을 때 발생
@@ -112,39 +129,70 @@ export default function WordPuzzle() {
     e.preventDefault();
   };
 
+  useEffect(() => {
+    if (isGameEnded) {
+      alert('게임이 종료되었습니다.');
+      const nextGamePath = gameData[gameIndex + 1].pathUri;
+      if (nextGamePath) {
+        navigate(nextGamePath, {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      } else {
+        // navigate('/cogTraining');
+        navigate('/market', {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      }
+    }
+  }, [isGameEnded, gameData, navigate]);
+
+  const handleTimeUp = () => {
+    setIsGameEnded(true);
+  };
+
   return (
     <>
-      <ul>
-        {letters.map((letter, index) => (
-          <li
-            style={{
-              position: 'absolute',
-              top: Math.ceil(Math.random() * 500),
-              left: Math.ceil(Math.random() * 500),
-            }}
-            key={index}
-            ref={(el) => (dragRefs.current[index] = el)}
-            draggable
-            onDragStart={dragStartHandler}
-            onDragEnd={dragEndHandler}
-            onDrag={dragHandler}
-            onDragOver={dragOverHandler}>
-            {letter}
-          </li>
-        ))}
-      </ul>
-      <div style={{ display: 'flex' }}>
-        {letters.map((_, index) => (
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              border: '1px solid black',
-            }}
-            key={index}
-            ref={(el) => (dropRefs.current[index] = el)}></div>
-        ))}
-      </div>
+      {isGameStarted ? (
+        <>
+          <Timer
+            timeLimit={gameData[gameIndex].timeLimit}
+            onTimeUp={handleTimeUp}
+          />
+          <ul>
+            {letters.map((letter, index) => (
+              <li
+                style={{
+                  position: 'absolute',
+                  top: Math.ceil(Math.random() * 500),
+                  left: Math.ceil(Math.random() * 500),
+                }}
+                key={index}
+                ref={(el) => (dragRefs.current[index] = el)}
+                draggable
+                onDragStart={dragStartHandler}
+                onDragEnd={dragEndHandler}
+                onDrag={dragHandler}
+                onDragOver={dragOverHandler}>
+                {letter}
+              </li>
+            ))}
+          </ul>
+          <div style={{ display: 'flex' }}>
+            {letters.map((_, index) => (
+              <div
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  border: '1px solid black',
+                }}
+                key={index}
+                ref={(el) => (dropRefs.current[index] = el)}></div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
+      )}
     </>
   );
 }

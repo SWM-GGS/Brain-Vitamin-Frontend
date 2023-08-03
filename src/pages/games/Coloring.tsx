@@ -6,6 +6,8 @@ import {
   Cell,
   Palette,
 } from '../../components/games/Coloring';
+import { useLocation, useNavigate } from 'react-router';
+import Timer from '../../modules/Timer.tsx';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -14,12 +16,19 @@ import {
  * 상 : 18
  */
 export default function Coloring() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const gameData = location.state.gameData;
+  const gameIndex = location.state.gameIndex;
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isGameEnded, setIsGameEnded] = useState(false);
+
   const [nowColor, setNowColor] = useState('');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
-
-  let difficulty = 1;
+  let difficulty = gameData[gameIndex].difficulty;
   let totalCellCnt = 18;
   let cellCnt;
+
   switch (difficulty) {
     case 1:
       cellCnt = 8;
@@ -58,10 +67,7 @@ export default function Coloring() {
       let el = cellRefs.current[i];
       if (el?.getAttribute('color') !== answer[i]) return;
     }
-    setTimeout(
-      () => alert('축하드립니다! 정확한 위치에 모두 색칠하셨습니다!'),
-      50,
-    );
+    setIsGameEnded(true);
   };
 
   const changeCellColor = (el: HTMLElement) => {
@@ -70,31 +76,66 @@ export default function Coloring() {
     checkAnswer();
   };
 
+  useEffect(() => {
+    if (isGameEnded) {
+      alert('게임이 종료되었습니다.');
+      const nextGamePath = gameData[gameIndex + 1].pathUri;
+      if (nextGamePath) {
+        navigate(nextGamePath, {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      } else {
+        // navigate('/cogTraining');
+        navigate('/overlapping', {
+          state: { gameData, gameIndex: gameIndex + 1 },
+        });
+      }
+    }
+  }, [isGameEnded, gameData, navigate]);
+
+  const handleTimeUp = () => {
+    setIsGameEnded(true);
+  };
+
   return (
     <>
-      <h1>예시를 보고 칠하기 칸에 똑같이 색칠해 보세요.</h1>
-      <PaperWrapper>
-        <Paper>
-          {answer.map((color, index) => (
-            <CellWrapper key={index}>
-              <Cell color={color} />
-            </CellWrapper>
+      {isGameStarted ? (
+        <>
+          <Timer
+            timeLimit={gameData[gameIndex].timeLimit}
+            onTimeUp={handleTimeUp}
+          />
+          <h1>예시를 보고 칠하기 칸에 똑같이 색칠해 보세요.</h1>
+          <PaperWrapper>
+            <Paper>
+              {answer.map((color, index) => (
+                <CellWrapper key={index}>
+                  <Cell color={color} />
+                </CellWrapper>
+              ))}
+            </Paper>
+            <Paper>
+              {answer.map((_, index) => (
+                <CellWrapper key={index}>
+                  <Cell
+                    onClick={(e) => changeCellColor(e.target as HTMLElement)}
+                    ref={(el) => (cellRefs.current[index] = el)}
+                  />
+                </CellWrapper>
+              ))}
+            </Paper>
+          </PaperWrapper>
+          {COLOR.map((color, index) => (
+            <Palette
+              key={index}
+              color={color}
+              onClick={() => setNowColor(color)}
+            />
           ))}
-        </Paper>
-        <Paper>
-          {answer.map((_, index) => (
-            <CellWrapper key={index}>
-              <Cell
-                onClick={(e) => changeCellColor(e.target as HTMLElement)}
-                ref={(el) => (cellRefs.current[index] = el)}
-              />
-            </CellWrapper>
-          ))}
-        </Paper>
-      </PaperWrapper>
-      {COLOR.map((color, index) => (
-        <Palette key={index} color={color} onClick={() => setNowColor(color)} />
-      ))}
+        </>
+      ) : (
+        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
+      )}
     </>
   );
 }

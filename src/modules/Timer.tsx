@@ -1,35 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  font-size: 5rem;
-  margin: 2rem 0 0 0;
-`;
+type Props = {
+  timeLimit: number;
+  onTimeUp: () => void;
+};
 
-function Timer() {
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const record = useRef<number>(0);
-  record.current = timeElapsed;
+function Timer({ timeLimit, onTimeUp }: Props) {
+  const [remainingTime, setRemainingTime] = useState(timeLimit);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeElapsed((timeElapsed) => timeElapsed + 30);
-    }, 30);
+      setRemainingTime((prevTime) => prevTime - 1);
+    }, 1000);
 
-    return () => {
-      alert('총 걸린 시간 : ' + record.current / 1000 + '초');
-      clearInterval(timer);
-    };
+    return () => clearInterval(timer);
   }, []);
 
-  return (
-    <Container>
-      <div>{Math.floor(timeElapsed / 1000)}:</div>
-      <div>{(timeElapsed % 1000) / 10}</div>
-    </Container>
-  );
+  useEffect(() => {
+    if (remainingTime === 0) {
+      onTimeUp();
+    }
+  }, [remainingTime, onTimeUp]);
+
+  return <div>남은 시간: {remainingTime}초</div>;
 }
 
 export default Timer;
