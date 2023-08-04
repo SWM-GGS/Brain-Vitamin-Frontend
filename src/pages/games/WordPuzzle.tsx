@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import Timer from '../../modules/Timer.tsx';
+import {
+  Container,
+  DropBox,
+  DropBoxWrapper,
+  Img,
+  Wrapper,
+} from '../../components/games/WordPuzzle.tsx';
 
 export default function WordPuzzle() {
   const navigate = useNavigate();
@@ -18,6 +25,12 @@ export default function WordPuzzle() {
   const [problemPool, setProblemPool] = useState<Props[]>(
     gameData[gameIndex].problemPool,
   );
+  const answers = problemPool.filter((v) => v.answer);
+  const letters = problemPool
+    .filter((v) => v.answer)
+    .map((v) => v.contents)
+    .join('')
+    .split('');
   const dragRefs = useRef<null[] | HTMLLIElement[]>([]);
   const dropRefs = useRef<null[] | HTMLDivElement[]>([]);
   type BoxProps = {
@@ -27,19 +40,27 @@ export default function WordPuzzle() {
     right: number;
   };
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
-
-  // 드래그하던 요소를 드랍했을 때 원래 위치로 돌려놓기 위한 초기 위치값
-  let originalX = 0;
-  let originalY = 0;
-
-  // 드래그 시 요소를 실제로 이동시키기 위해 필요
-  let posX = 0;
-  let posY = 0;
-
-  const word = '단어퍼즐';
-  const letters = word.split('');
+  let [posX, posY] = [0, 0]; // 드래그 시 요소를 실제로 이동시키기 위해 필요
+  type LetterPositionProps = {
+    marginTop: number;
+    height: number;
+    width: number;
+  };
+  const [letterPosition, setLetterPosition] = useState<LetterPositionProps>({
+    marginTop: 0,
+    height: 0,
+    width: 0,
+  }); // 글자가 처음 흩뿌려질 때 위치 조정 위함
 
   useEffect(() => {
+    if (dropRefs.current[0]) {
+      setLetterPosition({
+        marginTop: dropRefs.current[0].getBoundingClientRect().bottom,
+        height: (window.innerHeight || document.body.clientHeight) - 40,
+        width: (window.innerWidth || document.body.clientWidth) - 40,
+      });
+    }
+
     for (let i = 0; i < letters.length; i++) {
       const box = dropRefs?.current[i]?.getBoundingClientRect();
       if (typeof box?.top === 'number') {
@@ -54,15 +75,15 @@ export default function WordPuzzle() {
         ]);
       }
     }
-  }, []);
+  }, [isGameStarted]);
 
   const checkWord = () => {
-    // 방법 1: 드래그한 요소와 box id를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
+    // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
     // 방법 2: 요소를 드래그한 후 드롭했을 때 박스의 터치 감지
-    for (let i = 0; i < dragRefs.current.length; i++) {
-      let el = dragRefs.current[i];
-      let boxId = el?.getAttribute('boxId');
-      if (!boxId || el?.innerText !== letters[+boxId]) {
+    for (let i = 0; i < letters.length; i++) {
+      let el = dropRefs.current[i];
+      let letter = el?.getAttribute('letter');
+      if (!letter || letter !== letters[i]) {
         return;
       }
     }
@@ -78,9 +99,6 @@ export default function WordPuzzle() {
   const dragStartHandler = (e: React.DragEvent<HTMLElement>) => {
     posX = e.clientX;
     posY = e.clientY;
-
-    originalX = (e.target as HTMLElement).offsetLeft;
-    originalY = (e.target as HTMLElement).offsetTop;
   };
 
   const dragHandler = (e: React.DragEvent<HTMLElement>) => {
@@ -98,6 +116,18 @@ export default function WordPuzzle() {
   const dragEndHandler = (e: React.DragEvent<HTMLElement>) => {
     for (let i = 0; i < letters.length; i++) {
       const box = boxs[i];
+      console.log(
+        i,
+        box,
+        e.clientX,
+        e.clientY,
+        box.left < e.clientX &&
+          e.clientX < box.right &&
+          box.top < e.clientY &&
+          e.clientY < box.bottom,
+        (box.left + box.right) / 2,
+        (box.top + box.bottom) / 2,
+      );
       // 드래그한 글자가 박스에 안착했을 경우
       if (
         box.left < e.clientX &&
@@ -110,7 +140,10 @@ export default function WordPuzzle() {
         }px`;
         (e.target as HTMLElement).style.top = `${(box.top + box.bottom) / 2}px`;
 
-        (e.target as HTMLElement).setAttribute('boxId', `${i}`);
+        dropRefs.current[i]?.setAttribute(
+          'letter',
+          (e.target as HTMLElement).innerText,
+        );
         checkWord();
         return;
       }
@@ -122,7 +155,6 @@ export default function WordPuzzle() {
     (e.target as HTMLElement).style.top = `${
       (e.target as HTMLElement).offsetTop + e.clientY - posY
     }px`;
-    (e.target as HTMLElement).setAttribute('boxId', 'null');
   };
 
   const dragOverHandler = (e: React.DragEvent<HTMLElement>) => {
@@ -158,37 +190,50 @@ export default function WordPuzzle() {
             timeLimit={gameData[gameIndex].timeLimit}
             onTimeUp={handleTimeUp}
           />
-          <ul>
-            {letters.map((letter, index) => (
-              <li
-                style={{
-                  position: 'absolute',
-                  top: Math.ceil(Math.random() * 500),
-                  left: Math.ceil(Math.random() * 500),
-                }}
-                key={index}
-                ref={(el) => (dragRefs.current[index] = el)}
-                draggable
-                onDragStart={dragStartHandler}
-                onDragEnd={dragEndHandler}
-                onDrag={dragHandler}
-                onDragOver={dragOverHandler}>
-                {letter}
-              </li>
-            ))}
-          </ul>
-          <div style={{ display: 'flex' }}>
-            {letters.map((_, index) => (
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  border: '1px solid black',
-                }}
-                key={index}
-                ref={(el) => (dropRefs.current[index] = el)}></div>
-            ))}
-          </div>
+          <Container>
+            <Wrapper>
+              {answers.map((item, index) => (
+                <div key={index}>
+                  <Img src={item.imgUrl} />
+                  <DropBoxWrapper key={index}>
+                    {item.contents.split('').map((_, i) => (
+                      <DropBox
+                        key={`${index}-${i}`}
+                        ref={(el) =>
+                          (dropRefs.current[dropRefs.current.length] = el)
+                        }
+                      />
+                    ))}
+                  </DropBoxWrapper>
+                </div>
+              ))}
+            </Wrapper>
+            <ul>
+              {problemPool.map((item, index) =>
+                item.contents.split('').map((letter, i) => (
+                  <li
+                    style={{
+                      position: 'absolute',
+                      top: Math.floor(
+                        Math.random() *
+                          (letterPosition.height - letterPosition.marginTop) +
+                          letterPosition.marginTop,
+                      ),
+                      left: Math.floor(Math.random() * letterPosition.width),
+                    }}
+                    key={`${index}^_^${i}`}
+                    ref={(el) => (dragRefs.current[index] = el)}
+                    draggable
+                    onDragStart={dragStartHandler}
+                    onDragEnd={dragEndHandler}
+                    onDrag={dragHandler}
+                    onDragOver={dragOverHandler}>
+                    {letter}
+                  </li>
+                )),
+              )}
+            </ul>
+          </Container>
         </>
       ) : (
         <button onClick={() => setIsGameStarted(true)}>Start Game</button>
