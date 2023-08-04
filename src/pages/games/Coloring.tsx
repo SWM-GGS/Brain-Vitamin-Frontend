@@ -54,13 +54,11 @@ export default function Coloring() {
   const answer = useMemo(() => colors.sort(() => 0.5 - Math.random()), []);
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
-  useEffect(() => {
-    answer.forEach((color, i) => {
-      if (color === 'white') {
-        cellRefs.current[i]?.setAttribute('color', 'white');
-      }
-    });
-  }, []);
+  answer.forEach((color, i) => {
+    if (color === 'white') {
+      cellRefs.current[i]?.setAttribute('color', 'white');
+    }
+  });
 
   const checkAnswer = () => {
     for (let i = 0; i < cellRefs.current.length; i++) {
