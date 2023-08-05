@@ -13,6 +13,13 @@
   src: url('/src/assets/fonts/Pretendard-Bold.ttf');
 }
 
+:root {
+  --black-color: #1f1411;
+  --gray-bg-color: #f6f6f6;
+  --main-color: #ff9432;
+  --main-bg-color: #fff5ec;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -25,6 +32,8 @@ body {
   margin: 0;
   height: 100%;
   font-family: 'Pretendard-Regular';
+  color: var(--black-color);
+  background: var(--gray-bg-color);
 }
 
 li {
