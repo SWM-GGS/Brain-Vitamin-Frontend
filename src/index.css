@@ -24,13 +24,8 @@
   box-sizing: border-box;
 }
 
-html {
-  height: 100%;
-}
-
 body {
   margin: 0;
-  height: 100%;
   font-family: 'Pretendard-Regular';
   color: var(--black-color);
   background: var(--gray-bg-color);
@@ -46,6 +41,6 @@ button {
   cursor: pointer;
 }
 
-#root {
-  height: 100%;
+p {
+  margin: 0;
 }
