@@ -20,6 +20,9 @@ const userSlice = createSlice({
       state.fontSize = action.payload.fontSize;
       state.accessToken = action.payload.accessToken;
     },
+    setFontSize(state, action) {
+      state.fontSize = action.payload;
+    },
     setAccessToken(state, action) {
       state.accessToken = action.payload;
     },
