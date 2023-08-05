@@ -6,7 +6,7 @@ const initialState = {
   phoneNumber: '',
   familyKey: '',
   accessToken: '',
-  fontSize: '',
+  fontSize: 'medium',
 };
 const userSlice = createSlice({
   name: 'user',
