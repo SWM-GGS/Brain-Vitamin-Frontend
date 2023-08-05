@@ -44,3 +44,15 @@ button {
 p {
   margin: 0;
 }
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background: none;
+}
+
+input:focus {
+  outline: none;
+}
