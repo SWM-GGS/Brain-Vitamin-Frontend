@@ -26,7 +26,8 @@ function ShortInput({ label, desc, value, callbackFn, buttonText }: Props) {
       <ShortButton
         style={{
           background: value ? 'var(--main-color)' : '#C6C6C6',
-        }}>
+        }}
+        disabled={!value}>
         {buttonText}
       </ShortButton>
     </ShortInputWrapper>
