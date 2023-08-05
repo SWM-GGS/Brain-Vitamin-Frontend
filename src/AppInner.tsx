@@ -1,7 +1,7 @@
 import Router from './routes/router';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/reducer.ts';
-import GlobalStyle from './components/common/GlobalStyle.ts';
+import GlobalStyle from './components/common/GlobalStyle.tsx';
 import Splash from './pages/Splash.tsx';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from './store/index.ts';
