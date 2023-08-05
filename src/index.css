@@ -1,3 +1,18 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('/src/assets/fonts/Pretendard-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Pretendard-Medium';
+  src: url('/src/assets/fonts/Pretendard-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'Pretendard-Bold';
+  src: url('/src/assets/fonts/Pretendard-Bold.ttf');
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,6 +24,7 @@ html {
 body {
   margin: 0;
   height: 100%;
+  font-family: 'Pretendard-Regular';
 }
 
 li {
