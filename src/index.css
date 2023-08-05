@@ -1,24 +1,14 @@
-@font-face {
-  font-family: 'GmarketSansMedium';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
-    format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
 * {
   box-sizing: border-box;
 }
 
 html {
-  font-size: 62.5%;
+  height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'GmarketSansMedium';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 li {
@@ -32,9 +22,5 @@ button {
 }
 
 #root {
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  font-size: 1.8rem;
+  height: 100%;
 }
