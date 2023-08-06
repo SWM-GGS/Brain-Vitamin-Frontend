@@ -6,10 +6,18 @@ type Props = {
   value: string;
   callbackFn: (e: React.ChangeEvent<HTMLInputElement>) => void;
   buttonText: string;
+  style?: React.CSSProperties;
 };
-function ShortInput({ label, desc, value, callbackFn, buttonText }: Props) {
+function ShortInput({
+  label,
+  desc,
+  value,
+  callbackFn,
+  buttonText,
+  ...props
+}: Props) {
   return (
-    <ShortInputWrapper>
+    <ShortInputWrapper {...props} style={props.style}>
       <ShortInputBox
         style={{
           background: value ? 'white' : '#f4f4f4',
@@ -37,7 +45,6 @@ function ShortInput({ label, desc, value, callbackFn, buttonText }: Props) {
 const ShortInputWrapper = styled.div`
   display: flex;
   gap: 0.8rem;
-  margin: 8.2rem 0 1.6rem 0;
 `;
 
 const ShortInputBox = styled.div`
@@ -45,6 +52,10 @@ const ShortInputBox = styled.div`
   height: 7.8rem;
   border-radius: 0.8rem;
   padding: 1.4rem 0.9rem;
+  @media screen and (max-width: 767px) {
+    width: 18rem;
+    height: 7rem;
+  }
 `;
 
 const ShortButton = styled.button`
@@ -52,6 +63,9 @@ const ShortButton = styled.button`
   font-size: 1.4rem;
   border-radius: 0.8rem;
   padding: 2rem 2.4rem;
+  @media screen and (max-width: 767px) {
+    padding: 1rem 1.5rem;
+  }
 `;
 
 const InputLabel = styled.div`
@@ -63,6 +77,10 @@ const Input = styled.input`
   font-size: 2rem;
   &::placeholder {
     color: #6d6b69;
+  }
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    font-size: 1.6rem;
   }
 `;
 
