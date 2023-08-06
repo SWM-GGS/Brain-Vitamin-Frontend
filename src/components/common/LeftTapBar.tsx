@@ -5,7 +5,7 @@ function LeftTapBar() {
   const path = window.location.pathname;
   const navigate = useNavigate();
 
-  const onClickTap = () => {
+  const onClickTap = (path: string) => {
     navigate(path);
   };
 
@@ -18,7 +18,7 @@ function LeftTapBar() {
             background: path === '/home' ? 'var(--main-bg-color)' : 'none',
             color: path === '/home' ? 'var(--main-color)' : '#433D3A',
           }}
-          onClick={onClickTap}>
+          onClick={() => onClickTap('/home')}>
           홈
         </Tap>
         <Tap
@@ -26,7 +26,7 @@ function LeftTapBar() {
             background: path === '/family' ? 'var(--main-bg-color)' : 'none',
             color: path === '/family' ? 'var(--main-color)' : '#433D3A',
           }}
-          onClick={onClickTap}>
+          onClick={() => onClickTap('/family')}>
           가족 커뮤니티
         </Tap>
         <Tap
@@ -34,7 +34,7 @@ function LeftTapBar() {
             background: path === '/myPage' ? 'var(--main-bg-color)' : 'none',
             color: path === '/myPage' ? 'var(--main-color)' : '#433D3A',
           }}
-          onClick={onClickTap}>
+          onClick={() => onClickTap('/myPage')}>
           마이페이지
         </Tap>
       </TapWrapper>
@@ -43,7 +43,7 @@ function LeftTapBar() {
 }
 
 const Container = styled.div`
-  width: 30rem;
+  width: 27rem;
   height: 100vh;
   background: #fff;
   padding: 2.2rem;

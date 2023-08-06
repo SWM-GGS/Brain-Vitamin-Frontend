@@ -5,7 +5,7 @@ function BottomTapBar() {
   const path = window.location.pathname;
   const navigate = useNavigate();
 
-  const onClickTap = () => {
+  const onClickTap = (path: string) => {
     navigate(path);
   };
 
@@ -16,7 +16,7 @@ function BottomTapBar() {
           background: path === '/home' ? 'var(--main-bg-color)' : 'none',
           color: path === '/home' ? 'var(--main-color)' : '#433D3A',
         }}
-        onClick={onClickTap}>
+        onClick={() => onClickTap('/home')}>
         홈
       </Tap>
       <Tap
@@ -24,7 +24,7 @@ function BottomTapBar() {
           background: path === '/family' ? 'var(--main-bg-color)' : 'none',
           color: path === '/family' ? 'var(--main-color)' : '#433D3A',
         }}
-        onClick={onClickTap}>
+        onClick={() => onClickTap('/family')}>
         가족
       </Tap>
       <Tap
@@ -32,7 +32,7 @@ function BottomTapBar() {
           background: path === '/myPage' ? 'var(--main-bg-color)' : 'none',
           color: path === '/myPage' ? 'var(--main-color)' : '#433D3A',
         }}
-        onClick={onClickTap}>
+        onClick={() => onClickTap('/myPage')}>
         My
       </Tap>
     </Container>
