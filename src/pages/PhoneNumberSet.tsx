@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
 
 function PhoneNumberSet() {
-  const { state } = useLocation();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ function PhoneNumberSet() {
 
   const goNext = () => {
     navigate('/nameSet', {
-      state: { fontSize: state.fontSize, phoneNumber },
+      state: { phoneNumber },
     });
   };
 

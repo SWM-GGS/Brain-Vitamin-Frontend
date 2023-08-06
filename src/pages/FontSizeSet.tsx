@@ -15,7 +15,7 @@ function FontSizeSet() {
   const goNext = () => {
     setFirstRun();
     dispatch(userSlice.actions.setFontSize(fontSize));
-    navigate('/phoneNumberSet', { state: { fontSize } });
+    navigate('/phoneNumberSet');
   };
 
   return (

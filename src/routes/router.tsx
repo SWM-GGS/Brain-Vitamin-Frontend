@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer.ts';
+import { checkIsFirstRun } from '../utils/firstRun.ts';
 import CogTraining from '../pages/CogTraining.tsx';
 import CardMatch from '../pages/games/CardMatch.tsx';
 import OneToFifty from '../pages/games/OneToFifty.tsx';
@@ -16,7 +17,7 @@ import NumberTouch from '../pages/games/NumberTouch.tsx';
 import FontSizeSet from '../pages/FontSizeSet.tsx';
 import Home from '../pages/Home.tsx';
 import PhoneNumberSet from '../pages/PhoneNumberSet.tsx';
-import { checkIsFirstRun } from '../utils/firstRun.ts';
+import NameSet from '../pages/NameSet.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -43,6 +44,7 @@ export default function Router() {
       <Route path="/fontSizeSet" element={<FontSizeSet />} />
       <Route path="/home" element={<Home />} />
       <Route path="/phoneNumberSet" element={<PhoneNumberSet />} />
+      <Route path="/nameSet" element={<NameSet />} />
       <Route path="/cogTraining" element={<CogTraining />} />
       <Route path="/cardMatch" element={<CardMatch />} />
       <Route path="/oneToFifty" element={<OneToFifty />} />
