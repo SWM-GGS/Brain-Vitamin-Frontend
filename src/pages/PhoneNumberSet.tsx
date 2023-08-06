@@ -30,8 +30,9 @@ function PhoneNumberSet() {
     <Container>
       <Box>
         <Wrapper>
-          <Label>전화번호 인증</Label>
+          <Label style={{ textAlign: 'center' }}>전화번호 인증</Label>
           <ShortInput
+            style={{ margin: '8.2rem 0 1.6rem 0' }}
             label="전화번호"
             desc="010 1234 5678"
             value={phoneNumber}
@@ -70,15 +71,16 @@ const Box = styled.div`
   border-radius: 16px;
   background: #fff;
   box-shadow: 15px 13px 28px 0px rgba(0, 0, 0, 0.06);
-  @media screen and (max-width: 767px) {
-    width: 43.4rem;
-    height: 35.5rem;
-  }
   padding: 7.2rem 0 4.6rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  @media screen and (max-width: 767px) {
+    width: 35rem;
+    height: 60rem;
+    padding: 1.6rem;
+  }
 `;
 
 const Wrapper = styled.div``;
