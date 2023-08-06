@@ -18,6 +18,8 @@ import FontSizeSet from '../pages/FontSizeSet.tsx';
 import Home from '../pages/Home.tsx';
 import PhoneNumberSet from '../pages/PhoneNumberSet.tsx';
 import NameSet from '../pages/NameSet.tsx';
+import BirthDateSet from '../pages/BirthDateSet.tsx';
+import EducationSet from '../pages/EducationSet.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -45,6 +47,8 @@ export default function Router() {
       <Route path="/home" element={<Home />} />
       <Route path="/phoneNumberSet" element={<PhoneNumberSet />} />
       <Route path="/nameSet" element={<NameSet />} />
+      <Route path="/birthDateSet" element={<BirthDateSet />} />
+      <Route path="/educationSet" element={<EducationSet />} />
       <Route path="/cogTraining" element={<CogTraining />} />
       <Route path="/cardMatch" element={<CardMatch />} />
       <Route path="/oneToFifty" element={<OneToFifty />} />
