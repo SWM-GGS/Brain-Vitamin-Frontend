@@ -7,8 +7,8 @@ import {
   Front,
   Back,
 } from '../../components/games/CardMatch.tsx';
-import { useLocation, useNavigate } from 'react-router';
 import Timer from '../../modules/Timer.tsx';
+import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
  * 난도
@@ -16,24 +16,17 @@ import Timer from '../../modules/Timer.tsx';
  * 중 : 2 * 4
  * 상 : 3 * 4
  */
-export default function CardMatch() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const gameData = location.state.gameData;
-  const gameIndex = location.state.gameIndex;
-  const [isGameStarted, setIsGameStarted] = useState(false);
+export default function CardMatch({ gameData, onGameEnd }: GameProps) {
   const [isGameEnded, setIsGameEnded] = useState(false);
 
   type Props = {
     imgUrl: string;
   };
-  const [problemPool, setProblemPool] = useState<Props[]>(
-    gameData[gameIndex].problemPool,
-  );
+  const problemPool: Props[] = gameData.problemPool;
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
-  let difficulty = gameData[gameIndex].difficulty;
-  let cardCnt;
+  let difficulty = gameData.difficulty;
+  let cardCnt: number;
 
   if (difficulty === 1) {
     cardCnt = 6;
@@ -99,19 +92,9 @@ export default function CardMatch() {
   useEffect(() => {
     if (isGameEnded) {
       alert('게임이 종료되었습니다.');
-      const nextGamePath = gameData[gameIndex + 1].pathUri;
-      if (nextGamePath) {
-        navigate(nextGamePath, {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      } else {
-        // navigate('/cogTraining');
-        navigate('/coloring', {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      }
+      onGameEnd();
     }
-  }, [isGameEnded, gameData, navigate]);
+  }, [isGameEnded]);
 
   const handleTimeUp = () => {
     setIsGameEnded(true);
@@ -119,33 +102,24 @@ export default function CardMatch() {
 
   return (
     <>
-      {isGameStarted ? (
-        <>
-          <Timer
-            timeLimit={gameData[gameIndex].timeLimit}
-            onTimeUp={handleTimeUp}
-          />
-          <Container $difficulty={difficulty}>
-            {mixedCards.map((card) => (
-              <FlipWrapper key={card.idx}>
-                <Flip
-                  $status={card.status}
-                  $clickable={clickable}
-                  onClick={() => {
-                    !card.status ? handleClick(card.idx) : null;
-                  }}>
-                  <Card>
-                    <Front $status={card.status} $background={card.type} />
-                    <Back $status={card.status} />
-                  </Card>
-                </Flip>
-              </FlipWrapper>
-            ))}
-          </Container>
-        </>
-      ) : (
-        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
-      )}
+      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
+      <Container $difficulty={difficulty}>
+        {mixedCards.map((card) => (
+          <FlipWrapper key={card.idx}>
+            <Flip
+              $status={card.status}
+              $clickable={clickable}
+              onClick={() => {
+                !card.status ? handleClick(card.idx) : null;
+              }}>
+              <Card>
+                <Front $status={card.status} $background={card.type} />
+                <Back $status={card.status} />
+              </Card>
+            </Flip>
+          </FlipWrapper>
+        ))}
+      </Container>
     </>
   );
 }

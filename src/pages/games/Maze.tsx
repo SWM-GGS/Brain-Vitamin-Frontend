@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MazeBox, Target } from '../../components/games/Maze';
-import { useLocation, useNavigate } from 'react-router';
 import Timer from '../../modules/Timer';
+import { GameProps } from '../../routes/gameRouter';
 
-export default function Maze() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const gameData = location.state.gameData;
-  const gameIndex = location.state.gameIndex;
-  const [isGameStarted, setIsGameStarted] = useState(false);
+export default function Maze({ gameData, onGameEnd }: GameProps) {
   const [isGameEnded, setIsGameEnded] = useState(false);
 
   type Props = {
@@ -17,9 +12,7 @@ export default function Maze() {
     answer: boolean;
     imgUrl: string;
   };
-  const [problemPool, setProblemPool] = useState<Props[]>(
-    gameData[gameIndex].problemPool,
-  );
+  const problemPool: Props[] = gameData.problemPool;
   const answerCnt = problemPool.filter((item) => item.answer).length;
   let cnt = 0;
 
@@ -40,19 +33,9 @@ export default function Maze() {
   useEffect(() => {
     if (isGameEnded) {
       alert('게임이 종료되었습니다.');
-      const nextGamePath = gameData[gameIndex + 1].pathUri;
-      if (nextGamePath) {
-        navigate(nextGamePath, {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      } else {
-        // navigate('/cogTraining');
-        navigate('/dateQuiz', {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      }
+      onGameEnd();
     }
-  }, [isGameEnded, gameData, navigate]);
+  }, [isGameEnded]);
 
   const handleTimeUp = () => {
     setIsGameEnded(true);
@@ -60,29 +43,18 @@ export default function Maze() {
 
   return (
     <>
-      {isGameStarted ? (
-        <>
-          <Timer
-            timeLimit={gameData[gameIndex].timeLimit}
-            onTimeUp={handleTimeUp}
+      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
+      <MazeBox $imgUrl={problemPool[0].imgUrl}>
+        {problemPool.map((item, index) => (
+          <Target
+            key={index}
+            x={item.x}
+            y={item.y}
+            $bgColor={'#' + Math.floor(Math.random() * 0xffffff).toString(16)}
+            onClick={(e) => checkAnswer(e.target as HTMLElement, index)}
           />
-          <MazeBox $imgUrl={problemPool[0].imgUrl}>
-            {problemPool.map((item, index) => (
-              <Target
-                key={index}
-                x={item.x}
-                y={item.y}
-                $bgColor={
-                  '#' + Math.floor(Math.random() * 0xffffff).toString(16)
-                }
-                onClick={(e) => checkAnswer(e.target as HTMLElement, index)}
-              />
-            ))}
-          </MazeBox>
-        </>
-      ) : (
-        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
-      )}
+        ))}
+      </MazeBox>
     </>
   );
 }

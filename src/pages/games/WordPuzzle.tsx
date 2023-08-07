@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 import Timer from '../../modules/Timer.tsx';
 import {
   Container,
@@ -8,13 +7,9 @@ import {
   Img,
   Wrapper,
 } from '../../components/games/WordPuzzle.tsx';
+import { GameProps } from '../../routes/gameRouter.tsx';
 
-export default function WordPuzzle() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const gameData = location.state.gameData;
-  const gameIndex = location.state.gameIndex;
-  const [isGameStarted, setIsGameStarted] = useState(false);
+export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
   const [isGameEnded, setIsGameEnded] = useState(false);
 
   type Props = {
@@ -22,9 +17,7 @@ export default function WordPuzzle() {
     answer: boolean;
     imgUrl: string;
   };
-  const [problemPool, setProblemPool] = useState<Props[]>(
-    gameData[gameIndex].problemPool,
-  );
+  const problemPool: Props[] = gameData.problemPool;
   const answers = problemPool.filter((v) => v.answer);
   const letters = problemPool
     .filter((v) => v.answer)
@@ -75,7 +68,7 @@ export default function WordPuzzle() {
         ]);
       }
     }
-  }, [isGameStarted]);
+  }, []);
 
   const checkWord = () => {
     // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
@@ -164,19 +157,9 @@ export default function WordPuzzle() {
   useEffect(() => {
     if (isGameEnded) {
       alert('게임이 종료되었습니다.');
-      const nextGamePath = gameData[gameIndex + 1].pathUri;
-      if (nextGamePath) {
-        navigate(nextGamePath, {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      } else {
-        // navigate('/cogTraining');
-        navigate('/market', {
-          state: { gameData, gameIndex: gameIndex + 1 },
-        });
-      }
+      onGameEnd();
     }
-  }, [isGameEnded, gameData, navigate]);
+  }, [isGameEnded]);
 
   const handleTimeUp = () => {
     setIsGameEnded(true);
@@ -184,60 +167,51 @@ export default function WordPuzzle() {
 
   return (
     <>
-      {isGameStarted ? (
-        <>
-          <Timer
-            timeLimit={gameData[gameIndex].timeLimit}
-            onTimeUp={handleTimeUp}
-          />
-          <Container>
-            <Wrapper>
-              {answers.map((item, index) => (
-                <div key={index}>
-                  <Img src={item.imgUrl} />
-                  <DropBoxWrapper key={index}>
-                    {item.contents.split('').map((_, i) => (
-                      <DropBox
-                        key={`${index}-${i}`}
-                        ref={(el) =>
-                          (dropRefs.current[dropRefs.current.length] = el)
-                        }
-                      />
-                    ))}
-                  </DropBoxWrapper>
-                </div>
-              ))}
-            </Wrapper>
-            <ul>
-              {problemPool.map((item, index) =>
-                item.contents.split('').map((letter, i) => (
-                  <li
-                    style={{
-                      position: 'absolute',
-                      top: Math.floor(
-                        Math.random() *
-                          (letterPosition.height - letterPosition.marginTop) +
-                          letterPosition.marginTop,
-                      ),
-                      left: Math.floor(Math.random() * letterPosition.width),
-                    }}
-                    key={`${index}^_^${i}`}
-                    ref={(el) => (dragRefs.current[index] = el)}
-                    draggable
-                    onDragStart={dragStartHandler}
-                    onDragEnd={dragEndHandler}
-                    onDrag={dragHandler}
-                    onDragOver={dragOverHandler}>
-                    {letter}
-                  </li>
-                )),
-              )}
-            </ul>
-          </Container>
-        </>
-      ) : (
-        <button onClick={() => setIsGameStarted(true)}>Start Game</button>
-      )}
+      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
+      <Container>
+        <Wrapper>
+          {answers.map((item, index) => (
+            <div key={index}>
+              <Img src={item.imgUrl} />
+              <DropBoxWrapper key={index}>
+                {item.contents.split('').map((_, i) => (
+                  <DropBox
+                    key={`${index}-${i}`}
+                    ref={(el) =>
+                      (dropRefs.current[dropRefs.current.length] = el)
+                    }
+                  />
+                ))}
+              </DropBoxWrapper>
+            </div>
+          ))}
+        </Wrapper>
+        <ul>
+          {problemPool.map((item, index) =>
+            item.contents.split('').map((letter, i) => (
+              <li
+                style={{
+                  position: 'absolute',
+                  top: Math.floor(
+                    Math.random() *
+                      (letterPosition.height - letterPosition.marginTop) +
+                      letterPosition.marginTop,
+                  ),
+                  left: Math.floor(Math.random() * letterPosition.width),
+                }}
+                key={`${index}^_^${i}`}
+                ref={(el) => (dragRefs.current[index] = el)}
+                draggable
+                onDragStart={dragStartHandler}
+                onDragEnd={dragEndHandler}
+                onDrag={dragHandler}
+                onDragOver={dragOverHandler}>
+                {letter}
+              </li>
+            )),
+          )}
+        </ul>
+      </Container>
     </>
   );
 }
