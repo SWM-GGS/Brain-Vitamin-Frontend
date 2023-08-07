@@ -63,7 +63,7 @@ function Home() {
             <Label>우리 가족 이야기</Label>
           </Box>
           <Box>
-            <VitaminImage alt="" src="/src/assets/images/family.svg" />
+            <VitaminImage alt="" src="/src/assets/images/my.svg" />
             <Label>내 활동 보기</Label>
           </Box>
         </BoxWrapper>
