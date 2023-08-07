@@ -22,7 +22,7 @@ function AppInner() {
           return;
         }
         const response = await axios.post(
-          `${import.meta.env.API_URL}/refreshToken`,
+          `${import.meta.env.VITE_API_URL}/refreshToken`,
           {},
           {
             headers: {
@@ -66,7 +66,7 @@ function AppInner() {
             const refreshToken = await localStorage.getItem('refreshToken');
             // refreshToken이 유효하다면, accessToken 갱신 요청 후 실패했던 api 재요청
             const { data } = await axios.post(
-              `${import.meta.env.API_URL}/refreshToken`,
+              `${import.meta.env.VITE_API_URL}/refreshToken`,
               {},
               { headers: { authorization: `Bearer ${refreshToken}` } },
             );
