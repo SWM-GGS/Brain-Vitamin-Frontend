@@ -5,6 +5,7 @@ import {
   DropBoxWrapper,
   Img,
   Wrapper,
+  Letter,
 } from '../../components/games/WordPuzzle.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
@@ -31,26 +32,32 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
   };
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
   let [posX, posY] = [0, 0]; // 드래그 시 요소를 실제로 이동시키기 위해 필요
-  type LetterPositionProps = {
-    marginTop: number;
-    height: number;
-    width: number;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // 글자가 처음 흩뿌려질 위치 조정
+  const calculateRandomPosition = () => {
+    if (containerRef.current && dropRefs.current[dropRefs.current.length - 1]) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const lastDropRef = dropRefs.current[dropRefs.current.length - 1];
+      if (lastDropRef) {
+        const dropRefRect = lastDropRef.getBoundingClientRect();
+        const randomTop =
+          Math.floor(
+            Math.random() * (containerRect.bottom - dropRefRect.bottom) +
+              dropRefRect.bottom,
+          ) - 10;
+        const randomLeft =
+          Math.floor(
+            Math.random() * (containerRect.right - containerRect.left) +
+              containerRect.left,
+          ) - 40;
+        return { top: randomTop, left: randomLeft };
+      }
+    }
+    return { top: 0, left: 0 };
   };
-  const [letterPosition, setLetterPosition] = useState<LetterPositionProps>({
-    marginTop: 0,
-    height: 0,
-    width: 0,
-  }); // 글자가 처음 흩뿌려질 때 위치 조정 위함
 
   useEffect(() => {
-    if (dropRefs.current[0]) {
-      setLetterPosition({
-        marginTop: dropRefs.current[0].getBoundingClientRect().bottom,
-        height: (window.innerHeight || document.body.clientHeight) - 40,
-        width: (window.innerWidth || document.body.clientWidth) - 40,
-      });
-    }
-
     for (let i = 0; i < letters.length; i++) {
       const box = dropRefs?.current[i]?.getBoundingClientRect();
       if (typeof box?.top === 'number') {
@@ -158,6 +165,7 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
           (box.left + box.right) / 2
         }px`;
         (e.target as HTMLElement).style.top = `${(box.top + box.bottom) / 2}px`;
+        (e.target as HTMLElement).style.transform = 'translate(-50%, -50%)';
 
         dropRefs.current[i]?.setAttribute(
           'letter',
@@ -181,55 +189,46 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
   };
 
   return (
-    <>
-      <Container>
-        <Wrapper>
-          {answers.map((item, index) => (
-            <div key={index}>
-              <Img src={item.imgUrl} />
-              <DropBoxWrapper key={index}>
-                {item.contents.split('').map((_, i) => (
-                  <DropBox
-                    key={`${index}-${i}`}
-                    ref={(el) =>
-                      (dropRefs.current[dropRefs.current.length] = el)
-                    }
-                  />
-                ))}
-              </DropBoxWrapper>
-            </div>
-          ))}
-        </Wrapper>
-        <ul>
-          {problemPool.map((item, index) =>
-            item.contents.split('').map((letter, i) => (
-              <li
-                style={{
-                  position: 'absolute',
-                  top: Math.floor(
-                    Math.random() *
-                      (letterPosition.height - letterPosition.marginTop) +
-                      letterPosition.marginTop,
-                  ),
-                  left: Math.floor(Math.random() * letterPosition.width),
-                  touchAction: 'none',
-                }}
-                key={`${index}^_^${i}`}
-                ref={(el) => (dragRefs.current[index] = el)}
-                draggable
-                onDragStart={dragStartHandler}
-                onDragEnd={dragEndHandler}
-                onDrag={dragHandler}
-                onDragOver={dragOverHandler}
-                onTouchStart={dragStartHandler}
-                onTouchMove={dragHandler}
-                onTouchEnd={dragEndHandler}>
-                {letter}
-              </li>
-            )),
-          )}
-        </ul>
-      </Container>
-    </>
+    <Container ref={containerRef}>
+      <Wrapper>
+        {answers.map((item, index) => (
+          <div key={index}>
+            <Img src={item.imgUrl} />
+            <DropBoxWrapper key={index}>
+              {item.contents.split('').map((_, i) => (
+                <DropBox
+                  key={`${index}-${i}`}
+                  ref={(el) => (dropRefs.current[dropRefs.current.length] = el)}
+                />
+              ))}
+            </DropBoxWrapper>
+          </div>
+        ))}
+      </Wrapper>
+      <ul>
+        {problemPool.map((item, index) =>
+          item.contents.split('').map((letter, i) => (
+            <Letter
+              style={{
+                position: 'absolute',
+                ...calculateRandomPosition(),
+                touchAction: 'none',
+              }}
+              key={`${index}^_^${i}`}
+              ref={(el) => (dragRefs.current[index] = el)}
+              draggable
+              onDragStart={dragStartHandler}
+              onDragEnd={dragEndHandler}
+              onDrag={dragHandler}
+              onDragOver={dragOverHandler}
+              onTouchStart={dragStartHandler}
+              onTouchMove={dragHandler}
+              onTouchEnd={dragEndHandler}>
+              {letter}
+            </Letter>
+          )),
+        )}
+      </ul>
+    </Container>
   );
 }
