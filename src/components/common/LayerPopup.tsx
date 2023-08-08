@@ -49,14 +49,14 @@ const Container = styled.div`
 
 const Popup = styled.div`
   width: 87rem;
-  height: 46rem;
+  min-height: 46rem;
   border-radius: 1.6rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 12.8rem 6rem;
   @media screen and (max-width: 767px) {
     width: 25rem;
-    height: 23rem;
+    min-height: 23rem;
     padding: 3rem;
   }
 `;
