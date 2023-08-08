@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { styled } from 'styled-components';
 
 type Props = {
   timeLimit: number;
@@ -22,7 +23,11 @@ function Timer({ timeLimit, onTimeUp }: Props) {
     }
   }, [remainingTime, onTimeUp]);
 
-  return <div>남은 시간: {remainingTime}초</div>;
+  return <Text>남은 시간: {remainingTime}초</Text>;
 }
+
+const Text = styled.p`
+  font-size: 3rem;
+`;
 
 export default Timer;
