@@ -80,50 +80,79 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
     onGameEnd();
   };
 
+  const getClientXY = (
+    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
+  ) => {
+    let [clientX, clientY] = [0, 0];
+
+    if ('touches' in e && e.touches.length > 0) {
+      // 터치 이벤트일 경우
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else if ('clientX' in e) {
+      // 드래그 이벤트일 경우
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    return [clientX, clientY];
+  };
+
   // onDragStart : Item을 잡기 시작했을 때 발생
   // onDrag : onDragStart 직후부터 onDragEnd 직전까지 계속 발생
   // onDragEnd : 잡은 Item을 놓았을 때 발생
   // onDragEnter : 잡은 Item이 다른 Item이랑 겹쳐졌을 때 발생
   // onDragOver : 잡은 Item이 다른 Item과 겹쳐졌을 때 milli sec마다 발생 -> prevent로 발생 막기
   // onDragLeave : 잡은 Item이 다른 Item에 겹쳐졌다가 떠났을 때 발생
-  const dragStartHandler = (e: React.DragEvent<HTMLElement>) => {
-    posX = e.clientX;
-    posY = e.clientY;
+  const dragStartHandler = (
+    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
+  ) => {
+    const [clientX, clientY] = getClientXY(e);
+
+    posX = clientX;
+    posY = clientY;
   };
 
-  const dragHandler = (e: React.DragEvent<HTMLElement>) => {
+  const dragHandler = (
+    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
+  ) => {
+    const [clientX, clientY] = getClientXY(e);
+
     (e.target as HTMLElement).style.left = `${
-      (e.target as HTMLElement).offsetLeft + e.clientX - posX
+      (e.target as HTMLElement).offsetLeft + clientX - posX
     }px`;
     (e.target as HTMLElement).style.top = `${
-      (e.target as HTMLElement).offsetTop + e.clientY - posY
+      (e.target as HTMLElement).offsetTop + clientY - posY
     }px`;
 
-    posY = e.clientY;
-    posX = e.clientX;
+    posY = clientY;
+    posX = clientX;
   };
 
-  const dragEndHandler = (e: React.DragEvent<HTMLElement>) => {
+  const dragEndHandler = (
+    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
+  ) => {
+    let [clientX, clientY] = [0, 0];
+
+    if ('touches' in e && e.changedTouches.length > 0) {
+      // 터치 이벤트일 경우
+      const lastTouch = e.changedTouches[e.changedTouches.length - 1];
+      clientX = lastTouch.clientX;
+      clientY = lastTouch.clientY;
+    } else if ('clientX' in e) {
+      // 드래그 이벤트일 경우
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
     for (let i = 0; i < letters.length; i++) {
       const box = boxs[i];
-      console.log(
-        i,
-        box,
-        e.clientX,
-        e.clientY,
-        box.left < e.clientX &&
-          e.clientX < box.right &&
-          box.top < e.clientY &&
-          e.clientY < box.bottom,
-        (box.left + box.right) / 2,
-        (box.top + box.bottom) / 2,
-      );
       // 드래그한 글자가 박스에 안착했을 경우
       if (
-        box.left < e.clientX &&
-        e.clientX < box.right &&
-        box.top < e.clientY &&
-        e.clientY < box.bottom
+        box.left < clientX &&
+        clientX < box.right &&
+        box.top < clientY &&
+        clientY < box.bottom
       ) {
         (e.target as HTMLElement).style.left = `${
           (box.left + box.right) / 2
@@ -140,10 +169,10 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
     }
     // 박스를 벗어났을 경우
     (e.target as HTMLElement).style.left = `${
-      (e.target as HTMLElement).offsetLeft + e.clientX - posX
+      (e.target as HTMLElement).offsetLeft + clientX - posX
     }px`;
     (e.target as HTMLElement).style.top = `${
-      (e.target as HTMLElement).offsetTop + e.clientY - posY
+      (e.target as HTMLElement).offsetTop + clientY - posY
     }px`;
   };
 
@@ -183,6 +212,7 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
                       letterPosition.marginTop,
                   ),
                   left: Math.floor(Math.random() * letterPosition.width),
+                  touchAction: 'none',
                 }}
                 key={`${index}^_^${i}`}
                 ref={(el) => (dragRefs.current[index] = el)}
@@ -190,7 +220,10 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
                 onDragStart={dragStartHandler}
                 onDragEnd={dragEndHandler}
                 onDrag={dragHandler}
-                onDragOver={dragOverHandler}>
+                onDragOver={dragOverHandler}
+                onTouchStart={dragStartHandler}
+                onTouchMove={dragHandler}
+                onTouchEnd={dragEndHandler}>
                 {letter}
               </li>
             )),
