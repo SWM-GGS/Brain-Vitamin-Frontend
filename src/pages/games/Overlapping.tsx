@@ -1,4 +1,11 @@
-import { NumContainer, Num, NumBtn } from '../../components/games/Overlapping';
+import {
+  Container,
+  Text,
+  NumWrapper,
+  Num,
+  ButtonWrapper,
+  NumBtn,
+} from '../../components/games/Overlapping';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
@@ -34,9 +41,11 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
   };
 
   return (
-    <>
-      <h1>겹쳐진 {answer.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?</h1>
-      <NumContainer>
+    <Container>
+      <Text>
+        겹쳐진 {answer.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?
+      </Text>
+      <NumWrapper>
         {answer.map((num, index) => (
           <Num
             key={index}
@@ -45,14 +54,16 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
             {num}
           </Num>
         ))}
-      </NumContainer>
-      {Array.from({ length: 10 }).map((_, index) => (
-        <NumBtn
-          key={index}
-          onClick={(e) => checkAnswer(index, e.target as HTMLButtonElement)}>
-          {index}
-        </NumBtn>
-      ))}
-    </>
+      </NumWrapper>
+      <ButtonWrapper>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <NumBtn
+            key={index}
+            onClick={(e) => checkAnswer(index, e.target as HTMLButtonElement)}>
+            {index}
+          </NumBtn>
+        ))}
+      </ButtonWrapper>
+    </Container>
   );
 }
