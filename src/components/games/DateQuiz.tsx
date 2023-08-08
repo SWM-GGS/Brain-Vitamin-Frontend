@@ -45,7 +45,7 @@ const Body = ({ totalDate, today, onGameEnd }: BodyProps) => {
           <Day key={index}>{item}</Day>
         ))}
       </Days>
-      <Container>
+      <Wrapper>
         {totalDate.slice((week - 1) * 7, week * 7).map((date, idx) => (
           <Form key={idx} onClick={() => checkToday(date)}>
             <DateNum $idx={idx} $lastdate={lastDate} $firstdate={firstDate}>
@@ -53,8 +53,8 @@ const Body = ({ totalDate, today, onGameEnd }: BodyProps) => {
             </DateNum>
           </Form>
         ))}
-      </Container>
-      <h1>
+      </Wrapper>
+      {/* <h1>
         {new Date().getMonth() + 1}월 {quizDate}
         일은 무슨 요일일까요?
       </h1>
@@ -62,10 +62,26 @@ const Body = ({ totalDate, today, onGameEnd }: BodyProps) => {
         <Button key={index} onClick={() => checkAnswer(index)}>
           {item}
         </Button>
-      ))}
+      ))} */}
     </>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+`;
+
+const Desc = styled.p`
+  font-size: 3.2rem;
+  text-align: center;
+  margin: 0 0 10rem 0;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
+`;
 
 const Days = styled.div`
   display: flex;
@@ -79,9 +95,13 @@ const Day = styled.li`
   &:nth-child(7n) {
     color: red;
   }
+  font-size: 3rem;
+  @media screen and (max-width: 768px) {
+    font-size: 1.8rem;
+  }
 `;
 
-const Container = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
 `;
@@ -115,6 +135,11 @@ const DateNum = styled.div<{
     (props.$firstdate > 0 && props.$idx > props.$firstdate - 1)
       ? '#969696'
       : null};
+  font-size: 4rem;
+  font-family: 'Pretendard-Medium';
+  @media screen and (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const Button = styled.button`
@@ -123,4 +148,4 @@ const Button = styled.button`
   font-size: 5rem;
 `;
 
-export default Body;
+export { Container, Desc, Body };

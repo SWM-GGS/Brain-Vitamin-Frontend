@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Body from '../../components/games/DateQuiz';
+import { Container, Desc, Body } from '../../components/games/DateQuiz';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
@@ -47,9 +47,13 @@ export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
   }, []);
 
   return (
-    <>
-      <h1>{`${YEAR}년 ${MONTH}월 달력을 보고 있습니다. 아래 달력에서 오늘의 날짜를 터치해주세요.`}</h1>
+    <Container>
+      <Desc>
+        {YEAR}년 {MONTH}월 달력을 보고 있습니다.
+        <br />
+        아래 달력에서 오늘의 날짜를 터치해주세요.
+      </Desc>
       <Body totalDate={totalDate} today={TODAY} onGameEnd={onGameEnd} />
-    </>
+    </Container>
   );
 }
