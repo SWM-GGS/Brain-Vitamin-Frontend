@@ -20,25 +20,9 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
     imgUrl: string;
   };
   const problemPool: Props[] = gameData.problemPool;
-  // const problemPool = [
-  //   {
-  //     imgUrl:
-  //       'https://i.namu.wiki/i/HU1gqPTOGoPCjf9po5cSTGVmI3W_1MDEQfw9hRMlufPzZYG9KkRU10m_IE7P2qx79V63hPnot-eRCF9OpCns9Xrs_Wyhqtv82-53ZpaxkNI0ZgNcmlw8hKh6X3uXI0Q43LW2YHvVTRQxMNmQC2yuQQ.webp',
-  //   },
-  //   {
-  //     imgUrl:
-  //       'https://i.namu.wiki/i/wcD0bWhb6uhlo6GvSSiAX0jRsGiAZqW5GmJc76vZv3fM6RqeIB8xdjzZv779QtOr2uGsK2EzI7o8MET_rxbnFw.webp',
-  //   },
-  //   ,
-  //   {
-  //     imgUrl:
-  //       'https://i.namu.wiki/i/Bjxggs5ixnGrz1UKXgd7asU4LvO8…5QFAqIw_sR9HJPXowv2EME4-SDrVo0Fsa14kWhSM3dIA.webp',
-  //   },
-  // ];
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
-  // let difficulty = 1;
   let cardCnt: number;
 
   if (difficulty === 1) {

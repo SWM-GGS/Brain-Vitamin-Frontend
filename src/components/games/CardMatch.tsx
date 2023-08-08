@@ -3,6 +3,8 @@ import styled from 'styled-components';
 const Container = styled.div<{ $difficulty: number }>`
   display: grid;
   grid-gap: 2rem;
+  height: 100%;
+  place-items: center;
   ${(props) =>
     props.$difficulty === 1
       ? `
@@ -37,7 +39,10 @@ const FlipWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 150%;
+  padding-bottom: 100%;
+  @media screen and (max-width: 767px) {
+    padding-bottom: 150%;
+  }
 `;
 
 const Flip = styled.div<{ $status: boolean; $clickable: boolean }>`
