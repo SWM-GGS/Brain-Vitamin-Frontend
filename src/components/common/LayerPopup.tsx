@@ -3,19 +3,19 @@ import { styled } from 'styled-components';
 
 type Props = {
   label: string;
-  desc: string;
-  buttonText: string;
-  onClickButton: () => void;
-  cancelButtonText: string;
-  onClickCancelButton: () => void;
+  desc?: string;
+  leftButtonText: string;
+  onClickLeftButton: () => void;
+  rightButtonText: string;
+  onClickRightButton: () => void;
 };
 function LayerPopup({
   label,
   desc,
-  buttonText,
-  onClickButton,
-  cancelButtonText,
-  onClickCancelButton,
+  leftButtonText,
+  onClickLeftButton,
+  rightButtonText,
+  onClickRightButton,
 }: Props) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
 
@@ -25,10 +25,10 @@ function LayerPopup({
         <Label>{label}</Label>
         <Desc>{desc}</Desc>
         <ButtonWrapper>
-          <CancelButton onClick={onClickCancelButton}>
-            {cancelButtonText}
-          </CancelButton>
-          <Button onClick={onClickButton}>{buttonText}</Button>
+          <LeftButton onClick={onClickLeftButton}>{leftButtonText}</LeftButton>
+          <RightButton onClick={onClickRightButton}>
+            {rightButtonText}
+          </RightButton>
         </ButtonWrapper>
       </Popup>
     </Container>
@@ -91,7 +91,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const CancelButton = styled.button`
+const LeftButton = styled.button`
   width: 22.6rem;
   height: 6.7rem;
   color: var(--main-color);
@@ -104,7 +104,7 @@ const CancelButton = styled.button`
   }
 `;
 
-const Button = styled.button`
+const RightButton = styled.button`
   width: 22.6rem;
   height: 6.7rem;
   color: white;
