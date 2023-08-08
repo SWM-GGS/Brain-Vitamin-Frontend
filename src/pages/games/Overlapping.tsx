@@ -31,7 +31,9 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
       return;
     }
     console.log('정답입니다!');
-    el.style.background = 'gray';
+    el.style.background = 'var(--main-bg-color)';
+    el.style.border = '0.2rem solid var(--main-color)';
+    el.style.color = 'var(--main-color)';
     el.disabled = true;
     cnt++;
 
