@@ -1,22 +1,50 @@
+import { useRef } from 'react';
 import styled from 'styled-components';
+import { CogTrainingProps } from '../../pages/CogTraining';
 
 const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 
 type BodyProps = {
   totalDate: number[];
   today: number;
+  gameData: CogTrainingProps;
   onGameEnd: () => void;
+  saveGameResult: (problemId: number, duration: number, result: string) => void;
 };
 
-const Body = ({ totalDate, today, onGameEnd }: BodyProps) => {
+const Body = ({
+  totalDate,
+  today,
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: BodyProps) => {
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
   const lastDate = totalDate.indexOf(1);
   const firstDate = totalDate.indexOf(1, 7);
 
   const checkToday = (date: number) => {
     if (date === today) {
-      onGameEnd();
+      alert('정답입니다!');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        onGameEnd();
+      }
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'FAIL');
+        onGameEnd();
+      }
     }
   };
 

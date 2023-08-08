@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import {
   Container,
   Text,
@@ -14,10 +15,16 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 중 : 3
  * 상 : 4
  */
-export default function Overlapping({ gameData, onGameEnd }: GameProps) {
+export default function Overlapping({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   let difficulty = gameData.difficulty;
   let answer: number[] = [];
   let cnt = 0;
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
 
   while (answer.length < difficulty + 1) {
     answer.push(Math.floor(Math.random() * 10));
@@ -27,7 +34,15 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
 
   const checkAnswer = (num: number, el: HTMLButtonElement) => {
     if (!answer.includes(num)) {
-      console.log('틀렸습니다. 다시 선택해주세요.');
+      alert('틀렸습니다 ㅜ.ㅜ');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'FAIL');
+        onGameEnd();
+      }
       return;
     }
     console.log('정답입니다!');
@@ -38,7 +53,15 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
     cnt++;
 
     if (cnt === answer.length) {
-      onGameEnd();
+      alert('정답입니다!');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        onGameEnd();
+      }
     }
   };
 

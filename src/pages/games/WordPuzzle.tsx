@@ -9,7 +9,11 @@ import {
 } from '../../components/games/WordPuzzle.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
-export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
+export default function WordPuzzle({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   type Props = {
     contents: string;
     answer: boolean;
@@ -33,6 +37,8 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
   let [posX, posY] = [0, 0]; // 드래그 시 요소를 실제로 이동시키기 위해 필요
   const containerRef = useRef<HTMLDivElement>(null);
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
 
   // 글자가 처음 흩뿌려질 위치 조정
   const calculateRandomPosition = () => {
@@ -84,7 +90,14 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
         return;
       }
     }
-    onGameEnd();
+    alert('정답입니다!');
+    endTimeRef.current = new Date();
+    if (startTimeRef.current && endTimeRef.current) {
+      const duration =
+        (endTimeRef.current.getTime() - startTimeRef.current.getTime()) / 1000;
+      saveGameResult(gameData.problemId, duration, 'SUCCESS');
+      onGameEnd();
+    }
   };
 
   const getClientXY = (

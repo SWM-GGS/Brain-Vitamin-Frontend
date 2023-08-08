@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Container,
   Card,
@@ -15,7 +15,11 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 중 : 2 * 4
  * 상 : 3 * 4
  */
-export default function CardMatch({ gameData, onGameEnd }: GameProps) {
+export default function CardMatch({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   type Props = {
     imgUrl: string;
   };
@@ -24,7 +28,6 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
   let cardCnt: number;
-
   if (difficulty === 1) {
     cardCnt = 6;
   } else if (difficulty === 2) {
@@ -32,22 +35,27 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
   } else {
     cardCnt = 12;
   }
-
-  // const deck = Array.from(
-  //   { length: cardCnt / 2 },
-  //   () => '#' + Math.floor(Math.random() * 0xffffff).toString(16),
-  // );
   const deck = problemPool.map((v) => v.imgUrl);
   const cards = [...deck, ...deck].map((card, i) => {
     return { idx: i, type: card, status: false };
   });
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
   const mixedCards = useMemo(() => shuffle(), []);
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
 
   const checkAnswer = () => {
     // 모든 카드의 상태가 true면 게임 종료
     if (mixedCards.every((card) => card.status)) {
-      onGameEnd();
+      alert('정답입니다!');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        onGameEnd();
+      }
     }
   };
 

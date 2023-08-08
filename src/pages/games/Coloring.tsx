@@ -16,13 +16,16 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 중 : 13
  * 상 : 18
  */
-export default function Coloring({ gameData, onGameEnd }: GameProps) {
+export default function Coloring({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   const [nowColor, setNowColor] = useState('');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
   let difficulty = gameData.difficulty;
   let totalCellCnt = 18;
   let cellCnt;
-
   switch (difficulty) {
     case 1:
       cellCnt = 8;
@@ -33,7 +36,6 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
     case 3:
       cellCnt = 18;
   }
-
   const COLOR = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white'];
   let colors: string[] = [];
   if (cellCnt) {
@@ -46,6 +48,8 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
     }
   }
   const answer = useMemo(() => colors.sort(() => 0.5 - Math.random()), []);
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
   answer.forEach((color, i) => {
@@ -59,7 +63,14 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
       let el = cellRefs.current[i];
       if (el?.getAttribute('color') !== answer[i]) return;
     }
-    onGameEnd();
+    alert('정답입니다!');
+    endTimeRef.current = new Date();
+    if (startTimeRef.current && endTimeRef.current) {
+      const duration =
+        (endTimeRef.current.getTime() - startTimeRef.current.getTime()) / 1000;
+      saveGameResult(gameData.problemId, duration, 'SUCCESS');
+      onGameEnd();
+    }
   };
 
   const changeCellColor = (el: HTMLElement) => {

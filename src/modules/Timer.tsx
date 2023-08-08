@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
+import { CogTrainingProps } from '../pages/CogTraining';
 
 type Props = {
   timeLimit: number;
   onTimeUp: () => void;
+  gameData: CogTrainingProps;
+  saveGameResult: (problemId: number, duration: number, result: string) => void;
 };
 
-function Timer({ timeLimit, onTimeUp }: Props) {
+function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
   const [remainingTime, setRemainingTime] = useState(timeLimit);
 
   useEffect(() => {
@@ -19,6 +22,7 @@ function Timer({ timeLimit, onTimeUp }: Props) {
 
   useEffect(() => {
     if (remainingTime === 0) {
+      saveGameResult(gameData.problemId, gameData.timeLimit, 'FAIL');
       onTimeUp();
     }
   }, [remainingTime, onTimeUp]);

@@ -11,37 +11,84 @@ import { CogTrainingProps } from '../pages/CogTraining.tsx';
 export type GameProps = {
   gameData: CogTrainingProps;
   onGameEnd: () => void;
+  saveGameResult: (problemId: number, duration: number, result: string) => void;
 };
-export default function GameRouter({ gameData, onGameEnd }: GameProps) {
+export default function GameRouter({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   return (
     <Routes>
       <Route
         path="/cardMatch"
-        element={<CardMatch gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <CardMatch
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/wordPuzzle"
-        element={<WordPuzzle gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <WordPuzzle
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/dateQuiz"
-        element={<DateQuiz gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <DateQuiz
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/coloring"
-        element={<Coloring gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <Coloring
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/overlapping"
-        element={<Overlapping gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <Overlapping
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/maze"
-        element={<Maze gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <Maze
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
       <Route
         path="/market"
-        element={<Market gameData={gameData} onGameEnd={onGameEnd} />}
+        element={
+          <Market
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+          />
+        }
       />
     </Routes>
   );

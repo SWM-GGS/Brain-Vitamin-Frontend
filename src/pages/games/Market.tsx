@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Wrapper,
   Cupon,
@@ -13,7 +13,11 @@ import {
 import { ButtonWrapper } from '../../components/games/Overlapping.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
-export default function Market({ gameData, onGameEnd }: GameProps) {
+export default function Market({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   type Props = {
     contents: string;
     count: number;
@@ -26,6 +30,8 @@ export default function Market({ gameData, onGameEnd }: GameProps) {
   const [candidate, setCandidate] = useState<number[]>([]);
   const candidateCnt = 5;
   const difference = 500;
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
 
   useEffect(() => {
     let calculatedAnswer = problemPool.reduce(
@@ -54,9 +60,25 @@ export default function Market({ gameData, onGameEnd }: GameProps) {
 
   const checkAnswer = (el: HTMLElement) => {
     if (el.innerText === '' + answer + '원') {
-      onGameEnd();
+      alert('정답입니다!');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        onGameEnd();
+      }
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        const duration =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+        saveGameResult(gameData.problemId, duration, 'FAIL');
+        onGameEnd();
+      }
     }
   };
 

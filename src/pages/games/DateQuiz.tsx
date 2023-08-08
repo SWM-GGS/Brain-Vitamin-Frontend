@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Container, Desc, Body } from '../../components/games/DateQuiz';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
-export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
+export default function DateQuiz({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+}: GameProps) {
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
   const MONTH = DATE.getMonth() + 1;
@@ -53,7 +57,13 @@ export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
         <br />
         아래 달력에서 오늘의 날짜를 터치해주세요.
       </Desc>
-      <Body totalDate={totalDate} today={TODAY} onGameEnd={onGameEnd} />
+      <Body
+        totalDate={totalDate}
+        today={TODAY}
+        gameData={gameData}
+        onGameEnd={onGameEnd}
+        saveGameResult={saveGameResult}
+      />
     </Container>
   );
 }
