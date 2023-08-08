@@ -1,6 +1,4 @@
 import { NumContainer, Num, NumBtn } from '../../components/games/Overlapping';
-import Timer from '../../modules/Timer.tsx';
-import { useEffect, useState } from 'react';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
@@ -10,8 +8,6 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 상 : 4
  */
 export default function Overlapping({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   let difficulty = gameData.difficulty;
   let answer: number[] = [];
   let cnt = 0;
@@ -33,24 +29,12 @@ export default function Overlapping({ gameData, onGameEnd }: GameProps) {
     cnt++;
 
     if (cnt === answer.length) {
-      setIsGameEnded(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
       onGameEnd();
     }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
   };
 
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <h1>겹쳐진 {answer.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?</h1>
       <NumContainer>
         {answer.map((num, index) => (

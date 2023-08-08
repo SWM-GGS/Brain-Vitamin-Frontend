@@ -7,7 +7,6 @@ import {
   Front,
   Back,
 } from '../../components/games/CardMatch.tsx';
-import Timer from '../../modules/Timer.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
@@ -17,15 +16,29 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 상 : 3 * 4
  */
 export default function CardMatch({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   type Props = {
     imgUrl: string;
   };
   const problemPool: Props[] = gameData.problemPool;
+  // const problemPool = [
+  //   {
+  //     imgUrl:
+  //       'https://i.namu.wiki/i/HU1gqPTOGoPCjf9po5cSTGVmI3W_1MDEQfw9hRMlufPzZYG9KkRU10m_IE7P2qx79V63hPnot-eRCF9OpCns9Xrs_Wyhqtv82-53ZpaxkNI0ZgNcmlw8hKh6X3uXI0Q43LW2YHvVTRQxMNmQC2yuQQ.webp',
+  //   },
+  //   {
+  //     imgUrl:
+  //       'https://i.namu.wiki/i/wcD0bWhb6uhlo6GvSSiAX0jRsGiAZqW5GmJc76vZv3fM6RqeIB8xdjzZv779QtOr2uGsK2EzI7o8MET_rxbnFw.webp',
+  //   },
+  //   ,
+  //   {
+  //     imgUrl:
+  //       'https://i.namu.wiki/i/Bjxggs5ixnGrz1UKXgd7asU4LvO8…5QFAqIw_sR9HJPXowv2EME4-SDrVo0Fsa14kWhSM3dIA.webp',
+  //   },
+  // ];
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
+  // let difficulty = 1;
   let cardCnt: number;
 
   if (difficulty === 1) {
@@ -47,15 +60,18 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
   const mixedCards = useMemo(() => shuffle(), []);
 
-  // 모든 카드의 상태가 true면 게임 종료
-  useEffect(() => {
-    if (mixedCards.every((card) => card.status === true)) {
-      setIsGameEnded(true);
+  const checkAnswer = () => {
+    // 모든 카드의 상태가 true면 게임 종료
+    if (mixedCards.every((card) => card.status)) {
+      onGameEnd();
     }
+  };
+
+  useEffect(() => {
     // 클릭된 카드가 두 장인 경우, 매칭 여부 검사
     setClickable(false);
-    setTimeout(() => {
-      if (clickedCards.length === 2) {
+    if (clickedCards.length === 2) {
+      setTimeout(() => {
         let firstCard = mixedCards.find((card) => card.idx === clickedCards[0])
           ?.type;
         let secondCard = mixedCards.find((card) => card.idx === clickedCards[1])
@@ -73,13 +89,15 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
           console.log('매칭에 성공하셨습니다!');
         }
         setClickedCards([]);
-      }
+        setClickable(true);
+        checkAnswer();
+      }, 500);
+    } else {
       setClickable(true);
-    }, 500);
+    }
   }, [clickedCards]);
 
   const handleClick = (idx: number) => {
-    console.log(idx);
     setClickedCards((prev) => [...prev, idx]);
     mixedCards.forEach((card) => {
       if (card.idx === idx) {
@@ -89,20 +107,8 @@ export default function CardMatch({ gameData, onGameEnd }: GameProps) {
     });
   };
 
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
-      onGameEnd();
-    }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
-  };
-
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <Container $difficulty={difficulty}>
         {mixedCards.map((card) => (
           <FlipWrapper key={card.idx}>

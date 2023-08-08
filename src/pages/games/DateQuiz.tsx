@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import Body from '../../components/games/DateQuiz';
-import Timer from '../../modules/Timer.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
   const MONTH = DATE.getMonth() + 1;
@@ -49,22 +46,10 @@ export default function DateQuiz({ gameData, onGameEnd }: GameProps) {
     setTotalDate(changeDate(YEAR, MONTH));
   }, []);
 
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
-      onGameEnd();
-    }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
-  };
-
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <h1>{`${YEAR}년 ${MONTH}월 달력을 보고 있습니다. 아래 달력에서 오늘의 날짜를 터치해주세요.`}</h1>
-      <Body totalDate={totalDate} today={TODAY} onTimeUp={handleTimeUp} />
+      <Body totalDate={totalDate} today={TODAY} onGameEnd={onGameEnd} />
     </>
   );
 }

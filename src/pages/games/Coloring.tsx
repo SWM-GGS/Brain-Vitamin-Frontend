@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   PaperWrapper,
   Paper,
@@ -6,7 +6,6 @@ import {
   Cell,
   Palette,
 } from '../../components/games/Coloring';
-import Timer from '../../modules/Timer.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
@@ -16,8 +15,6 @@ import { GameProps } from '../../routes/gameRouter.tsx';
  * 상 : 18
  */
 export default function Coloring({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   const [nowColor, setNowColor] = useState('');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
   let difficulty = gameData.difficulty;
@@ -60,7 +57,7 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
       let el = cellRefs.current[i];
       if (el?.getAttribute('color') !== answer[i]) return;
     }
-    setIsGameEnded(true);
+    onGameEnd();
   };
 
   const changeCellColor = (el: HTMLElement) => {
@@ -69,20 +66,8 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
     checkAnswer();
   };
 
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
-      onGameEnd();
-    }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
-  };
-
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <h1>예시를 보고 칠하기 칸에 똑같이 색칠해 보세요.</h1>
       <PaperWrapper>
         <Paper>

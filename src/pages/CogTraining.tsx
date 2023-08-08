@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import GameRouter from '../routes/gameRouter';
 import LayerPopup from '../components/common/LayerPopup';
+import Timer from '../modules/Timer';
+import { useNavigate } from 'react-router';
 
 export type CogTrainingProps = {
   cogArea: string;
@@ -18,6 +20,8 @@ function CogTraining() {
   const [gameData, setGameData] = useState<CogTrainingProps[]>([]);
   const [gameIndex, setGameIndex] = useState(0);
   const [showLayerPopup, setShowLayerPopup] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getGameData = async () => {
@@ -35,9 +39,25 @@ function CogTraining() {
     getGameData();
   }, []);
 
-  const goNextGame = () => {
+  const goToNextGame = () => {
+    if (gameIndex === gameData.length - 1) {
+      alert('모든 게임이 종료되었습니다');
+      return;
+    }
     setGameIndex((prev) => prev + 1);
+  };
+
+  const onGameEnd = () => {
+    goToNextGame();
     setShowLayerPopup(true);
+    setIsTimerRunning(false);
+  };
+
+  const startGame = () => {
+    setShowLayerPopup(false);
+    setIsTimerRunning(true);
+    // navigate(`/cogTraining/${gameData[gameIndex].pathUri}`);
+    navigate(path[gameIndex]);
   };
 
   const path = [
@@ -52,21 +72,26 @@ function CogTraining() {
 
   return (
     <Container>
-      <p>dsfsdfsdfsd</p>
-      <GameRouter
-        gameData={gameData}
-        gameIndex={gameIndex}
-        goNextGame={goNextGame}
-      />
-      {gameData.length && showLayerPopup ? (
-        <LayerPopup
-          label={gameData[gameIndex].trainingName}
-          desc={gameData[gameIndex].explanation}
-          buttonText="게임 시작"
-          // path={`/cogTraining/${gameData[gameIndex].pathUri}`}
-          path={path[gameIndex]}
-          setShowLayerPopup={setShowLayerPopup}
-        />
+      {gameData.length ? (
+        <>
+          {showLayerPopup && (
+            <LayerPopup
+              label={gameData[gameIndex].trainingName}
+              desc={gameData[gameIndex].explanation}
+              buttonText="게임 시작"
+              onClickButton={startGame}
+              cancelButtonText="검사 종료"
+              onClickCancelButton={() => navigate('/home')}
+            />
+          )}
+          {isTimerRunning && (
+            <Timer
+              timeLimit={gameData[gameIndex].timeLimit}
+              onTimeUp={onGameEnd}
+            />
+          )}
+          <GameRouter gameData={gameData[gameIndex]} onGameEnd={onGameEnd} />
+        </>
       ) : null}
     </Container>
   );

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import Timer from '../../modules/Timer.tsx';
 import {
   Container,
   DropBox,
@@ -10,8 +9,6 @@ import {
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   type Props = {
     contents: string;
     answer: boolean;
@@ -80,7 +77,7 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
         return;
       }
     }
-    setIsGameEnded(true);
+    onGameEnd();
   };
 
   // onDragStart : Item을 잡기 시작했을 때 발생
@@ -154,20 +151,8 @@ export default function WordPuzzle({ gameData, onGameEnd }: GameProps) {
     e.preventDefault();
   };
 
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
-      onGameEnd();
-    }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
-  };
-
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <Container>
         <Wrapper>
           {answers.map((item, index) => (

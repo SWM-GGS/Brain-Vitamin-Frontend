@@ -1,30 +1,23 @@
 import { useRef } from 'react';
-import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 
 type Props = {
   label: string;
   desc: string;
   buttonText: string;
-  path: string;
-  setShowLayerPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  state?: any;
+  onClickButton: () => void;
+  cancelButtonText: string;
+  onClickCancelButton: () => void;
 };
 function LayerPopup({
   label,
   desc,
   buttonText,
-  path,
-  setShowLayerPopup,
-  state,
+  onClickButton,
+  cancelButtonText,
+  onClickCancelButton,
 }: Props) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-
-  const goPath = () => {
-    navigate(path, { state });
-    setShowLayerPopup(false);
-  };
 
   return (
     <Container ref={layerPopupRef}>
@@ -32,10 +25,10 @@ function LayerPopup({
         <Label>{label}</Label>
         <Desc>{desc}</Desc>
         <ButtonWrapper>
-          <CancelButton onClick={() => setShowLayerPopup(false)}>
-            취소
+          <CancelButton onClick={onClickCancelButton}>
+            {cancelButtonText}
           </CancelButton>
-          <Button onClick={goPath}>{buttonText}</Button>
+          <Button onClick={onClickButton}>{buttonText}</Button>
         </ButtonWrapper>
       </Popup>
     </Container>

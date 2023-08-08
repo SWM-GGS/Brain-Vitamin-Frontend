@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
 import { MazeBox, Target } from '../../components/games/Maze';
-import Timer from '../../modules/Timer';
 import { GameProps } from '../../routes/gameRouter';
 
 export default function Maze({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   type Props = {
     x: number;
     y: number;
@@ -26,24 +22,12 @@ export default function Maze({ gameData, onGameEnd }: GameProps) {
     cnt++;
 
     if (cnt === answerCnt) {
-      setIsGameEnded(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
       onGameEnd();
     }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
   };
 
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <MazeBox $imgUrl={problemPool[0].imgUrl}>
         {problemPool.map((item, index) => (
           <Target

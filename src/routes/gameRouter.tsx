@@ -8,57 +8,40 @@ import Maze from '../pages/games/Maze.tsx';
 import Market from '../pages/games/Market.tsx';
 import { CogTrainingProps } from '../pages/CogTraining.tsx';
 
-type Props = {
-  gameData: CogTrainingProps[];
-  gameIndex: number;
-  goNextGame: () => void;
-};
 export type GameProps = {
   gameData: CogTrainingProps;
   onGameEnd: () => void;
 };
-export default function GameRouter({ gameData, gameIndex, goNextGame }: Props) {
+export default function GameRouter({ gameData, onGameEnd }: GameProps) {
   return (
     <Routes>
       <Route
         path="/cardMatch"
-        element={
-          <CardMatch gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<CardMatch gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/wordPuzzle"
-        element={
-          <WordPuzzle gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<WordPuzzle gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/dateQuiz"
-        element={
-          <DateQuiz gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<DateQuiz gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/coloring"
-        element={
-          <Coloring gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<Coloring gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/overlapping"
-        element={
-          <Overlapping gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<Overlapping gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/maze"
-        element={<Maze gameData={gameData[gameIndex]} onGameEnd={goNextGame} />}
+        element={<Maze gameData={gameData} onGameEnd={onGameEnd} />}
       />
       <Route
         path="/market"
-        element={
-          <Market gameData={gameData[gameIndex]} onGameEnd={goNextGame} />
-        }
+        element={<Market gameData={gameData} onGameEnd={onGameEnd} />}
       />
     </Routes>
   );

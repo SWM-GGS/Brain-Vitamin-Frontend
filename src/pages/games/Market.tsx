@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
 import { Memo, Container, Img, Button } from '../../components/games/Market';
-import Timer from '../../modules/Timer.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 export default function Market({ gameData, onGameEnd }: GameProps) {
-  const [isGameEnded, setIsGameEnded] = useState(false);
-
   type Props = {
     contents: string;
     count: number;
@@ -33,26 +29,14 @@ export default function Market({ gameData, onGameEnd }: GameProps) {
 
   const checkAnswer = (el: HTMLElement) => {
     if (+el.innerText === answer) {
-      setIsGameEnded(true);
+      onGameEnd();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
     }
   };
 
-  useEffect(() => {
-    if (isGameEnded) {
-      alert('게임이 종료되었습니다.');
-      onGameEnd();
-    }
-  }, [isGameEnded]);
-
-  const handleTimeUp = () => {
-    setIsGameEnded(true);
-  };
-
   return (
     <>
-      <Timer timeLimit={gameData.timeLimit} onTimeUp={handleTimeUp} />
       <h1>
         시장에서 장을 보기 위해, 구매할 품목을 메모지에 적어놓았습니다.
         <br />

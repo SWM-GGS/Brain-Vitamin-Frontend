@@ -5,16 +5,16 @@ const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 type BodyProps = {
   totalDate: number[];
   today: number;
-  onTimeUp: () => void;
+  onGameEnd: () => void;
 };
 
-const Body = ({ totalDate, today, onTimeUp }: BodyProps) => {
+const Body = ({ totalDate, today, onGameEnd }: BodyProps) => {
   const lastDate = totalDate.indexOf(1);
   const firstDate = totalDate.indexOf(1, 7);
 
   const checkToday = (date: number) => {
     if (date === today) {
-      onTimeUp();
+      onGameEnd();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
     }
