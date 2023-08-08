@@ -28,6 +28,9 @@ function Timer({ timeLimit, onTimeUp }: Props) {
 
 const Text = styled.p`
   font-size: 3rem;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
 `;
 
 export default Timer;
