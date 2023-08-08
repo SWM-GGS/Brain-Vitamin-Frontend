@@ -1,4 +1,16 @@
-import { Memo, Container, Img, Button } from '../../components/games/Market';
+import { useEffect, useState } from 'react';
+import {
+  Wrapper,
+  Cupon,
+  Item,
+  Name,
+  Price,
+  Memo,
+  Container,
+  Img,
+  Button,
+} from '../../components/games/Market';
+import { ButtonWrapper } from '../../components/games/Overlapping.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 export default function Market({ gameData, onGameEnd }: GameProps) {
@@ -10,25 +22,38 @@ export default function Market({ gameData, onGameEnd }: GameProps) {
   };
   const problemPool: Props[] = gameData.problemPool;
   const discountPercent = gameData.discountPercent;
-  let answer = problemPool.reduce((p, c) => p + c.price * c.count, 0);
-  if (discountPercent) {
-    answer = answer * (1 - discountPercent / 100);
-  }
-  const difference = 500;
+  const [answer, setAnswer] = useState(0);
+  const [candidate, setCandidate] = useState<number[]>([]);
   const candidateCnt = 5;
-  let candidate = [answer];
-  while (candidate.length < candidateCnt) {
-    const price =
-      answer +
-      (Math.random() > 0.5 ? 1 : -1) *
-        Math.floor(Math.random() * 5) *
-        difference;
-    if (price > 0 && !candidate.includes(price)) candidate.push(price);
-  }
-  candidate.sort(() => Math.random() - 0.5);
+  const difference = 500;
+
+  useEffect(() => {
+    let calculatedAnswer = problemPool.reduce(
+      (p, c) => p + c.price * c.count,
+      0,
+    );
+    if (discountPercent) {
+      calculatedAnswer = calculatedAnswer * (1 - discountPercent / 100);
+    }
+    setAnswer(calculatedAnswer);
+
+    let calculatedCandidate: number[] = [calculatedAnswer];
+    while (calculatedCandidate.length < candidateCnt) {
+      const price =
+        calculatedAnswer +
+        (Math.random() > 0.5 ? 1 : -1) *
+          Math.floor(Math.random() * 5) *
+          difference;
+      if (price > 0 && !calculatedCandidate.includes(price))
+        calculatedCandidate.push(price);
+    }
+    calculatedCandidate.sort(() => Math.random() - 0.5);
+    setCandidate(calculatedCandidate);
+    // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
+  }, []);
 
   const checkAnswer = (el: HTMLElement) => {
-    if (+el.innerText === answer) {
+    if (el.innerText === '' + answer + '원') {
       onGameEnd();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
@@ -37,35 +62,32 @@ export default function Market({ gameData, onGameEnd }: GameProps) {
 
   return (
     <>
-      <h1>
-        시장에서 장을 보기 위해, 구매할 품목을 메모지에 적어놓았습니다.
-        <br />
-        {discountPercent ? `${discountPercent}% 할인 쿠폰을 사용할 때, ` : null}
-        총 얼마를 지불해야 할까요?
-      </h1>
-      <Memo>
-        {problemPool.map((v, i) => (
-          <span key={i}>
-            {v.contents} {v.count}개
-          </span>
-        ))}
-      </Memo>
+      <Wrapper>
+        {discountPercent ? <Cupon>{discountPercent}% 할인 쿠폰</Cupon> : null}
+        <Memo>
+          {problemPool.map((v, i) => (
+            <span key={i}>
+              {v.contents} {v.count}개
+            </span>
+          ))}
+        </Memo>
+      </Wrapper>
       <Container>
         {problemPool.map((item, index) => (
-          <div key={index}>
+          <Item key={index}>
             <Img src={item.imgUrl} />
-            <div>
-              <p>{item.contents}</p>
-              <p>{item.price}원</p>
-            </div>
-          </div>
+            <Name>{item.contents}</Name>
+            <Price>{item.price}원</Price>
+          </Item>
         ))}
       </Container>
-      {candidate.map((price, i) => (
-        <Button key={i} onClick={(e) => checkAnswer(e.target as HTMLElement)}>
-          {price}
-        </Button>
-      ))}
+      <ButtonWrapper>
+        {candidate.map((price, i) => (
+          <Button key={i} onClick={(e) => checkAnswer(e.target as HTMLElement)}>
+            {price}원
+          </Button>
+        ))}
+      </ButtonWrapper>
     </>
   );
 }
