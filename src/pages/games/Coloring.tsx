@@ -1,9 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
 import {
+  Container,
   PaperWrapper,
   Paper,
   CellWrapper,
   Cell,
+  PaletteWrapper,
   Palette,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
@@ -67,8 +69,16 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
   };
 
   return (
-    <>
-      <h1>예시를 보고 칠하기 칸에 똑같이 색칠해 보세요.</h1>
+    <Container>
+      <PaletteWrapper>
+        {COLOR.map((color, index) => (
+          <Palette
+            key={index}
+            color={color}
+            onClick={() => setNowColor(color)}
+          />
+        ))}
+      </PaletteWrapper>
       <PaperWrapper>
         <Paper>
           {answer.map((color, index) => (
@@ -88,9 +98,6 @@ export default function Coloring({ gameData, onGameEnd }: GameProps) {
           ))}
         </Paper>
       </PaperWrapper>
-      {COLOR.map((color, index) => (
-        <Palette key={index} color={color} onClick={() => setNowColor(color)} />
-      ))}
-    </>
+    </Container>
   );
 }

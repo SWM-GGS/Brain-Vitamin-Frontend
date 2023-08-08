@@ -1,5 +1,12 @@
 import { styled } from 'styled-components';
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+`;
+
 const PaperWrapper = styled.div`
   @media screen and (min-width: 768px) {
     display: grid;
@@ -35,15 +42,32 @@ const Cell = styled.div<{ color?: string }>`
   border-bottom: 0.2rem solid #aaa;
 `;
 
+const PaletteWrapper = styled.div`
+  text-align: center;
+  margin: 0 0 4rem 0;
+  @media screen and (max-width: 768px) {
+    margin: 0 0 2rem 0;
+  }
+`;
+
 const Palette = styled.button<{ color: string }>`
   border: 0.2rem solid #aaa;
   border-radius: 50%;
   background: ${(props) => props.color};
   margin: 1rem;
   padding: 2.8rem;
-  @media screen and (min-width: 768px) {
-    padding: 3.2rem;
+  @media screen and (max-width: 768px) {
+    padding: 1.5rem;
+    margin: 0.2rem;
   }
 `;
 
-export { PaperWrapper, Paper, CellWrapper, Cell, Palette };
+export {
+  Container,
+  PaperWrapper,
+  Paper,
+  CellWrapper,
+  Cell,
+  PaletteWrapper,
+  Palette,
+};
