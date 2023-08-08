@@ -1,4 +1,4 @@
-import { MazeBox, Target } from '../../components/games/Maze';
+import { Container, MazeBox, Target } from '../../components/games/Maze';
 import { GameProps } from '../../routes/gameRouter';
 
 export default function Maze({ gameData, onGameEnd }: GameProps) {
@@ -27,7 +27,7 @@ export default function Maze({ gameData, onGameEnd }: GameProps) {
   };
 
   return (
-    <>
+    <Container>
       <MazeBox $imgUrl={problemPool[0].imgUrl}>
         {problemPool.map((item, index) => (
           <Target
@@ -39,6 +39,6 @@ export default function Maze({ gameData, onGameEnd }: GameProps) {
           />
         ))}
       </MazeBox>
-    </>
+    </Container>
   );
 }
