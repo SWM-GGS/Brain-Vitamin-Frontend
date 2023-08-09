@@ -6,7 +6,12 @@ type Props = {
   timeLimit: number;
   onTimeUp: () => void;
   gameData: CogTrainingProps;
-  saveGameResult: (problemId: number, duration: number, result: string) => void;
+  saveGameResult: (
+    problemId: number,
+    duration: number,
+    result: string,
+    score: number,
+  ) => void;
 };
 
 function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
@@ -22,7 +27,8 @@ function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
 
   useEffect(() => {
     if (remainingTime === 0) {
-      saveGameResult(gameData.problemId, gameData.timeLimit, 'FAIL');
+      saveGameResult(gameData.problemId, gameData.timeLimit, 'FAIL', 0);
+      alert('제한 시간을 초과하여 게임이 종료됩니다.');
       onTimeUp();
     }
   }, [remainingTime, onTimeUp]);

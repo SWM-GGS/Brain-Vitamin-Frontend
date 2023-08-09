@@ -66,7 +66,7 @@ export default function Market({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
         onGameEnd();
       }
     } else {
@@ -76,7 +76,7 @@ export default function Market({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL');
+        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
         onGameEnd();
       }
     }

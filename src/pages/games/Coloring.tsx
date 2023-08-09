@@ -68,7 +68,7 @@ export default function Coloring({
     if (startTimeRef.current && endTimeRef.current) {
       const duration =
         (endTimeRef.current.getTime() - startTimeRef.current.getTime()) / 1000;
-      saveGameResult(gameData.problemId, duration, 'SUCCESS');
+      saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
       onGameEnd();
     }
   };

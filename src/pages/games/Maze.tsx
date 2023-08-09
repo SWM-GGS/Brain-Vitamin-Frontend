@@ -27,7 +27,7 @@ export default function Maze({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL');
+        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
         onGameEnd();
       }
       return;
@@ -43,7 +43,7 @@ export default function Maze({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
         onGameEnd();
       }
     }

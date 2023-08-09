@@ -11,7 +11,12 @@ import { CogTrainingProps } from '../pages/CogTraining.tsx';
 export type GameProps = {
   gameData: CogTrainingProps;
   onGameEnd: () => void;
-  saveGameResult: (problemId: number, duration: number, result: string) => void;
+  saveGameResult: (
+    problemId: number,
+    duration: number,
+    result: string,
+    score: number,
+  ) => void;
 };
 export default function GameRouter({
   gameData,

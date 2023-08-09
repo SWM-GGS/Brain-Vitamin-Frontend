@@ -11,6 +11,7 @@ import EducationSet from '../pages/EducationSet.tsx';
 import Home from '../pages/Home.tsx';
 import Family from '../pages/Family.tsx';
 import LogIn from '../pages/LogIn.tsx';
+import CogTrainingResult from '../pages/CogTrainingResult.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -37,6 +38,7 @@ export default function Router() {
       <Route path="/home" element={<Home />} />
       <Route path="/family" element={<Family />} />
       <Route path="/cogTraining/*" element={<CogTraining />} />
+      <Route path="/cogTrainingResult" element={<CogTrainingResult />} />
     </Routes>
   );
 }

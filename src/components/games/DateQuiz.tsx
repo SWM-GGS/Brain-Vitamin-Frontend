@@ -9,7 +9,12 @@ type BodyProps = {
   today: number;
   gameData: CogTrainingProps;
   onGameEnd: () => void;
-  saveGameResult: (problemId: number, duration: number, result: string) => void;
+  saveGameResult: (
+    problemId: number,
+    duration: number,
+    result: string,
+    score: number,
+  ) => void;
 };
 
 const Body = ({
@@ -32,7 +37,7 @@ const Body = ({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
         onGameEnd();
       }
     } else {
@@ -42,7 +47,7 @@ const Body = ({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL');
+        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
         onGameEnd();
       }
     }

@@ -53,7 +53,7 @@ export default function CardMatch({
         const duration =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS');
+        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
         onGameEnd();
       }
     }
