@@ -17,14 +17,19 @@ function LogIn() {
   const dispatch = useAppDispatch();
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value);
+    setPhoneNumber(e.target.value.trim());
   };
 
   const onChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
+    setCode(e.target.value.trim());
   };
 
   const sendCode = async () => {
+    const phoneNumberRegex = /^01(0|1|[6-9])[0-9]{3,4}[0-9]{4}$/;
+    if (!phoneNumberRegex.test(phoneNumber)) {
+      alert('전화번호를 올바르게 입력해주세요.');
+      return;
+    }
     alert('인증번호가 전송되었습니다.');
     try {
       const { data } = await axios.post(

@@ -19,11 +19,11 @@ function NameSet() {
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setName(e.target.value.trim());
   };
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+    setNickname(e.target.value.trim());
   };
 
   const signUp = async () => {

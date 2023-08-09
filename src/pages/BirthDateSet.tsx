@@ -12,10 +12,15 @@ function BirthDateSet() {
   const navigate = useNavigate();
 
   const onChangeBirthDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBirthDate(e.target.value);
+    setBirthDate(e.target.value.trim());
   };
 
   const goNext = () => {
+    const birthDateRegex = /^\d{4}\d{2}\d{2}$/;
+    if (!birthDateRegex.test(birthDate)) {
+      alert('생년월일을 올바르게 입력해주세요.');
+      return;
+    }
     navigate('/educationSet', {
       state: { birthDate, gender, nextToDo: state.nextToDo },
     });
