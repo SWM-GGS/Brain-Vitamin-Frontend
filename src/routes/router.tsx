@@ -10,6 +10,7 @@ import BirthDateSet from '../pages/BirthDateSet.tsx';
 import EducationSet from '../pages/EducationSet.tsx';
 import Home from '../pages/Home.tsx';
 import Family from '../pages/Family.tsx';
+import LogIn from '../pages/LogIn.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -23,17 +24,12 @@ export default function Router() {
         path="/"
         element={
           <Navigate
-            to={
-              isLoggedIn
-                ? '/home'
-                : isFirstRun
-                ? '/fontSizeSet'
-                : '/phoneNumberSet'
-            }
+            to={isLoggedIn ? '/home' : isFirstRun ? '/fontSizeSet' : '/logIn'}
           />
         }
       />
       <Route path="/fontSizeSet" element={<FontSizeSet />} />
+      <Route path="/logIn" element={<LogIn />} />
       <Route path="/phoneNumberSet" element={<PhoneNumberSet />} />
       <Route path="/nameSet" element={<NameSet />} />
       <Route path="/birthDateSet" element={<BirthDateSet />} />
