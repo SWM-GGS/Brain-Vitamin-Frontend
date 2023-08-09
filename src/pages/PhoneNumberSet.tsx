@@ -5,10 +5,12 @@ import { useState } from 'react';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
+import axios from 'axios';
 
 function PhoneNumberSet() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
+  const [authNum, setAuthNum] = useState('');
   const navigate = useNavigate();
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +21,27 @@ function PhoneNumberSet() {
     setCode(e.target.value);
   };
 
+  const sendCode = async () => {
+    alert('인증번호가 전송되었습니다.');
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/patient/sms`,
+        {
+          to: phoneNumber,
+          content: '',
+        },
+      );
+      setAuthNum(data.result.authNum);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const goNext = () => {
+    if (code !== authNum) {
+      alert('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
+      return;
+    }
     navigate('/nameSet', {
       state: { phoneNumber },
     });
@@ -37,6 +59,7 @@ function PhoneNumberSet() {
             value={phoneNumber}
             callbackFn={onChangePhoneNumber}
             buttonText="인증하기"
+            onClickButton={sendCode}
           />
           <Input
             label="인증번호"

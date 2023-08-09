@@ -26,35 +26,40 @@ function NameSet() {
     setNickname(e.target.value);
   };
 
-  const goNext = () => {
-    const signUp = async () => {
-      try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL}/patient/signup`,
-          {
-            name,
-            nickname,
-            fontSize,
-            phoneNumber: state.phoneNumber,
-          },
-        );
-        dispatch(
-          userSlice.actions.setUser({
-            name,
-            nickname,
-            fontSize,
-            phoneNumber: state.phoneNumber,
-            familyKey: data.result.familyKey,
-            accessToken: data.result.accessToken,
-          }),
-        );
-        await localStorage.setItem('refreshToken', data.result.refreshToken);
-      } catch (error) {
-        console.error(error);
+  const signUp = async () => {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/patient/signup`,
+        {
+          name,
+          nickname,
+          fontSize,
+          phoneNumber: state.phoneNumber,
+        },
+      );
+      if (!data.isSuccess) {
+        alert(data.message);
+        return;
       }
-    };
-    signUp();
-    navigate('/home');
+      dispatch(
+        userSlice.actions.setUser({
+          name,
+          nickname,
+          fontSize,
+          phoneNumber: state.phoneNumber,
+          familyKey: data.result.familyKey,
+          accessToken: data.result.accessTokenDto.accessToken,
+        }),
+      );
+      await localStorage.setItem(
+        'refreshToken',
+        data.result.refreshTokenDto.refreshToken,
+      );
+      alert('회원가입에 성공하였습니다.');
+      navigate('/home');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -84,8 +89,8 @@ function NameSet() {
             </Section>
           </InputWrapper>
         </Wrapper>
-        <Button disabled={!name || !nickname} onClick={goNext}>
-          다음
+        <Button disabled={!name || !nickname} onClick={signUp}>
+          회원가입
         </Button>
       </Box>
     </Container>
