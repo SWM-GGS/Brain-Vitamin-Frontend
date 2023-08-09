@@ -1,11 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyle = createGlobalStyle<{ fontSize: string }>`
+const GlobalStyle = createGlobalStyle<{ fontSize: number }>`
   html {
     font-size: ${(props) =>
-      props.fontSize === 'small'
+      props.fontSize === 1
         ? '62.5%'
-        : props.fontSize === 'medium'
+        : props.fontSize === 2
         ? '70.3125%'
         : '78.125%'};
   }

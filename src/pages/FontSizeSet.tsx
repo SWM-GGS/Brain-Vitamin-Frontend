@@ -8,7 +8,7 @@ import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 
 function FontSizeSet() {
-  const [fontSize, setFontSize] = useState('');
+  const [fontSize, setFontSize] = useState(0);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -24,32 +24,28 @@ function FontSizeSet() {
       <BoxWrapper>
         <Box
           style={{
-            background: fontSize === 'large' ? 'var(--main-bg-color)' : 'white',
-            border:
-              fontSize === 'large' ? '0.2rem solid var(--main-color)' : 'none',
+            background: fontSize === 3 ? 'var(--main-bg-color)' : 'white',
+            border: fontSize === 3 ? '0.2rem solid var(--main-color)' : 'none',
           }}
-          onClick={() => setFontSize('large')}>
+          onClick={() => setFontSize(3)}>
           <Text>크게</Text>
           <Large>잘했고, 잘해왔고, 잘할 거야</Large>
         </Box>
         <Box
           style={{
-            background:
-              fontSize === 'medium' ? 'var(--main-bg-color)' : 'white',
-            border:
-              fontSize === 'medium' ? '0.2rem solid var(--main-color)' : 'none',
+            background: fontSize === 2 ? 'var(--main-bg-color)' : 'white',
+            border: fontSize === 2 ? '0.2rem solid var(--main-color)' : 'none',
           }}
-          onClick={() => setFontSize('medium')}>
+          onClick={() => setFontSize(2)}>
           <Text>중간</Text>
           <Medium>잘했고, 잘해왔고, 잘할 거야</Medium>
         </Box>
         <Box
           style={{
-            background: fontSize === 'small' ? 'var(--main-bg-color)' : 'white',
-            border:
-              fontSize === 'small' ? '0.2rem solid var(--main-color)' : 'none',
+            background: fontSize === 1 ? 'var(--main-bg-color)' : 'white',
+            border: fontSize === 1 ? '0.2rem solid var(--main-color)' : 'none',
           }}
-          onClick={() => setFontSize('small')}>
+          onClick={() => setFontSize(1)}>
           <Text>작게</Text>
           <Small>잘했고, 잘해왔고, 잘할 거야</Small>
         </Box>
