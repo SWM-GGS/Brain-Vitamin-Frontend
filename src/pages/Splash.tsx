@@ -12,15 +12,15 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
 `;
 
 const Logo = styled.img`
-  width: 50rem;
-  height: 50rem;
+  width: 40rem;
+  height: 40rem;
   @media screen and (max-width: 767px) {
-    width: 30rem;
-    height: 30rem;
+    width: 20rem;
+    height: 20rem;
   }
 `;
 
