@@ -6,6 +6,7 @@ type Props = {
   value: string;
   callbackFn: (e: React.ChangeEvent<HTMLInputElement>) => void;
   buttonText: string;
+  onClickButton: () => void;
   style?: React.CSSProperties;
 };
 function ShortInput({
@@ -14,6 +15,7 @@ function ShortInput({
   value,
   callbackFn,
   buttonText,
+  onClickButton,
   ...props
 }: Props) {
   return (
@@ -35,7 +37,8 @@ function ShortInput({
         style={{
           background: value ? 'var(--main-color)' : '#C6C6C6',
         }}
-        disabled={!value}>
+        disabled={!value}
+        onClick={onClickButton}>
         {buttonText}
       </ShortButton>
     </ShortInputWrapper>
