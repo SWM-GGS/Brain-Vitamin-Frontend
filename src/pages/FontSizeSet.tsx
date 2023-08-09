@@ -28,7 +28,7 @@ function FontSizeSet() {
             border: fontSize === 3 ? '0.2rem solid var(--main-color)' : 'none',
           }}
           onClick={() => setFontSize(3)}>
-          <Text>크게</Text>
+          <LabelLarge>크게</LabelLarge>
           <Large>잘했고, 잘해왔고, 잘할 거야</Large>
         </Box>
         <Box
@@ -37,7 +37,7 @@ function FontSizeSet() {
             border: fontSize === 2 ? '0.2rem solid var(--main-color)' : 'none',
           }}
           onClick={() => setFontSize(2)}>
-          <Text>중간</Text>
+          <LabelMedium>중간</LabelMedium>
           <Medium>잘했고, 잘해왔고, 잘할 거야</Medium>
         </Box>
         <Box
@@ -46,7 +46,7 @@ function FontSizeSet() {
             border: fontSize === 1 ? '0.2rem solid var(--main-color)' : 'none',
           }}
           onClick={() => setFontSize(1)}>
-          <Text>작게</Text>
+          <LabelSmall>작게</LabelSmall>
           <Small>잘했고, 잘해왔고, 잘할 거야</Small>
         </Box>
       </BoxWrapper>
@@ -97,8 +97,28 @@ const Box = styled.div`
   }
 `;
 
-const Text = styled.p`
+const LabelLarge = styled.p`
   font-size: 3.2rem;
+  color: var(--main-color);
+  font-family: 'Pretendard-Bold';
+  margin: 0 0 1.8rem 0;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
+`;
+
+const LabelMedium = styled.p`
+  font-size: 2.6rem;
+  color: var(--main-color);
+  font-family: 'Pretendard-Bold';
+  margin: 0 0 1.8rem 0;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
+`;
+
+const LabelSmall = styled.p`
+  font-size: 2.2rem;
   color: var(--main-color);
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
