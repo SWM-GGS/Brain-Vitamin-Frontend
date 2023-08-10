@@ -7,6 +7,7 @@ import {
   Cell,
   PaletteWrapper,
   Palette,
+  CurrentColorWrapper,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
@@ -22,7 +23,7 @@ export default function Coloring({
   saveGameResult,
   isNextButtonClicked,
 }: GameProps) {
-  const [nowColor, setNowColor] = useState('');
+  const [nowColor, setNowColor] = useState('red');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
   let difficulty = gameData.difficulty;
   let totalCellCnt = 18;
@@ -94,6 +95,10 @@ export default function Coloring({
 
   return (
     <Container>
+      <CurrentColorWrapper>
+        <span>현재 색깔:</span>
+        <Palette color={nowColor} />
+      </CurrentColorWrapper>
       <PaletteWrapper>
         {COLOR.map((color, index) => (
           <Palette

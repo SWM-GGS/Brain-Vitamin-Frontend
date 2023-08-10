@@ -62,6 +62,18 @@ const Palette = styled.button<{ color: string }>`
   }
 `;
 
+const CurrentColorWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 3rem;
+  justify-content: center;
+  margin: 0 0 1rem 0;
+  @media screen and (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
+
 export {
   Container,
   PaperWrapper,
@@ -70,4 +82,5 @@ export {
   Cell,
   PaletteWrapper,
   Palette,
+  CurrentColorWrapper,
 };
