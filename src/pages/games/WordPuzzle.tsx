@@ -13,6 +13,7 @@ export default function WordPuzzle({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   type Props = {
     contents: string;
@@ -39,6 +40,7 @@ export default function WordPuzzle({
   const containerRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
 
   // 글자가 처음 흩뿌려질 위치 조정
   const calculateRandomPosition = () => {
@@ -80,25 +82,35 @@ export default function WordPuzzle({
     }
   }, []);
 
-  const checkWord = () => {
+  const checkAnswer = () => {
     // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
     // 방법 2: 요소를 드래그한 후 드롭했을 때 박스의 터치 감지
     for (let i = 0; i < letters.length; i++) {
       let el = dropRefs.current[i];
       let letter = el?.getAttribute('letter');
       if (!letter || letter !== letters[i]) {
+        alert('틀렸습니다 ㅜ.ㅜ');
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        onGameEnd();
         return;
       }
     }
     alert('정답입니다!');
-    endTimeRef.current = new Date();
-    if (startTimeRef.current && endTimeRef.current) {
-      const duration =
-        (endTimeRef.current.getTime() - startTimeRef.current.getTime()) / 1000;
-      saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-      onGameEnd();
-    }
+    saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    onGameEnd();
   };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        duration.current =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+      }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
 
   const getClientXY = (
     e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
@@ -184,7 +196,6 @@ export default function WordPuzzle({
           'letter',
           (e.target as HTMLElement).innerText,
         );
-        checkWord();
         return;
       }
     }

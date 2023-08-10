@@ -17,6 +17,7 @@ export default function Market({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   type Props = {
     contents: string;
@@ -30,8 +31,11 @@ export default function Market({
   const [candidate, setCandidate] = useState<number[]>([]);
   const candidateCnt = 5;
   const difference = 500;
+  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
+  let clickedPrice = useRef(0);
 
   useEffect(() => {
     let calculatedAnswer = problemPool.reduce(
@@ -58,27 +62,50 @@ export default function Market({
     // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
   }, []);
 
-  const checkAnswer = (el: HTMLElement) => {
-    if (el.innerText === '' + answer + '원') {
+  const checkAnswer = () => {
+    if (clickedPrice.current === answer) {
       alert('정답입니다!');
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        const duration =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-        onGameEnd();
-      }
+      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      onGameEnd();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
+      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+      onGameEnd();
+    }
+  };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
       endTimeRef.current = new Date();
       if (startTimeRef.current && endTimeRef.current) {
-        const duration =
+        duration.current =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
-        onGameEnd();
       }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
+
+  const onClickPrice = (price: number, el: HTMLElement) => {
+    if (clickedPrice.current === price) {
+      el.style.background = '#c6c6c6';
+      el.style.border = 'none';
+      el.style.color = 'var(--black-color)';
+      clickedPrice.current = 0;
+    } else {
+      for (let i = 0; i < buttonRefs.current.length; i++) {
+        const buttonRef = buttonRefs.current[i];
+        if (buttonRef?.style.background === 'var(--main-bg-color)') {
+          buttonRef.style.background = '#c6c6c6';
+          buttonRef.style.border = 'none';
+          buttonRef.style.color = 'var(--black-color)';
+          break;
+        }
+      }
+      el.style.background = 'var(--main-bg-color)';
+      el.style.border = '0.2rem solid var(--main-color)';
+      el.style.color = 'var(--main-color)';
+      clickedPrice.current = price;
     }
   };
 
@@ -105,7 +132,10 @@ export default function Market({
       </Container>
       <ButtonWrapper>
         {candidate.map((price, i) => (
-          <Button key={i} onClick={(e) => checkAnswer(e.target as HTMLElement)}>
+          <Button
+            ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
+            key={i}
+            onClick={(e) => onClickPrice(price, e.target as HTMLElement)}>
             {price}원
           </Button>
         ))}

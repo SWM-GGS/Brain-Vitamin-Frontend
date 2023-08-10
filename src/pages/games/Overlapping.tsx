@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Container,
   Text,
@@ -19,49 +19,69 @@ export default function Overlapping({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   let difficulty = gameData.difficulty;
-  let answer: number[] = [];
-  let cnt = 0;
+  const [answer, setAnswer] = useState<number[]>([]);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
+  let clickedNums = useRef<number[]>([]);
 
-  while (answer.length < difficulty + 1) {
-    answer.push(Math.floor(Math.random() * 10));
-    answer = [...new Set(answer)];
-  }
+  useEffect(() => {
+    let newAnswer: number[] = [];
+    while (newAnswer.length < difficulty + 1) {
+      newAnswer.push(Math.floor(Math.random() * 10));
+      newAnswer = [...new Set(newAnswer)];
+    }
+    setAnswer(newAnswer);
+  }, []);
   console.log(answer);
 
-  const checkAnswer = (num: number, el: HTMLButtonElement) => {
-    if (!answer.includes(num)) {
-      alert('틀렸습니다 ㅜ.ㅜ');
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        const duration =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
-        onGameEnd();
-      }
-      return;
-    }
-    console.log('정답입니다!');
-    el.style.background = 'var(--main-bg-color)';
-    el.style.border = '0.2rem solid var(--main-color)';
-    el.style.color = 'var(--main-color)';
-    el.disabled = true;
-    cnt++;
-
-    if (cnt === answer.length) {
+  const checkAnswer = () => {
+    const answerSet = new Set(answer);
+    const clickedNumSet = new Set(clickedNums.current);
+    if (
+      clickedNums.current.length === answer.length &&
+      [...answerSet].every((num) => clickedNumSet.has(num))
+    ) {
       alert('정답입니다!');
+      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      onGameEnd();
+    } else {
+      alert('틀렸습니다 ㅜ.ㅜ');
+      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+      onGameEnd();
+    }
+  };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
       endTimeRef.current = new Date();
       if (startTimeRef.current && endTimeRef.current) {
-        const duration =
+        duration.current =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-        onGameEnd();
       }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
+
+  const onClickNum = (num: number, el: HTMLButtonElement) => {
+    if (clickedNums.current.includes(num)) {
+      el.style.background = '#c6c6c6';
+      el.style.border = 'none';
+      el.style.color = 'var(--black-color)';
+      clickedNums.current = clickedNums.current.filter((v) => v !== num);
+    } else {
+      if (clickedNums.current.length === answer.length) {
+        alert(`${answer.length}개의 정답만 선택해주세요.`);
+        return;
+      }
+      el.style.background = 'var(--main-bg-color)';
+      el.style.border = '0.2rem solid var(--main-color)';
+      el.style.color = 'var(--main-color)';
+      clickedNums.current.push(num);
     }
   };
 
@@ -84,7 +104,7 @@ export default function Overlapping({
         {Array.from({ length: 10 }).map((_, index) => (
           <NumBtn
             key={index}
-            onClick={(e) => checkAnswer(index, e.target as HTMLButtonElement)}>
+            onClick={(e) => onClickNum(index, e.target as HTMLButtonElement)}>
             {index}
           </NumBtn>
         ))}

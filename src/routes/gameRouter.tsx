@@ -17,11 +17,13 @@ export type GameProps = {
     result: string,
     score: number,
   ) => void;
+  isNextButtonClicked: boolean;
 };
 export default function GameRouter({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   return (
     <Routes>
@@ -32,6 +34,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -42,6 +45,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -52,6 +56,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -62,6 +67,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -72,6 +78,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -82,6 +89,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />
@@ -92,6 +100,7 @@ export default function GameRouter({
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
           />
         }
       />

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Container,
   PaperWrapper,
@@ -20,6 +20,7 @@ export default function Coloring({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   const [nowColor, setNowColor] = useState('');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
@@ -50,6 +51,7 @@ export default function Coloring({
   const answer = useMemo(() => colors.sort(() => 0.5 - Math.random()), []);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
   answer.forEach((color, i) => {
@@ -61,22 +63,33 @@ export default function Coloring({
   const checkAnswer = () => {
     for (let i = 0; i < cellRefs.current.length; i++) {
       let el = cellRefs.current[i];
-      if (el?.getAttribute('color') !== answer[i]) return;
+      if (el?.getAttribute('color') !== answer[i]) {
+        alert('틀렸습니다 ㅜ.ㅜ');
+        saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+        onGameEnd();
+        return;
+      }
     }
     alert('정답입니다!');
-    endTimeRef.current = new Date();
-    if (startTimeRef.current && endTimeRef.current) {
-      const duration =
-        (endTimeRef.current.getTime() - startTimeRef.current.getTime()) / 1000;
-      saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-      onGameEnd();
-    }
+    saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    onGameEnd();
   };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        duration.current =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+      }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
 
   const changeCellColor = (el: HTMLElement) => {
     el.setAttribute('color', nowColor);
     el.style.background = nowColor;
-    checkAnswer();
   };
 
   return (

@@ -35,6 +35,7 @@ function CogTraining() {
   };
   const [gameResults, setGameResults] = useState<GameResultProps[]>([]);
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const [isNextButtonClicked, setIsNextButtonClicked] = useState(false);
 
   useEffect(() => {
     const getGameData = async () => {
@@ -92,12 +93,17 @@ function CogTraining() {
     goToNextGame();
     setShowLayerPopup(true);
     setIsTimerRunning(false);
+    setIsNextButtonClicked(false);
   };
 
   const startGame = () => {
     setShowLayerPopup(false);
     setIsTimerRunning(true);
     navigate(`/cogTraining/${gameData[gameIndex].pathUri}`);
+  };
+
+  const handleNextButtonClick = () => {
+    setIsNextButtonClicked(true);
   };
 
   return (
@@ -114,19 +120,23 @@ function CogTraining() {
                   saveGameResult={saveGameResult}
                 />
               )}
-              <Num>
-                {gameIndex + 1}/{gameData.length}
-              </Num>
+              <Section>
+                <Num>
+                  {gameIndex + 1}/{gameData.length}
+                </Num>
+                <Button onClick={() => setExitGame(true)}>게임 종료</Button>
+              </Section>
             </StatusWrapper>
             <GameWrapper>
               <GameRouter
                 gameData={gameData[gameIndex]}
                 onGameEnd={onGameEnd}
                 saveGameResult={saveGameResult}
+                isNextButtonClicked={isNextButtonClicked}
               />
             </GameWrapper>
             <ButtonWrapper>
-              <Button onClick={() => setExitGame(true)}>게임 종료</Button>
+              <Button onClick={handleNextButtonClick}>다음</Button>
             </ButtonWrapper>
           </Wrapper>
           {showLayerPopup && (
@@ -182,6 +192,7 @@ const GameWrapper = styled.div`
 const StatusWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const Num = styled.div`
@@ -194,6 +205,12 @@ const Num = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+const Section = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 3rem;
 `;
 
 export default CogTraining;

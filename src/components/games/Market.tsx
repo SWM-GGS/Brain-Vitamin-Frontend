@@ -82,6 +82,7 @@ const Button = styled.button`
   margin: 1rem;
   font-size: 5rem;
   border-radius: 0.8rem;
+  background: #c6c6c6;
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     padding: 1.5rem;

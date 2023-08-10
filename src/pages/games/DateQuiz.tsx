@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Desc, Body } from '../../components/games/DateQuiz';
 import { GameProps } from '../../routes/gameRouter.tsx';
 
@@ -6,6 +6,7 @@ export default function DateQuiz({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
@@ -63,6 +64,7 @@ export default function DateQuiz({
         gameData={gameData}
         onGameEnd={onGameEnd}
         saveGameResult={saveGameResult}
+        isNextButtonClicked={isNextButtonClicked}
       />
     </Container>
   );

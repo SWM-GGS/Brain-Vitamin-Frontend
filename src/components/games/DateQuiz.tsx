@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { CogTrainingProps } from '../../pages/CogTraining';
 
@@ -15,6 +15,7 @@ type BodyProps = {
     result: string,
     score: number,
   ) => void;
+  isNextButtonClicked: boolean;
 };
 
 const Body = ({
@@ -23,33 +24,60 @@ const Body = ({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: BodyProps) => {
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
   const lastDate = totalDate.indexOf(1);
   const firstDate = totalDate.indexOf(1, 7);
+  let clickedDate = useRef(0);
+  const formRefs = useRef<HTMLButtonElement[] | null[]>([]);
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
 
-  const checkToday = (date: number) => {
-    if (date === today) {
+  const checkAnswer = () => {
+    if (clickedDate.current === today) {
       alert('정답입니다!');
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        const duration =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-        onGameEnd();
-      }
+      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      onGameEnd();
     } else {
       alert('틀렸습니다 ㅜ.ㅜ');
+      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+      onGameEnd();
+    }
+  };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
       endTimeRef.current = new Date();
       if (startTimeRef.current && endTimeRef.current) {
-        const duration =
+        duration.current =
           (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
           1000;
-        saveGameResult(gameData.problemId, duration, 'FAIL', 0);
-        onGameEnd();
       }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
+
+  const onClickDate = (date: number, el: HTMLElement) => {
+    if (clickedDate.current === date) {
+      el.style.background = '#c6c6c6';
+      el.style.border = '0.1rem solid #e4e3e6';
+      el.style.color = 'var(--black-color)';
+      clickedDate.current = 0;
+    } else {
+      for (let i = 0; i < formRefs.current.length; i++) {
+        const formRef = formRefs.current[i];
+        if (formRef?.style.background === 'var(--main-bg-color)') {
+          formRef.style.background = '#c6c6c6';
+          formRef.style.border = '0.1rem solid #e4e3e6';
+          formRef.style.color = 'var(--black-color)';
+          break;
+        }
+      }
+      el.style.background = 'var(--main-bg-color)';
+      el.style.border = '0.2rem solid var(--main-color)';
+      el.style.color = 'var(--main-color)';
+      clickedDate.current = date;
     }
   };
 
@@ -63,7 +91,7 @@ const Body = ({
   const week = getWeek(new Date());
   const quizDate = Math.floor(Math.random() * (30 - 1) + 1);
 
-  const checkAnswer = (index: number) => {
+  const checkAnswer2 = (index: number) => {
     if (totalDate.indexOf(quizDate, lastDate) % 7 === index) {
       alert('정답입니다!');
     } else {
@@ -80,10 +108,11 @@ const Body = ({
       </Days>
       <Wrapper>
         {totalDate.slice((week - 1) * 7, week * 7).map((date, idx) => (
-          <Form key={idx} onClick={() => checkToday(date)}>
-            <DateNum $idx={idx} $lastdate={lastDate} $firstdate={firstDate}>
-              <span>{date}일</span>
-            </DateNum>
+          <Form
+            ref={(el) => (formRefs.current[formRefs.current.length] = el)}
+            key={idx}
+            onClick={(e) => onClickDate(date, e.target as HTMLElement)}>
+            {date}일
           </Form>
         ))}
       </Wrapper>
@@ -92,7 +121,7 @@ const Body = ({
         일은 무슨 요일일까요?
       </h1>
       {DAY.map((item, index) => (
-        <Button key={index} onClick={() => checkAnswer(index)}>
+        <Button key={index} onClick={() => checkAnswer2(index)}>
           {item}
         </Button>
       ))} */}
@@ -121,7 +150,7 @@ const Days = styled.div`
   margin: 1rem 0 0 0;
 `;
 
-const Day = styled.li`
+const Day = styled.div`
   width: 100%;
   text-align: center;
   &:nth-child(7n + 1),
@@ -139,35 +168,18 @@ const Wrapper = styled.div`
   flex-flow: row wrap;
 `;
 
-const Form = styled.li`
+const Form = styled.button`
   position: relative;
   padding: 0 0.6vw;
   width: calc(100% / 7);
   min-height: 9vw;
   text-align: center;
-  border-bottom: 1px solid #e4e3e6;
-  border-left: 1px solid #e4e3e6;
-  &:nth-child(7n + 1),
-  &:nth-child(7n) {
-    color: red;
-    // background-color: #f5f5f5;
-  }
+  border: 0.1rem solid #e4e3e6;
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const DateNum = styled.div<{
-  $idx: number;
-  $firstdate: number;
-  $lastdate: number;
-}>`
+  background: #c6c6c6;
   margin: 1rem 0 0 0;
-  color: ${(props) =>
-    props.$idx < props.$lastdate ||
-    (props.$firstdate > 0 && props.$idx > props.$firstdate - 1)
-      ? '#969696'
-      : null};
   font-size: 4rem;
   font-family: 'Pretendard-Medium';
   @media screen and (max-width: 768px) {

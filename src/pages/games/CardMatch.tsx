@@ -19,6 +19,7 @@ export default function CardMatch({
   gameData,
   onGameEnd,
   saveGameResult,
+  isNextButtonClicked,
 }: GameProps) {
   type Props = {
     imgUrl: string;
@@ -43,21 +44,32 @@ export default function CardMatch({
   const mixedCards = useMemo(() => shuffle(), []);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
+  let duration = useRef(0);
 
   const checkAnswer = () => {
     // 모든 카드의 상태가 true면 게임 종료
     if (mixedCards.every((card) => card.status)) {
       alert('정답입니다!');
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        const duration =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-        saveGameResult(gameData.problemId, duration, 'SUCCESS', 10);
-        onGameEnd();
-      }
+      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      onGameEnd();
+    } else {
+      alert('틀렸습니다 ㅜ.ㅜ');
+      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+      onGameEnd();
     }
   };
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        duration.current =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+      }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
 
   useEffect(() => {
     // 클릭된 카드가 두 장인 경우, 매칭 여부 검사
@@ -82,7 +94,6 @@ export default function CardMatch({
         }
         setClickedCards([]);
         setClickable(true);
-        checkAnswer();
       }, 500);
     } else {
       setClickable(true);
