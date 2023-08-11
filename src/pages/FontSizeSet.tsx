@@ -67,10 +67,8 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 1.6rem;
-  margin: 23rem 0 0 0;
-  @media screen and (max-width: 767px) {
-    margin: 3rem 0 0 0;
-  }
+  height: 100vh;
+  align-items: center;
 `;
 
 const BoxWrapper = styled.div`

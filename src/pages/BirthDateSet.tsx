@@ -80,10 +80,8 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   padding: 1.6rem;
-  margin: 16rem 0 0 0;
-  @media screen and (max-width: 767px) {
-    margin: 3rem 0 0 0;
-  }
+  height: 100vh;
+  align-items: center;
 `;
 
 const Box = styled.div`
