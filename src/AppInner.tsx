@@ -21,8 +21,8 @@ function AppInner() {
         if (!token) {
           return;
         }
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/refreshToken`,
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`,
           {},
           {
             headers: {
@@ -30,15 +30,21 @@ function AppInner() {
             },
           },
         );
+        const { name, nickname, phoneNumber, familyKey, fontSize } =
+          data.result.patientDetailDto;
         dispatch(
           userSlice.actions.setUser({
-            name: response.data.data.name,
-            nickname: response.data.data.nickname,
-            phoneNumber: response.data.data.phoneNumber,
-            familyKey: response.data.data.familyKey,
-            accessToken: response.data.data.accessToken,
-            fontSize: response.data.data.fontSize,
+            name,
+            nickname,
+            phoneNumber,
+            familyKey,
+            fontSize,
+            accessToken: data.result.tokenDto.accessTokenDto.accessToken,
           }),
+        );
+        await localStorage.setItem(
+          'refreshToken',
+          data.result.tokenDto.refreshTokenDto.refreshToken,
         );
       } catch (error) {
         console.error(error);
