@@ -79,6 +79,20 @@ const Back = styled.div<{ $status: boolean }>`
   background: royalblue;
   transform: ${(props) =>
     props.$status ? 'rotateY(180deg)' : 'rotateY(0deg)'};
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background-image: url('/src/assets/images/logo.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+  }
 `;
 
 const RestartBtn = styled.button`
