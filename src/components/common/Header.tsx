@@ -30,6 +30,8 @@ const Wrapper = styled.div`
   left: 1rem;
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
+    top: 0;
+    left: 0;
   }
 `;
 

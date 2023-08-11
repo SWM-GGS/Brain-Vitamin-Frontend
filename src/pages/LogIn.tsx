@@ -96,8 +96,8 @@ function LogIn() {
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>로그인</Label>
+          <Margin1 />
           <ShortInput
-            style={{ margin: '8.2rem 0 1.6rem 0' }}
             label="전화번호"
             desc="010 1234 5678"
             value={phoneNumber}
@@ -105,16 +105,15 @@ function LogIn() {
             buttonText="인증하기"
             onClickButton={sendCode}
           />
+          <Margin2 />
           <Input
             label="인증번호"
             desc="인증번호를 입력해주세요"
             value={code}
             callbackFn={onChangeCode}
           />
-          <Button
-            style={{ margin: '3rem 0 0 0' }}
-            disabled={!phoneNumber || !code}
-            onClick={logIn}>
+          <Margin3 />
+          <Button disabled={!phoneNumber || !code} onClick={logIn}>
             로그인
           </Button>
         </Wrapper>
@@ -146,7 +145,7 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 60rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
@@ -155,6 +154,27 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const Margin1 = styled.div`
+  margin: 8.2rem 0 0 0;
+  @media screen and (max-width: 767px) {
+    margin: 4rem 0 0 0;
+  }
+`;
+
+const Margin2 = styled.div`
+  margin: 0 0 1.6rem 0;
+  @media screen and (max-width: 767px) {
+    margin: 0 0 0.8rem 0;
+  }
+`;
+
+const Margin3 = styled.div`
+  margin: 3rem 0 0 0;
+  @media screen and (max-width: 767px) {
+    margin: 1.5rem 0 0 0;
+  }
 `;
 
 export default LogIn;

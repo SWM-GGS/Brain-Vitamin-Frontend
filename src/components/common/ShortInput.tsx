@@ -56,7 +56,7 @@ const ShortInputBox = styled.div`
   border-radius: 0.8rem;
   padding: 1.4rem 0.9rem;
   @media screen and (max-width: 767px) {
-    width: 18rem;
+    width: 16rem;
     height: 7rem;
   }
 `;

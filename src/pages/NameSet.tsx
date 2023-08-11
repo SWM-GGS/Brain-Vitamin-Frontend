@@ -74,7 +74,6 @@ function NameSet() {
             <Section>
               <Intro>이름을 입력해주세요</Intro>
               <Input
-                style={{ margin: '0 0 2.9rem 0' }}
                 label="이름"
                 desc="이름을 입력해주세요"
                 value={name}
@@ -122,7 +121,7 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 60rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
@@ -136,11 +135,16 @@ const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 8.2rem 0 0 0;
+  @media screen and (max-width: 767px) {
+    margin: 4rem 0 0 0;
+  }
 `;
 
 const Section = styled.div`
+  margin: 0 0 2.9rem 0;
   @media screen and (max-width: 767px) {
     width: 100%;
+    margin: 0 0 1.4rem 0;
   }
 `;
 
@@ -149,7 +153,8 @@ const Intro = styled.p`
   font-size: 2.2rem;
   margin: 0 0 2.4rem 0;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin: 0 0 1rem 0;
   }
 `;
 

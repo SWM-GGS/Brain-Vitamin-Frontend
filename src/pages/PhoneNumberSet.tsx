@@ -59,8 +59,8 @@ function PhoneNumberSet() {
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>전화번호 인증</Label>
+          <Margin1 />
           <ShortInput
-            style={{ margin: '8.2rem 0 1.6rem 0' }}
             label="전화번호"
             desc="010 1234 5678"
             value={phoneNumber}
@@ -68,6 +68,7 @@ function PhoneNumberSet() {
             buttonText="인증하기"
             onClickButton={sendCode}
           />
+          <Margin2 />
           <Input
             label="인증번호"
             desc="인증번호를 입력해주세요"
@@ -105,11 +106,25 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 60rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
 
 const Wrapper = styled.div``;
+
+const Margin1 = styled.div`
+  margin: 8.2rem 0 0 0;
+  @media screen and (max-width: 767px) {
+    margin: 4rem 0 0 0;
+  }
+`;
+
+const Margin2 = styled.div`
+  margin: 0 0 1.6rem 0;
+  @media screen and (max-width: 767px) {
+    margin: 0 0 0.8rem 0;
+  }
+`;
 
 export default PhoneNumberSet;
