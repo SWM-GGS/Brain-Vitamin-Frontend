@@ -23,7 +23,11 @@ function Header({ label }: { label: string }) {
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  font-size: 3.2rem;
+  font-size: 3rem;
+  font-family: 'Pretendard-Medium';
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }

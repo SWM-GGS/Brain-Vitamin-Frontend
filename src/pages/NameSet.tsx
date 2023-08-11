@@ -9,6 +9,7 @@ import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
+import Header from '../components/common/Header';
 
 function NameSet() {
   const { state } = useLocation();
@@ -64,6 +65,7 @@ function NameSet() {
 
   return (
     <Container>
+      <Header label="회원가입" />
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>회원 정보 입력</Label>

@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import Button from '../components/common/Button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
+import Header from '../components/common/Header';
 
 function CogTrainingResult() {
   const { state } = useLocation();
@@ -16,6 +17,7 @@ function CogTrainingResult() {
 
   return (
     <Container>
+      <Header label="결과보기" />
       <Wrapper>
         <Box>
           <MyWrapper>

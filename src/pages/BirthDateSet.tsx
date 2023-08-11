@@ -4,6 +4,7 @@ import Label from '../components/common/Label';
 import { useState } from 'react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
+import Header from '../components/common/Header';
 
 function BirthDateSet() {
   const { state } = useLocation();
@@ -28,6 +29,7 @@ function BirthDateSet() {
 
   return (
     <Container>
+      <Header label="회원정보" />
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>회원 정보 입력</Label>

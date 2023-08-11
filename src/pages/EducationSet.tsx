@@ -4,6 +4,7 @@ import Label from '../components/common/Label';
 import { useState } from 'react';
 import Button from '../components/common/Button';
 import axios from 'axios';
+import Header from '../components/common/Header';
 
 function EducationSet() {
   const { state } = useLocation();
@@ -31,6 +32,7 @@ function EducationSet() {
 
   return (
     <Container>
+      <Header label="회원정보" />
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>최종학력</Label>

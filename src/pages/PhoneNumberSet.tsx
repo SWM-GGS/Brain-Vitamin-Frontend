@@ -6,6 +6,7 @@ import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
 import axios from 'axios';
+import Header from '../components/common/Header';
 
 function PhoneNumberSet() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -54,6 +55,7 @@ function PhoneNumberSet() {
 
   return (
     <Container>
+      <Header label="회원가입" />
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>전화번호 인증</Label>
