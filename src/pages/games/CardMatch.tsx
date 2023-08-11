@@ -21,10 +21,10 @@ export default function CardMatch({
   saveGameResult,
   isNextButtonClicked,
 }: GameProps) {
-  type Props = {
-    imgUrl: string;
-  };
-  const problemPool: Props[] = gameData.problemPool;
+  // type Props = {
+  //   imgUrl: string;
+  // };
+  // const problemPool: Props[] = gameData.problemPool;
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
@@ -36,8 +36,40 @@ export default function CardMatch({
   } else {
     cardCnt = 12;
   }
-  const deck = problemPool.map((v) => v.imgUrl);
-  const cards = [...deck, ...deck].map((card, i) => {
+  // const deck = problemPool.map((v) => v.imgUrl);
+  const deck = [
+    '/src/assets/images/cardMatch/1.svg',
+    '/src/assets/images/cardMatch/2.svg',
+    '/src/assets/images/cardMatch/3.svg',
+    '/src/assets/images/cardMatch/4.svg',
+    '/src/assets/images/cardMatch/5.svg',
+    '/src/assets/images/cardMatch/6.svg',
+    '/src/assets/images/cardMatch/7.svg',
+    '/src/assets/images/cardMatch/8.svg',
+    '/src/assets/images/cardMatch/9.svg',
+    '/src/assets/images/cardMatch/10.svg',
+    '/src/assets/images/cardMatch/11.svg',
+    '/src/assets/images/cardMatch/12.svg',
+    '/src/assets/images/cardMatch/13.svg',
+    '/src/assets/images/cardMatch/14.svg',
+    '/src/assets/images/cardMatch/15.svg',
+    '/src/assets/images/cardMatch/16.svg',
+    '/src/assets/images/cardMatch/17.svg',
+    '/src/assets/images/cardMatch/18.svg',
+    '/src/assets/images/cardMatch/19.svg',
+    '/src/assets/images/cardMatch/20.svg',
+    '/src/assets/images/cardMatch/21.svg',
+    '/src/assets/images/cardMatch/22.svg',
+    '/src/assets/images/cardMatch/23.svg',
+    '/src/assets/images/cardMatch/24.svg',
+    '/src/assets/images/cardMatch/25.svg',
+  ];
+  let randomDeck: string[] = [];
+  while (randomDeck.length < cardCnt / 2) {
+    randomDeck.push(deck[Math.floor(Math.random() * deck.length)]);
+    randomDeck = [...new Set(randomDeck)];
+  }
+  const cards = [...randomDeck, ...randomDeck].map((card, i) => {
     return { idx: i, type: card, status: false };
   });
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
