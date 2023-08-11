@@ -41,6 +41,7 @@ function Home() {
   }, []);
 
   const onClickVitamin = () => {
+    if (loading) return;
     if (data?.first) {
       navigate('/birthDateSet', { state: { nextToDo: data.nextToDo } });
     } else {

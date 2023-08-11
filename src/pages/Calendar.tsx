@@ -8,8 +8,8 @@ const Calendar = () => {
   const MONTH = DATE.getMonth() + 1;
   const TODAY = DATE.getDate();
 
-  const [year, setYear] = useState(YEAR);
-  const [month, setMonth] = useState(MONTH);
+  const [year, setYear] = useState(0);
+  const [month, setMonth] = useState(0);
   const [totalDate, setTotalDate] = useState<number[]>([]);
 
   const changeDate = (month: number) => {
@@ -55,6 +55,7 @@ const Calendar = () => {
   const [today, setToday] = useState(0);
 
   const goToday = () => {
+    setYear(YEAR);
     setMonth(MONTH);
     setToday(TODAY);
   };

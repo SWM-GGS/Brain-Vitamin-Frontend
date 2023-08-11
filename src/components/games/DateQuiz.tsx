@@ -26,8 +26,8 @@ const Body = ({
   saveGameResult,
   isNextButtonClicked,
 }: BodyProps) => {
-  const lastDate = totalDate.indexOf(1);
-  const firstDate = totalDate.indexOf(1, 7);
+  // const lastDate = totalDate.indexOf(1);
+  // const firstDate = totalDate.indexOf(1, 7);
   let clickedDate = useRef(0);
   const formRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const startTimeRef = useRef<Date | null>(new Date());
@@ -89,15 +89,15 @@ const Body = ({
   };
 
   const week = getWeek(new Date());
-  const quizDate = Math.floor(Math.random() * (30 - 1) + 1);
+  // const quizDate = Math.floor(Math.random() * (30 - 1) + 1);
 
-  const checkAnswer2 = (index: number) => {
-    if (totalDate.indexOf(quizDate, lastDate) % 7 === index) {
-      alert('정답입니다!');
-    } else {
-      alert('틀렸습니다 ㅜ.ㅜ');
-    }
-  };
+  // const checkAnswer2 = (index: number) => {
+  //   if (totalDate.indexOf(quizDate, lastDate) % 7 === index) {
+  //     alert('정답입니다!');
+  //   } else {
+  //     alert('틀렸습니다 ㅜ.ㅜ');
+  //   }
+  // };
 
   return (
     <>
@@ -187,10 +187,10 @@ const Form = styled.button`
   }
 `;
 
-const Button = styled.button`
-  padding: 1rem;
-  margin: 2rem;
-  font-size: 5rem;
-`;
+// const Button = styled.button`
+//   padding: 1rem;
+//   margin: 2rem;
+//   font-size: 5rem;
+// `;
 
 export { Container, Desc, Body };
