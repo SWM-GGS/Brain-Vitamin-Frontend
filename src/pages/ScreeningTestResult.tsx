@@ -19,7 +19,7 @@ function screeningTestResult() {
       <Wrapper>
         <Box>
           <ResultWrapper>
-            <Result cogLevel={cogLevel}>
+            <Result $cogLevel={cogLevel}>
               <span>{cogLevel}</span>
             </Result>
             <Desc>
@@ -79,11 +79,11 @@ const ResultWrapper = styled.div`
   }
 `;
 
-const Result = styled.div<{ cogLevel: string }>`
+const Result = styled.div<{ $cogLevel: string }>`
   width: 20rem;
   height: 20rem;
   background: ${(props) =>
-    props.cogLevel === '정상' ? 'forestgreen' : '#FF3F3F'};
+    props.$cogLevel === '정상' ? 'forestgreen' : '#FF3F3F'};
   display: flex;
   justify-content: center;
   align-items: center;
