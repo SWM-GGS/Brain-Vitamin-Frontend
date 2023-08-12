@@ -21,7 +21,7 @@ function CogTrainingResult() {
       <Wrapper>
         <Box>
           <MyWrapper>
-            <ProfileImage alt="" src="/src/assets/images/profile-default.svg" />
+            <ProfileImage alt="" src="/assets/images/profile-default.svg" />
             <Name>{nickname}</Name>
             <Score>{totalScore}점</Score>
             <Result>{result}</Result>

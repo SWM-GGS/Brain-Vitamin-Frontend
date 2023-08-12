@@ -13,7 +13,7 @@ function Header({ label }: { label: string }) {
       <Back
         onClick={goBack}
         alt="뒤로가기 버튼"
-        src="/src/assets/images/arrow-narrow-left.svg"
+        src="/assets/images/arrow-narrow-left.svg"
       />
       <span>{label}</span>
     </Wrapper>

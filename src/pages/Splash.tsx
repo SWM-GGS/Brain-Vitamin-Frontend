@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 function Splash() {
   return (
     <Container>
-      <Logo alt="로고" src="/src/assets/images/logo.svg" />
+      <Logo alt="로고" src="/assets/images/logo.svg" />
     </Container>
   );
 }

@@ -54,17 +54,17 @@ function Home() {
       <LeftTapBar />
       <Wrapper>
         <BigBox onClick={onClickVitamin}>
-          <VitaminImage alt="" src="/src/assets/images/vitamin.svg" />
+          <VitaminImage alt="" src="/assets/images/vitamin.svg" />
           <Label>식후 30분 두뇌 비타민</Label>
           <Sub>{data?.consecutiveDays}일째 연속으로 챙겨먹고 있어요!</Sub>
         </BigBox>
         <BoxWrapper>
           <Box>
-            <VitaminImage alt="" src="/src/assets/images/family.svg" />
+            <VitaminImage alt="" src="/assets/images/family.svg" />
             <Label>우리 가족 이야기</Label>
           </Box>
           <Box>
-            <VitaminImage alt="" src="/src/assets/images/my.svg" />
+            <VitaminImage alt="" src="/assets/images/my.svg" />
             <Label>내 활동 보기</Label>
           </Box>
         </BoxWrapper>
