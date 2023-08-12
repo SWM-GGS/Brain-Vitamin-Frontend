@@ -67,19 +67,21 @@ function LogIn() {
         alert(data.message);
         return;
       }
+      const { name, nickname, fontSize, familyKey } =
+        data.result.patientDetailDto;
       dispatch(
         userSlice.actions.setUser({
-          name: data.result.name,
-          nickname: data.result.nickname,
-          fontSize: data.result.fontSize,
-          phoneNumber: data.result.phoneNumber,
-          familyKey: data.result.familyKey,
-          accessToken: data.result.accessTokenDto.accessToken,
+          name,
+          nickname,
+          fontSize,
+          phoneNumber,
+          familyKey,
+          accessToken: data.result.tokenDto.accessTokenDto.accessToken,
         }),
       );
       await localStorage.setItem(
         'refreshToken',
-        data.result.refreshTokenDto.refreshToken,
+        data.result.tokenDto.refreshTokenDto.refreshToken,
       );
       navigate('/home');
     } catch (error) {
