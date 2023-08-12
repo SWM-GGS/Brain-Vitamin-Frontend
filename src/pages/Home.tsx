@@ -86,14 +86,15 @@ const Wrapper = styled.div`
   display: flex;
   gap: 2.8rem;
   justify-content: center;
+  height: 100vh;
   @media screen and (min-width: 768px) {
-    height: 100vh;
     align-items: center;
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 0;
     gap: 1rem;
+    align-content: center;
   }
 `;
 
@@ -109,7 +110,7 @@ const BigBox = styled.div`
   align-items: center;
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 26rem;
+    height: 30rem;
     margin: 1.6rem 1.6rem 0 1.6rem;
   }
 `;
@@ -127,7 +128,7 @@ const Box = styled.div`
   padding: 0.5rem;
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 13.5rem;
+    height: 16rem;
     padding: 1rem;
     word-break: keep-all;
     text-align: center;
