@@ -140,8 +140,10 @@ const Desc = styled.p`
   font-size: 3.2rem;
   text-align: center;
   margin: 0 0 10rem 0;
+  word-break: keep-all;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin: 0 0 2rem 0;
   }
 `;
 
@@ -183,7 +185,8 @@ const Form = styled.button`
   font-size: 4rem;
   font-family: 'Pretendard-Medium';
   @media screen and (max-width: 768px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
+    padding: 1.5rem 0;
   }
 `;
 

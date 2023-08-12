@@ -63,7 +63,7 @@ const Box = styled.div`
   margin: 2.55rem 0;
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 50rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
@@ -96,7 +96,7 @@ const Result = styled.div<{ $cogLevel: string }>`
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
-    font-size: 2.4rem;
+    font-size: 2rem;
   }
 `;
 
@@ -105,9 +105,10 @@ const Desc = styled.p`
   font-size: 3.2rem;
   margin: 7rem 0 6rem 0;
   text-align: center;
+  word-break: keep-all;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
-    margin: 3rem 0 3rem 0;
+    font-size: 1.8rem;
+    margin: 2rem 0 1.5rem 0;
   }
 `;
 
@@ -119,7 +120,8 @@ const Sub = styled.p`
   word-break: keep-all;
   margin: 0 0 6.8rem 0;
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    margin: 0 0 3.5rem 0;
   }
 `;
 

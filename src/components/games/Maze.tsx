@@ -27,6 +27,10 @@ const Target = styled.div<{ x: number; y: number; $bgColor: string }>`
   height: 5rem;
   background: ${(props) => props.$bgColor};
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    width: 2rem;
+    height: 2rem;
+  }
 `;
 
 export { Container, MazeBox, Target };

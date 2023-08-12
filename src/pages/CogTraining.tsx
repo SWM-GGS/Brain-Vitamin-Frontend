@@ -184,8 +184,9 @@ const GameWrapper = styled.div`
   margin: 2.55rem 0;
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 50rem;
+    height: 40rem;
     padding: 1.6rem;
+    margin: 0.5rem 0;
   }
 `;
 
@@ -198,7 +199,7 @@ const StatusWrapper = styled.div`
 const Num = styled.div`
   font-size: 3rem;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 `;
 

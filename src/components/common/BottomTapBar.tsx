@@ -41,12 +41,14 @@ function BottomTapBar() {
 
 const Container = styled.div`
   width: 100%;
-  height: 7rem;
+  height: 6rem;
   background: #fff;
-  padding: 1.6rem;
+  padding: 1rem 1.6rem;
   display: flex;
   justify-content: space-between;
-  align-self: flex-end;
+  position: fixed;
+  bottom: 0;
+  left: 0;
   @media screen and (min-width: 768px) {
     display: none;
   }
@@ -56,6 +58,7 @@ const Tap = styled.div`
   border-radius: 2.6rem;
   font-size: 1.6rem;
   padding: 1rem 3rem;
+  font-family: 'Pretendard-Medium';
 `;
 
 export default BottomTapBar;

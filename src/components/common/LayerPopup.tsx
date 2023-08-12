@@ -54,9 +54,10 @@ const Popup = styled.div`
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 12.8rem 6rem;
+  word-break: keep-all;
   @media screen and (max-width: 767px) {
     width: 25rem;
-    min-height: 23rem;
+    min-height: 20rem;
     padding: 3rem;
   }
 `;

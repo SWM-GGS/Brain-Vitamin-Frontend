@@ -220,8 +220,9 @@ const Box = styled.div`
   justify-content: center;
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 50rem;
+    height: 36rem;
     padding: 1.6rem;
+    margin: 1.3rem 0;
   }
 `;
 
@@ -246,8 +247,8 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
   align-items: center;
   position: relative;
   @media screen and (max-width: 767px) {
-    width: 5rem;
-    height: 5rem;
+    width: 4rem;
+    height: 4rem;
     font-size: 2rem;
     border: 0.2rem solid white;
   }
@@ -283,7 +284,7 @@ const QuestionWrapper = styled.div`
   align-items: center;
   @media screen and (max-width: 767px) {
     width: 26rem;
-    margin: 2rem auto;
+    margin: 1rem auto;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -302,16 +303,17 @@ const ChoiceButton = styled.button`
   font-size: 4rem;
   padding: 2rem 2.5rem;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
-    padding: 1.3rem 2rem;
+    font-size: 1.4rem;
+    padding: 1rem 1.5rem;
   }
 `;
 
 const Question = styled.p`
   font-size: 4rem;
   word-break: keep-all;
+  font-family: 'Pretendard-Medium';
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
     margin: 0 0 1rem 0;
     text-align: center;
   }
@@ -324,7 +326,7 @@ const Desc = styled.div`
   font-size: 2.8rem;
   @media screen and (max-width: 767px) {
     width: 27rem;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     display: flex;
     justify-content: space-between;
   }

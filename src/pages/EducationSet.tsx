@@ -5,11 +5,14 @@ import { useState } from 'react';
 import Button from '../components/common/Button';
 import axios from 'axios';
 import Header from '../components/common/Header';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/reducer';
 
 function EducationSet() {
   const { state } = useLocation();
   const [education, setEducation] = useState('');
   const navigate = useNavigate();
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
 
   const goNext = () => {
     const postUserDetails = async () => {
@@ -20,6 +23,11 @@ function EducationSet() {
             education,
             birthDate: state.birthDate,
             gender: state.gender,
+          },
+          {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
           },
         );
       } catch (error) {
@@ -134,7 +142,7 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 60rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
@@ -153,6 +161,8 @@ const ButtonWrapper = styled.div`
   margin: 5.3rem 0 0 0;
   @media screen and (max-width: 767px) {
     width: 100%;
+    margin: 3rem 0 0 0;
+    gap: 1rem;
   }
 `;
 
@@ -162,6 +172,10 @@ const EduButton = styled.button`
   border-radius: 8px;
   font-family: 'Pretendard-Medium';
   font-size: 2.2rem;
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+    height: 4rem;
+  }
 `;
 
 export default EducationSet;

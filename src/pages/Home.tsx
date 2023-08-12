@@ -68,8 +68,8 @@ function Home() {
             <Label>내 활동 보기</Label>
           </Box>
         </BoxWrapper>
-        <BottomTapBar />
       </Wrapper>
+      <BottomTapBar />
     </Container>
   );
 }
@@ -86,11 +86,14 @@ const Wrapper = styled.div`
   display: flex;
   gap: 2.8rem;
   justify-content: center;
-  height: 100vh;
-  align-items: center;
+  @media screen and (min-width: 768px) {
+    height: 100vh;
+    align-items: center;
+  }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 0;
+    gap: 1rem;
   }
 `;
 
@@ -106,7 +109,7 @@ const BigBox = styled.div`
   align-items: center;
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 33rem;
+    height: 26rem;
     margin: 1.6rem 1.6rem 0 1.6rem;
   }
 `;
@@ -124,7 +127,10 @@ const Box = styled.div`
   padding: 0.5rem;
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 100%;
+    height: 13.5rem;
+    padding: 1rem;
+    word-break: keep-all;
+    text-align: center;
   }
 `;
 

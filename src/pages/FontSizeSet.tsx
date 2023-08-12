@@ -78,19 +78,21 @@ const BoxWrapper = styled.div`
   flex-wrap: wrap;
   margin: 6.6rem 0 11.2rem 0;
   @media screen and (max-width: 767px) {
-    margin: 3.3rem 0 5.6rem 0;
+    gap: 2rem;
+    margin: 1rem 0 2rem 0;
   }
 `;
 
-const Box = styled.div`
+const Box = styled.button`
   width: 35.8rem;
   height: 24.5rem;
   border-radius: 1.6rem;
   box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.1);
   padding: 3.7rem 2.2rem;
+  word-break: keep-all;
   @media screen and (max-width: 767px) {
-    width: 17.9rem;
-    height: 12.25rem;
+    width: 16rem;
+    height: 11rem;
     padding: 1.35rem 1.1rem;
   }
 `;
@@ -111,7 +113,7 @@ const LabelMedium = styled.p`
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 `;
 
@@ -121,7 +123,7 @@ const LabelSmall = styled.p`
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 `;
 

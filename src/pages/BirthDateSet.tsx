@@ -99,7 +99,7 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 60rem;
+    height: 40rem;
     padding: 1.6rem;
   }
 `;
@@ -115,7 +115,8 @@ const Intro = styled.p`
   font-size: 2.2rem;
   margin: 8.2rem 0 2.4rem 0;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin: 4.1rem 0 1rem 0;
   }
 `;
 
@@ -135,6 +136,9 @@ const GenderButton = styled.button`
   font-size: 2rem;
   width: 100%;
   margin: 2.5rem 0 0 0;
+  @media screen and (max-width: 767px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export default BirthDateSet;

@@ -8,8 +8,11 @@ const Button = styled.button`
   font-family: 'Pretendard-Bold';
   font-size: 1.6rem;
   color: white;
+  padding: 1rem;
   @media screen and (max-width: 767px) {
     width: 100%;
+    height: 4rem;
+    font-size: 1.4rem;
   }
   &:disabled {
     background: #c6c6c6;

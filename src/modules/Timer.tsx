@@ -39,7 +39,7 @@ function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
 const Text = styled.p`
   font-size: 3rem;
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 `;
 

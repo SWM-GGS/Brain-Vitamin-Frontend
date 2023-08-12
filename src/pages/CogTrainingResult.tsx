@@ -55,8 +55,9 @@ const Box = styled.div`
   margin: 2.55rem 0;
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 50rem;
+    height: 40rem;
     padding: 1.6rem;
+    margin: 2rem 0;
   }
 `;
 
@@ -102,6 +103,7 @@ const Result = styled.span`
   font-size: 2rem;
   margin: 1rem 0 0 0;
   color: var(--main-color);
+  font-family: 'Pretendard-Medium';
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }

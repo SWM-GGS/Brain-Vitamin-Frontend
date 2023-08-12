@@ -69,6 +69,8 @@ const Front = styled.div<{ $status: boolean; $background: string }>`
   background-size: cover;
   transform: ${(props) =>
     props.$status ? 'rotateY(0deg)' : 'rotateY(180deg)'};
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.3);
 `;
 
 const Back = styled.div<{ $status: boolean }>`
@@ -79,19 +81,25 @@ const Back = styled.div<{ $status: boolean }>`
   background: royalblue;
   transform: ${(props) =>
     props.$status ? 'rotateY(180deg)' : 'rotateY(0deg)'};
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.3);
   &::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
+    width: 20rem;
+    height: 20rem;
     background-image: url('/src/assets/images/logo.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.8;
+    @media screen and (max-width: 767px) {
+      width: 5rem;
+      height: 5rem;
+    }
   }
 `;
 

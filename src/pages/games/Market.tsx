@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Wrapper,
-  Cupon,
+  Coupon,
+  Percent,
   Item,
   Name,
   Price,
@@ -112,7 +113,11 @@ export default function Market({
   return (
     <>
       <Wrapper>
-        {discountPercent ? <Cupon>{discountPercent}% 할인 쿠폰</Cupon> : null}
+        {discountPercent ? (
+          <Coupon>
+            <Percent>{discountPercent}%</Percent>할인 쿠폰
+          </Coupon>
+        ) : null}
         <Memo>
           {problemPool.map((v, i) => (
             <span key={i}>
