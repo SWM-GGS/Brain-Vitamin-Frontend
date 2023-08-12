@@ -7,7 +7,6 @@ import {
   Cell,
   PaletteWrapper,
   Palette,
-  CurrentColorWrapper,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
 

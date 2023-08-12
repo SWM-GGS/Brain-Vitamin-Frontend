@@ -220,7 +220,7 @@ const Box = styled.div`
   justify-content: center;
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 36rem;
+    height: 40rem;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
