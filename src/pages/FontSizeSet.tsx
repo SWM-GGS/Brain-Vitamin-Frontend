@@ -78,8 +78,7 @@ const BoxWrapper = styled.div`
   flex-wrap: wrap;
   margin: 6.6rem 0 11.2rem 0;
   @media screen and (max-width: 767px) {
-    gap: 2rem;
-    margin: 1rem 0 2rem 0;
+    margin: 3.3rem 0 5.6rem 0;
   }
 `;
 
@@ -91,8 +90,8 @@ const Box = styled.button`
   padding: 3.7rem 2.2rem;
   word-break: keep-all;
   @media screen and (max-width: 767px) {
-    width: 16rem;
-    height: 11rem;
+    width: 17.9rem;
+    height: 12.25rem;
     padding: 1.35rem 1.1rem;
   }
 `;
