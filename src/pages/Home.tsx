@@ -49,6 +49,14 @@ function Home() {
     }
   };
 
+  const toFamily = () => {
+    alert('해당 페이지는 향후 추가될 예정이에요.');
+  };
+
+  const toMyPage = () => {
+    alert('해당 페이지는 향후 추가될 예정이에요.');
+  };
+
   return (
     <Container>
       <LeftTapBar />
@@ -59,11 +67,11 @@ function Home() {
           <Sub>{data?.consecutiveDays}일째 연속으로 챙겨먹고 있어요!</Sub>
         </BigBox>
         <BoxWrapper>
-          <Box>
+          <Box onClick={toFamily}>
             <VitaminImage alt="" src="/assets/images/family.svg" />
             <Label>우리 가족 이야기</Label>
           </Box>
-          <Box>
+          <Box onClick={toMyPage}>
             <VitaminImage alt="" src="/assets/images/my.svg" />
             <Label>내 활동 보기</Label>
           </Box>

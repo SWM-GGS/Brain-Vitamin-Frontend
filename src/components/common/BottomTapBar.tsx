@@ -6,6 +6,10 @@ function BottomTapBar() {
   const navigate = useNavigate();
 
   const onClickTap = (path: string) => {
+    if (path === '/family' || path === '/myPage') {
+      alert('해당 페이지는 향후 추가될 예정이에요.');
+      return;
+    }
     navigate(path);
   };
 
