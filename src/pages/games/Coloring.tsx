@@ -95,15 +95,12 @@ export default function Coloring({
 
   return (
     <Container>
-      <CurrentColorWrapper>
-        <span>현재 색깔:</span>
-        <Palette color={nowColor} />
-      </CurrentColorWrapper>
       <PaletteWrapper>
         {COLOR.map((color, index) => (
           <Palette
             key={index}
             color={color}
+            $nowColor={nowColor}
             onClick={() => setNowColor(color)}
           />
         ))}

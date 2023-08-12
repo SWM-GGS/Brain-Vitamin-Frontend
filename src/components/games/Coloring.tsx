@@ -50,12 +50,27 @@ const PaletteWrapper = styled.div`
   }
 `;
 
-const Palette = styled.button<{ color: string }>`
+const Palette = styled.button<{ color: string; $nowColor: string }>`
   border: 0.2rem solid #aaa;
   border-radius: 50%;
   background: ${(props) => props.color};
   margin: 1rem;
   padding: 2.8rem;
+  position: relative;
+  ${(props) =>
+    props.color === props.$nowColor &&
+    `&::before {
+  content: "\\2713";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4.5rem;
+  color: #999;
+  transition: opacity 0.3s ease-in-out;
+  @media screen and (max-width: 768px) {
+    font-size: 1.6rem;
+  }}`}
   @media screen and (max-width: 768px) {
     padding: 1.5rem;
     margin: 0.2rem;
