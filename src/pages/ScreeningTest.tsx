@@ -280,19 +280,24 @@ const QuestionWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 130rem;
-  margin: 5rem auto;
+  margin: 0 auto;
   align-items: center;
+  border-bottom: 0.2rem solid #c6c6c6;
+  padding: 4rem 0;
+  &:last-child {
+    border: none;
+  }
   @media screen and (max-width: 767px) {
     width: 26rem;
-    margin: 1rem auto;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 1rem 0;
   }
 `;
 
 const ChoiceWrapper = styled.div`
   display: flex;
-  gap: 9rem;
+  gap: 11rem;
   @media screen and (max-width: 767px) {
     gap: 2rem;
   }
