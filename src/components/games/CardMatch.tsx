@@ -91,7 +91,7 @@ const Back = styled.div<{ $status: boolean }>`
     transform: translate(-50%, -50%);
     width: 20rem;
     height: 20rem;
-    background-image: url('/src/assets/images/logo.svg');
+    background-image: url('/assets/images/logo.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
