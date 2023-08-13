@@ -8,6 +8,11 @@ import {
   Back,
 } from '../../components/games/CardMatch.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import {
+  AnswerFeedback,
+  Correct,
+  Incorrect,
+} from '../../components/common/AnswerFeedback.tsx';
 
 /**
  * 난도별 카드 개수 상이
@@ -45,18 +50,26 @@ export default function CardMatch({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
+  const [answerState, setAnswerState] = useState('');
 
-  const checkAnswer = () => {
+  const checkAnswer = async () => {
     // 모든 카드의 상태가 true면 게임 종료
     if (mixedCards.every((card) => card.status)) {
-      alert('정답입니다!');
+      // 정답
+      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      onGameEnd();
     } else {
-      alert('틀렸습니다 ㅜ.ㅜ');
+      // 오답
+      setAnswerState('incorrect');
       saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-      onGameEnd();
     }
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    onGameEnd();
   };
 
   useEffect(() => {
@@ -129,6 +142,13 @@ export default function CardMatch({
           </FlipWrapper>
         ))}
       </Container>
+      <AnswerFeedback>
+        {answerState === 'correct' ? (
+          <Correct />
+        ) : answerState === 'incorrect' ? (
+          <Incorrect />
+        ) : null}
+      </AnswerFeedback>
     </>
   );
 }

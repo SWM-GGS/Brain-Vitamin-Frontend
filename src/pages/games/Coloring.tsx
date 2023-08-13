@@ -9,6 +9,11 @@ import {
   Palette,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import {
+  AnswerFeedback,
+  Correct,
+  Incorrect,
+} from '../../components/common/AnswerFeedback.tsx';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -52,6 +57,7 @@ export default function Coloring({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
+  const [answerState, setAnswerState] = useState('');
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
   answer.forEach((color, i) => {
@@ -60,18 +66,32 @@ export default function Coloring({
     }
   });
 
-  const checkAnswer = () => {
+  const checkAnswer = async () => {
     for (let i = 0; i < cellRefs.current.length; i++) {
       let el = cellRefs.current[i];
       if (el?.getAttribute('color') !== answer[i]) {
-        alert('틀렸습니다 ㅜ.ㅜ');
-        saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+        // 오답
+        setAnswerState('incorrect');
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
         onGameEnd();
         return;
       }
     }
-    alert('정답입니다!');
+    // 정답
+    setAnswerState('correct');
     saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
     onGameEnd();
   };
 
@@ -93,36 +113,45 @@ export default function Coloring({
   };
 
   return (
-    <Container>
-      <PaletteWrapper>
-        {COLOR.map((color, index) => (
-          <Palette
-            key={index}
-            color={color}
-            $nowColor={nowColor}
-            onClick={() => setNowColor(color)}
-          />
-        ))}
-      </PaletteWrapper>
-      <PaperWrapper>
-        <Paper>
-          {answer.map((color, index) => (
-            <CellWrapper key={index}>
-              <Cell color={color} />
-            </CellWrapper>
+    <>
+      <Container>
+        <PaletteWrapper>
+          {COLOR.map((color, index) => (
+            <Palette
+              key={index}
+              color={color}
+              $nowColor={nowColor}
+              onClick={() => setNowColor(color)}
+            />
           ))}
-        </Paper>
-        <Paper>
-          {answer.map((_, index) => (
-            <CellWrapper key={index}>
-              <Cell
-                onClick={(e) => changeCellColor(e.target as HTMLElement)}
-                ref={(el) => (cellRefs.current[index] = el)}
-              />
-            </CellWrapper>
-          ))}
-        </Paper>
-      </PaperWrapper>
-    </Container>
+        </PaletteWrapper>
+        <PaperWrapper>
+          <Paper>
+            {answer.map((color, index) => (
+              <CellWrapper key={index}>
+                <Cell color={color} />
+              </CellWrapper>
+            ))}
+          </Paper>
+          <Paper>
+            {answer.map((_, index) => (
+              <CellWrapper key={index}>
+                <Cell
+                  onClick={(e) => changeCellColor(e.target as HTMLElement)}
+                  ref={(el) => (cellRefs.current[index] = el)}
+                />
+              </CellWrapper>
+            ))}
+          </Paper>
+        </PaperWrapper>
+      </Container>
+      <AnswerFeedback>
+        {answerState === 'correct' ? (
+          <Correct />
+        ) : answerState === 'incorrect' ? (
+          <Incorrect />
+        ) : null}
+      </AnswerFeedback>
+    </>
   );
 }

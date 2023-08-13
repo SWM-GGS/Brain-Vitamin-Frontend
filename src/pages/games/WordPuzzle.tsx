@@ -8,6 +8,11 @@ import {
   Letter,
 } from '../../components/games/WordPuzzle.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import {
+  AnswerFeedback,
+  Correct,
+} from '../../components/common/AnswerFeedback.tsx';
+import { styled } from 'styled-components';
 
 export default function WordPuzzle({
   gameData,
@@ -41,6 +46,7 @@ export default function WordPuzzle({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
+  const [answerState, setAnswerState] = useState('');
 
   // 글자가 처음 흩뿌려질 위치 조정
   const calculateRandomPosition = () => {
@@ -82,21 +88,35 @@ export default function WordPuzzle({
     }
   }, []);
 
-  const checkAnswer = () => {
+  const checkAnswer = async () => {
     // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
     // 방법 2: 요소를 드래그한 후 드롭했을 때 박스의 터치 감지
     for (let i = 0; i < letters.length; i++) {
       let el = dropRefs.current[i];
       let letter = el?.getAttribute('letter');
       if (!letter || letter !== letters[i]) {
-        alert('틀렸습니다 ㅜ.ㅜ');
+        // 오답
+        setAnswerState('incorrect');
         saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
         onGameEnd();
         return;
       }
     }
-    alert('정답입니다!');
+    // 정답
+    setAnswerState('correct');
     saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
     onGameEnd();
   };
 
@@ -213,46 +233,87 @@ export default function WordPuzzle({
   };
 
   return (
-    <Container ref={containerRef}>
-      <Wrapper>
-        {answers.map((item, index) => (
-          <div key={index}>
-            <Img src={item.imgUrl} />
-            <DropBoxWrapper key={index}>
-              {item.contents.split('').map((_, i) => (
-                <DropBox
-                  key={`${index}-${i}`}
-                  ref={(el) => (dropRefs.current[dropRefs.current.length] = el)}
-                />
-              ))}
-            </DropBoxWrapper>
-          </div>
-        ))}
-      </Wrapper>
-      <ul>
-        {problemPool.map((item, index) =>
-          item.contents.split('').map((letter, i) => (
-            <Letter
-              style={{
-                position: 'absolute',
-                ...calculateRandomPosition(),
-                touchAction: 'none',
-              }}
-              key={`${index}^_^${i}`}
-              ref={(el) => (dragRefs.current[index] = el)}
-              draggable
-              onDragStart={dragStartHandler}
-              onDragEnd={dragEndHandler}
-              onDrag={dragHandler}
-              onDragOver={dragOverHandler}
-              onTouchStart={dragStartHandler}
-              onTouchMove={dragHandler}
-              onTouchEnd={dragEndHandler}>
-              {letter}
-            </Letter>
-          )),
-        )}
-      </ul>
-    </Container>
+    <>
+      <Container ref={containerRef}>
+        <Wrapper>
+          {answers.map((item, index) => (
+            <div key={index}>
+              <Img src={item.imgUrl} />
+              <DropBoxWrapper key={index}>
+                {item.contents.split('').map((_, i) => (
+                  <DropBox
+                    key={`${index}-${i}`}
+                    ref={(el) =>
+                      (dropRefs.current[dropRefs.current.length] = el)
+                    }
+                  />
+                ))}
+              </DropBoxWrapper>
+            </div>
+          ))}
+        </Wrapper>
+        <ul>
+          {problemPool.map((item, index) =>
+            item.contents.split('').map((letter, i) => (
+              <Letter
+                style={{
+                  position: 'absolute',
+                  ...calculateRandomPosition(),
+                  touchAction: 'none',
+                }}
+                key={`${index}^_^${i}`}
+                ref={(el) => (dragRefs.current[index] = el)}
+                draggable
+                onDragStart={dragStartHandler}
+                onDragEnd={dragEndHandler}
+                onDrag={dragHandler}
+                onDragOver={dragOverHandler}
+                onTouchStart={dragStartHandler}
+                onTouchMove={dragHandler}
+                onTouchEnd={dragEndHandler}>
+                {letter}
+              </Letter>
+            )),
+          )}
+        </ul>
+      </Container>
+      <AnswerFeedback>
+        {answerState === 'correct' ? (
+          <Correct />
+        ) : answerState === 'incorrect' ? (
+          <ShowAnswer>
+            <p>
+              정답은 [
+              {answers.map((v, i) => {
+                if (i === answers.length - 1) return v.contents;
+                return `${v.contents}, `;
+              })}
+              ]입니다.
+            </p>
+          </ShowAnswer>
+        ) : null}
+      </AnswerFeedback>
+    </>
   );
 }
+
+const ShowAnswer = styled.div`
+  font-size: 5rem;
+  width: 50rem;
+  height: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--main-bg-color);
+  border-radius: 1.3rem;
+  box-shadow: 15px 13px 28px 0px rgba(0, 0, 0, 0.06);
+  padding: 4rem;
+  word-break: keep-all;
+  text-align: center;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+    width: 20rem;
+    height: 20rem;
+    padding: 2rem;
+  }
+`;

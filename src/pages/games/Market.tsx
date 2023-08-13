@@ -13,6 +13,11 @@ import {
 } from '../../components/games/Market';
 import { ButtonWrapper } from '../../components/games/Overlapping.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import {
+  AnswerFeedback,
+  Correct,
+} from '../../components/common/AnswerFeedback.tsx';
+import { styled } from 'styled-components';
 
 export default function Market({
   gameData,
@@ -37,6 +42,7 @@ export default function Market({
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
   let clickedPrice = useRef(0);
+  const [answerState, setAnswerState] = useState('');
 
   useEffect(() => {
     let calculatedAnswer = problemPool.reduce(
@@ -63,16 +69,23 @@ export default function Market({
     // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
   }, []);
 
-  const checkAnswer = () => {
+  const checkAnswer = async () => {
     if (clickedPrice.current === answer) {
-      alert('정답입니다!');
+      // 정답
+      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      onGameEnd();
     } else {
-      alert('틀렸습니다 ㅜ.ㅜ');
+      // 오답
+      setAnswerState('incorrect');
       saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-      onGameEnd();
     }
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    onGameEnd();
   };
 
   useEffect(() => {
@@ -145,6 +158,36 @@ export default function Market({
           </Button>
         ))}
       </ButtonWrapper>
+      <AnswerFeedback>
+        {answerState === 'correct' ? (
+          <Correct />
+        ) : answerState === 'incorrect' ? (
+          <ShowAnswer>
+            <p>정답은 [{answer}원]입니다.</p>
+          </ShowAnswer>
+        ) : null}
+      </AnswerFeedback>
     </>
   );
 }
+
+const ShowAnswer = styled.div`
+  font-size: 5rem;
+  width: 50rem;
+  height: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--main-bg-color);
+  border-radius: 1.3rem;
+  box-shadow: 15px 13px 28px 0px rgba(0, 0, 0, 0.06);
+  padding: 4rem;
+  word-break: keep-all;
+  text-align: center;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+    width: 20rem;
+    height: 20rem;
+    padding: 2rem;
+  }
+`;

@@ -23,21 +23,21 @@ const Target = styled.div<{
   x: number;
   y: number;
   $bgColor: string;
-  difficulty: number;
+  $difficulty: number;
 }>`
   position: absolute;
   top: ${(props) => props.y * 63}rem;
   left: ${(props) => props.x * 63}rem;
   transform: translate(-50%, -50%);
-  width: ${(props) => (props.difficulty === 3 ? '3.5rem' : '5rem')};
-  height: ${(props) => (props.difficulty === 3 ? '3.5rem' : '5rem')};
+  width: ${(props) => (props.$difficulty === 3 ? '3.5rem' : '5rem')};
+  height: ${(props) => (props.$difficulty === 3 ? '3.5rem' : '5rem')};
   background: ${(props) => props.$bgColor};
   cursor: pointer;
   @media screen and (max-width: 768px) {
     top: ${(props) => props.y * 26}rem;
     left: ${(props) => props.x * 26}rem;
-    width: ${(props) => (props.difficulty === 3 ? '1.5rem' : '2rem')};
-    height: ${(props) => (props.difficulty === 3 ? '1.5rem' : '2rem')};
+    width: ${(props) => (props.$difficulty === 3 ? '1.5rem' : '2rem')};
+    height: ${(props) => (props.$difficulty === 3 ? '1.5rem' : '2rem')};
   }
 `;
 

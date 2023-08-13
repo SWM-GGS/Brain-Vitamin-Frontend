@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { CogTrainingProps } from '../../pages/CogTraining';
+import { AnswerFeedback, Correct } from '../common/AnswerFeedback';
 
 const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -33,17 +34,25 @@ const Body = ({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
+  const [answerState, setAnswerState] = useState('');
 
-  const checkAnswer = () => {
+  const checkAnswer = async () => {
     if (clickedDate.current === today) {
-      alert('정답입니다!');
+      // 정답
+      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      onGameEnd();
     } else {
-      alert('틀렸습니다 ㅜ.ㅜ');
+      // 오답
+      setAnswerState('incorrect');
       saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-      onGameEnd();
     }
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    onGameEnd();
   };
 
   useEffect(() => {
@@ -125,6 +134,15 @@ const Body = ({
           {item}
         </Button>
       ))} */}
+      <AnswerFeedback>
+        {answerState === 'correct' ? (
+          <Correct />
+        ) : answerState === 'incorrect' ? (
+          <ShowAnswer>
+            <p>오늘의 날짜는 [{today}일]입니다.</p>
+          </ShowAnswer>
+        ) : null}
+      </AnswerFeedback>
     </>
   );
 };
@@ -195,5 +213,26 @@ const Form = styled.button`
 //   margin: 2rem;
 //   font-size: 5rem;
 // `;
+
+const ShowAnswer = styled.div`
+  font-size: 5rem;
+  width: 50rem;
+  height: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--main-bg-color);
+  border-radius: 1.3rem;
+  box-shadow: 15px 13px 28px 0px rgba(0, 0, 0, 0.06);
+  padding: 4rem;
+  word-break: keep-all;
+  text-align: center;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+    width: 20rem;
+    height: 20rem;
+    padding: 2rem;
+  }
+`;
 
 export { Container, Desc, Body };
