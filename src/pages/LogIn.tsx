@@ -83,6 +83,10 @@ function LogIn() {
         'refreshToken',
         data.result.tokenDto.refreshTokenDto.refreshToken,
       );
+      await localStorage.setItem(
+        'accessToken',
+        data.result.tokenDto.accessTokenDto.accessToken,
+      );
       navigate('/home');
     } catch (error) {
       console.error(error);

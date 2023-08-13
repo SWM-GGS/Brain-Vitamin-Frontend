@@ -17,18 +17,20 @@ function AppInner() {
   useEffect(() => {
     const getTokenAndRefresh = async () => {
       try {
-        const token = await localStorage.getItem('refreshToken');
-        if (!token) {
-          return;
-        }
+        const refreshToken = await localStorage.getItem('refreshToken');
+        const accessToken = await localStorage.getItem('accessToken');
+        if (!refreshToken) return;
         const { data } = await axios.post(
           `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`,
-          {},
           {
-            headers: {
-              authorization: `Bearer ${token}`,
+            accessTokenDto: {
+              accessToken: accessToken,
+            },
+            refreshTokenDto: {
+              refreshToken: refreshToken,
             },
           },
+          { headers: { authorization: `Bearer ${accessToken}` } },
         );
         const { name, nickname, phoneNumber, familyKey, fontSize } =
           data.result.patientDetailDto;
@@ -45,6 +47,10 @@ function AppInner() {
         await localStorage.setItem(
           'refreshToken',
           data.result.tokenDto.refreshTokenDto.refreshToken,
+        );
+        await localStorage.setItem(
+          'accessToken',
+          data.result.tokenDto.accessTokenDto.accessToken,
         );
       } catch (error) {
         console.error(error);
@@ -66,20 +72,44 @@ function AppInner() {
           config,
           response: { status },
         } = error;
-        if (status === 419) {
-          if (error.response.data.code === 'expired') {
-            const originalRequest = config;
-            const refreshToken = await localStorage.getItem('refreshToken');
-            // refreshToken이 유효하다면, accessToken 갱신 요청 후 실패했던 api 재요청
-            const { data } = await axios.post(
-              `${import.meta.env.VITE_API_URL}/refreshToken`,
-              {},
-              { headers: { authorization: `Bearer ${refreshToken}` } },
-            );
-            dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
-            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
-            return axios(originalRequest);
+        if (status === 401) {
+          if (
+            config.url ===
+            `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`
+          ) {
+            return;
           }
+          const originalRequest = config;
+          const refreshToken = await localStorage.getItem('refreshToken');
+          const accessToken = await localStorage.getItem('accessToken');
+          // refreshToken이 유효하다면, accessToken 갱신 요청 후 실패했던 api 재요청
+          const { data } = await axios.post(
+            `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`,
+            {
+              accessTokenDto: {
+                accessToken: accessToken,
+              },
+              refreshTokenDto: {
+                refreshToken: refreshToken,
+              },
+            },
+            { headers: { authorization: `Bearer ${accessToken}` } },
+          );
+          dispatch(
+            userSlice.actions.setAccessToken(
+              data.result.tokenDto.accessTokenDto.accessToken,
+            ),
+          );
+          await localStorage.setItem(
+            'refreshToken',
+            data.result.tokenDto.refreshTokenDto.refreshToken,
+          );
+          await localStorage.setItem(
+            'accessToken',
+            data.result.tokenDto.accessTokenDto.accessToken,
+          );
+          originalRequest.headers.authorization = `Bearer ${data.result.tokenDto.accessTokenDto.accessToken}`;
+          return axios(originalRequest);
         }
         return Promise.reject(error);
       },

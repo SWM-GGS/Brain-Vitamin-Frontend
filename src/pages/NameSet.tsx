@@ -49,13 +49,17 @@ function NameSet() {
           nickname,
           fontSize,
           phoneNumber: state.phoneNumber,
-          familyKey: data.result.familyKey,
-          accessToken: data.result.accessTokenDto.accessToken,
+          familyKey: data.result.patientDetailDto.familyKey,
+          accessToken: data.result.tokenDto.accessTokenDto.accessToken,
         }),
       );
       await localStorage.setItem(
         'refreshToken',
-        data.result.refreshTokenDto.refreshToken,
+        data.result.tokenDto.refreshTokenDto.refreshToken,
+      );
+      await localStorage.setItem(
+        'accessToken',
+        data.result.tokenDto.accessTokenDto.accessToken,
       );
       alert('회원가입에 성공하였습니다.');
       navigate('/home');
