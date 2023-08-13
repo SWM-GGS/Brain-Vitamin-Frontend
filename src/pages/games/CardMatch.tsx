@@ -10,7 +10,7 @@ import {
 import { GameProps } from '../../routes/gameRouter.tsx';
 
 /**
- * 난도
+ * 난도별 카드 개수 상이
  * 하 : 2 * 3
  * 중 : 2 * 4
  * 상 : 3 * 4
@@ -21,10 +21,10 @@ export default function CardMatch({
   saveGameResult,
   isNextButtonClicked,
 }: GameProps) {
-  // type Props = {
-  //   imgUrl: string;
-  // };
-  // const problemPool: Props[] = gameData.problemPool;
+  type Props = {
+    imgUrl: string;
+  };
+  const problemPool: Props[] = gameData.problemPool;
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
@@ -36,40 +36,8 @@ export default function CardMatch({
   } else {
     cardCnt = 12;
   }
-  // const deck = problemPool.map((v) => v.imgUrl);
-  const deck = [
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card1.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card2.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card3.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card4.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card5.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card6.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card7.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card8.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card9.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card10.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card11.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card12.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card13.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card14.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card15.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card16.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card17.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card18.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card19.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card20.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card21.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card22.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card23.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card24.svg',
-    'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card25.svg',
-  ];
-  let randomDeck: string[] = [];
-  while (randomDeck.length < cardCnt / 2) {
-    randomDeck.push(deck[Math.floor(Math.random() * deck.length)]);
-    randomDeck = [...new Set(randomDeck)];
-  }
-  const cards = [...randomDeck, ...randomDeck].map((card, i) => {
+  const deck = problemPool.map((v) => v.imgUrl);
+  const cards = [...deck, ...deck].map((card, i) => {
     return { idx: i, type: card, status: false };
   });
   const shuffle = () => cards.sort(() => 0.5 - Math.random());
