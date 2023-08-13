@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import Button from '../components/common/Button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
+import Splash from './Splash';
 
 export type CogTrainingProps = {
   cogArea: string;
@@ -36,6 +37,7 @@ function CogTraining() {
   const [gameResults, setGameResults] = useState<GameResultProps[]>([]);
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [isNextButtonClicked, setIsNextButtonClicked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getGameData = async () => {
@@ -49,6 +51,8 @@ function CogTraining() {
         setShowLayerPopup(true);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     getGameData();
@@ -106,6 +110,7 @@ function CogTraining() {
     setIsNextButtonClicked(true);
   };
 
+  if (loading) return <Splash />;
   return (
     <Container>
       {gameData.length ? (
