@@ -15,25 +15,21 @@ export default function Maze({
     imgUrl: string;
   };
   const problemPool: Props[] = gameData.problemPool;
-  const answerCnt = problemPool.filter((item) => item.answer).length;
-  let clickedTargets = useRef<number[]>([]);
+  const difficulty = gameData.difficulty;
+  const clickedTarget = useRef(-1);
+  const targetRefs = useRef<HTMLDivElement[] | null[]>([]);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
 
   const checkAnswer = () => {
-    for (let i = 0; i < clickedTargets.current.length; i++) {
-      const index = clickedTargets.current[i];
-      if (!problemPool[index].answer) {
-        alert('틀렸습니다 ㅜ.ㅜ');
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        onGameEnd();
-        return;
-      }
-    }
-    if (clickedTargets.current.length === answerCnt) {
+    if (problemPool[clickedTarget.current].answer) {
       alert('정답입니다!');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      onGameEnd();
+    } else {
+      alert('틀렸습니다 ㅜ.ㅜ');
+      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
       onGameEnd();
     }
   };
@@ -51,18 +47,19 @@ export default function Maze({
   }, [isNextButtonClicked]);
 
   const onClickTarget = (el: HTMLElement, index: number) => {
-    if (clickedTargets.current.includes(index)) {
+    if (clickedTarget.current === index) {
       el.style.border = 'none';
-      clickedTargets.current = clickedTargets.current.filter(
-        (v) => v !== index,
-      );
+      clickedTarget.current = -1;
     } else {
-      if (clickedTargets.current.length === answerCnt) {
-        alert(`${answerCnt}개의 정답만 선택해주세요.`);
-        return;
+      for (let i = 0; i < targetRefs.current.length; i++) {
+        const targetRef = targetRefs.current[i];
+        if (targetRef?.style.border === '0.5rem solid var(--main-color)') {
+          targetRef.style.border = 'none';
+          break;
+        }
       }
       el.style.border = '0.5rem solid var(--main-color)';
-      clickedTargets.current.push(index);
+      clickedTarget.current = index;
     }
   };
 
@@ -72,10 +69,12 @@ export default function Maze({
         <MazeBox $imgUrl={problemPool[0].imgUrl}>
           {problemPool.map((item, index) => (
             <Target
+              ref={(el) => (targetRefs.current[targetRefs.current.length] = el)}
               key={index}
               x={item.x}
               y={item.y}
               $bgColor={'#' + Math.floor(Math.random() * 0xffffff).toString(16)}
+              difficulty={difficulty}
               onClick={(e) => onClickTarget(e.target as HTMLElement, index)}
             />
           ))}

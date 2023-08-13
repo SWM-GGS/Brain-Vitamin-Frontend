@@ -19,17 +19,25 @@ const MazeBox = styled.div<{ $imgUrl: string }>`
   }
 `;
 
-const Target = styled.div<{ x: number; y: number; $bgColor: string }>`
+const Target = styled.div<{
+  x: number;
+  y: number;
+  $bgColor: string;
+  difficulty: number;
+}>`
   position: absolute;
-  top: ${(props) => props.y}px;
-  left: ${(props) => props.x}px;
-  width: 5rem;
-  height: 5rem;
+  top: ${(props) => props.y * 63}rem;
+  left: ${(props) => props.x * 63}rem;
+  transform: translate(-50%, -50%);
+  width: ${(props) => (props.difficulty === 3 ? '3.5rem' : '5rem')};
+  height: ${(props) => (props.difficulty === 3 ? '3.5rem' : '5rem')};
   background: ${(props) => props.$bgColor};
   cursor: pointer;
   @media screen and (max-width: 768px) {
-    width: 2rem;
-    height: 2rem;
+    top: ${(props) => props.y * 26}rem;
+    left: ${(props) => props.x * 26}rem;
+    width: ${(props) => (props.difficulty === 3 ? '1.5rem' : '2rem')};
+    height: ${(props) => (props.difficulty === 3 ? '1.5rem' : '2rem')};
   }
 `;
 
