@@ -33,14 +33,6 @@ export default function CardMatch({
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [clickable, setClickable] = useState<boolean>(true);
   let difficulty = gameData.difficulty;
-  let cardCnt: number;
-  if (difficulty === 1) {
-    cardCnt = 6;
-  } else if (difficulty === 2) {
-    cardCnt = 8;
-  } else {
-    cardCnt = 12;
-  }
   const deck = problemPool.map((v) => v.imgUrl);
   const cards = [...deck, ...deck].map((card, i) => {
     return { idx: i, type: card, status: false };
