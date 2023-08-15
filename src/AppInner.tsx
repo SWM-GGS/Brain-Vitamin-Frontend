@@ -21,7 +21,7 @@ function AppInner() {
         const accessToken = await localStorage.getItem('accessToken');
         if (!refreshToken) return;
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`,
+          `${import.meta.env.VITE_API_URL}/patient/reissue`,
           {
             accessTokenDto: {
               accessToken: accessToken,
