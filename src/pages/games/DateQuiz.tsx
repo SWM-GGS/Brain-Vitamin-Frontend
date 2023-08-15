@@ -7,6 +7,8 @@ export default function DateQuiz({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
@@ -65,6 +67,8 @@ export default function DateQuiz({
         onGameEnd={onGameEnd}
         saveGameResult={saveGameResult}
         isNextButtonClicked={isNextButtonClicked}
+        setAnswerState={setAnswerState}
+        answerState={answerState}
       />
     </Container>
   );

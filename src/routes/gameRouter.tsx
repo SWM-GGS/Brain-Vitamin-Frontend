@@ -18,12 +18,16 @@ export type GameProps = {
     score: number,
   ) => void;
   isNextButtonClicked: boolean;
+  setAnswerState: React.Dispatch<React.SetStateAction<string>>;
+  answerState: string;
 };
 export default function GameRouter({
   gameData,
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   return (
     <Routes>
@@ -35,6 +39,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -46,6 +52,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -57,6 +65,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -68,6 +78,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -79,6 +91,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -90,6 +104,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />
@@ -101,6 +117,8 @@ export default function GameRouter({
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
             isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
           />
         }
       />

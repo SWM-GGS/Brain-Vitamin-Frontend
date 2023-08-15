@@ -8,10 +8,7 @@ import {
   NumBtn,
 } from '../../components/games/Overlapping';
 import { GameProps } from '../../routes/gameRouter.tsx';
-import {
-  AnswerFeedback,
-  Correct,
-} from '../../components/common/AnswerFeedback.tsx';
+import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
 
 /**
@@ -25,6 +22,8 @@ export default function Overlapping({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   let difficulty = gameData.difficulty;
   const [answer, setAnswer] = useState<number[]>([]);
@@ -32,7 +31,7 @@ export default function Overlapping({
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
   let clickedNums = useRef<number[]>([]);
-  const [answerState, setAnswerState] = useState('');
+  const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
     let newAnswer: number[] = [];
@@ -52,21 +51,43 @@ export default function Overlapping({
       [...answerSet].every((num) => clickedNumSet.has(num))
     ) {
       // 정답
-      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      setAnswerState('correct');
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setAnswerState('');
+          resolve();
+        }, 2000);
+      });
+      onGameEnd();
     } else {
       // 오답
       setAnswerState('incorrect');
-      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
     }
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setAnswerState('');
-        resolve();
-      }, 2000);
-    });
-    onGameEnd();
   };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      const handleIncorrect = async () => {
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
+        setShowAnswer(true);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setShowAnswer(false);
+            resolve();
+          }, 2000);
+        });
+        onGameEnd();
+      };
+      handleIncorrect();
+    }
+  }, [answerState]);
 
   useEffect(() => {
     if (isNextButtonClicked) {
@@ -124,10 +145,8 @@ export default function Overlapping({
           ))}
         </ButtonWrapper>
       </Container>
-      <AnswerFeedback>
-        {answerState === 'correct' ? (
-          <Correct />
-        ) : answerState === 'incorrect' ? (
+      {showAnswer && (
+        <AnswerFeedback>
           <ShowAnswer>
             <p>
               정답은 [
@@ -138,8 +157,8 @@ export default function Overlapping({
               ]입니다.
             </p>
           </ShowAnswer>
-        ) : null}
-      </AnswerFeedback>
+        </AnswerFeedback>
+      )}
     </>
   );
 }

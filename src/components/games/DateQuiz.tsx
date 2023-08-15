@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { CogTrainingProps } from '../../pages/CogTraining';
-import { AnswerFeedback, Correct } from '../common/AnswerFeedback';
+import { AnswerFeedback } from '../common/AnswerFeedback';
 
 const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -17,6 +17,8 @@ type BodyProps = {
     score: number,
   ) => void;
   isNextButtonClicked: boolean;
+  setAnswerState: React.Dispatch<React.SetStateAction<string>>;
+  answerState: string;
 };
 
 const Body = ({
@@ -26,6 +28,8 @@ const Body = ({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: BodyProps) => {
   // const lastDate = totalDate.indexOf(1);
   // const firstDate = totalDate.indexOf(1, 7);
@@ -34,26 +38,48 @@ const Body = ({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
-  const [answerState, setAnswerState] = useState('');
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const checkAnswer = async () => {
     if (clickedDate.current === today) {
       // 정답
-      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      setAnswerState('correct');
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setAnswerState('');
+          resolve();
+        }, 2000);
+      });
+      onGameEnd();
     } else {
       // 오답
       setAnswerState('incorrect');
-      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
     }
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setAnswerState('');
-        resolve();
-      }, 2000);
-    });
-    onGameEnd();
   };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      const handleIncorrect = async () => {
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
+        setShowAnswer(true);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setShowAnswer(false);
+            resolve();
+          }, 2000);
+        });
+        onGameEnd();
+      };
+      handleIncorrect();
+    }
+  }, [answerState]);
 
   useEffect(() => {
     if (isNextButtonClicked) {
@@ -134,15 +160,13 @@ const Body = ({
           {item}
         </Button>
       ))} */}
-      <AnswerFeedback>
-        {answerState === 'correct' ? (
-          <Correct />
-        ) : answerState === 'incorrect' ? (
+      {showAnswer && (
+        <AnswerFeedback>
           <ShowAnswer>
             <p>오늘의 날짜는 [{today}일]입니다.</p>
           </ShowAnswer>
-        ) : null}
-      </AnswerFeedback>
+        </AnswerFeedback>
+      )}
     </>
   );
 };

@@ -9,6 +9,11 @@ import Button from '../components/common/Button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Splash from './Splash';
+import {
+  AnswerFeedback,
+  Correct,
+  Incorrect,
+} from '../components/common/AnswerFeedback';
 
 export type CogTrainingProps = {
   cogArea: string;
@@ -38,6 +43,7 @@ function CogTraining() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [isNextButtonClicked, setIsNextButtonClicked] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [answerState, setAnswerState] = useState('');
 
   useEffect(() => {
     const getGameData = async () => {
@@ -120,7 +126,7 @@ function CogTraining() {
     setIsNextButtonClicked(true);
   };
 
-  const handleExitGame = async () => {
+  const handleExitGame = () => {
     let restResults: GameResultProps[] = [];
     for (let i = gameIndex; i < gameData.length; i++) {
       restResults.push({
@@ -143,9 +149,7 @@ function CogTraining() {
               {isTimerRunning && (
                 <Timer
                   timeLimit={gameData[gameIndex].timeLimit}
-                  onTimeUp={onGameEnd}
-                  gameData={gameData[gameIndex]}
-                  saveGameResult={saveGameResult}
+                  setAnswerState={setAnswerState}
                 />
               )}
               <Section>
@@ -161,12 +165,21 @@ function CogTraining() {
                 onGameEnd={onGameEnd}
                 saveGameResult={saveGameResult}
                 isNextButtonClicked={isNextButtonClicked}
+                setAnswerState={setAnswerState}
+                answerState={answerState}
               />
             </GameWrapper>
             <ButtonWrapper>
               <Button onClick={handleNextButtonClick}>다음</Button>
             </ButtonWrapper>
           </Wrapper>
+          <AnswerFeedback>
+            {answerState === 'correct' ? (
+              <Correct />
+            ) : answerState === 'incorrect' ? (
+              <Incorrect />
+            ) : null}
+          </AnswerFeedback>
           {showLayerPopup && (
             <LayerPopup
               label={gameData[gameIndex].trainingName}

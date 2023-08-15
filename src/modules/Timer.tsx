@@ -1,20 +1,12 @@
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
-import { CogTrainingProps } from '../pages/CogTraining';
 
 type Props = {
   timeLimit: number;
-  onTimeUp: () => void;
-  gameData: CogTrainingProps;
-  saveGameResult: (
-    problemId: number,
-    duration: number,
-    result: string,
-    score: number,
-  ) => void;
+  setAnswerState: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
+function Timer({ timeLimit, setAnswerState }: Props) {
   const [remainingTime, setRemainingTime] = useState(timeLimit);
 
   useEffect(() => {
@@ -27,11 +19,9 @@ function Timer({ timeLimit, onTimeUp, gameData, saveGameResult }: Props) {
 
   useEffect(() => {
     if (remainingTime === 0) {
-      saveGameResult(gameData.problemId, gameData.timeLimit, 'FAIL', 0);
-      alert('제한 시간을 초과하여 게임이 종료됩니다.');
-      onTimeUp();
+      setAnswerState('incorrect');
     }
-  }, [remainingTime, onTimeUp]);
+  }, [remainingTime]);
 
   return <Text>남은 시간: {remainingTime}초</Text>;
 }

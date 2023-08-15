@@ -9,11 +9,6 @@ import {
   Palette,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
-import {
-  AnswerFeedback,
-  Correct,
-  Incorrect,
-} from '../../components/common/AnswerFeedback.tsx';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -26,6 +21,8 @@ export default function Coloring({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   const [nowColor, setNowColor] = useState('red');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
@@ -57,7 +54,6 @@ export default function Coloring({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
-  const [answerState, setAnswerState] = useState('');
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
   answer.forEach((color, i) => {
@@ -67,11 +63,34 @@ export default function Coloring({
   });
 
   const checkAnswer = async () => {
+    let isIncorrect = false;
     for (let i = 0; i < cellRefs.current.length; i++) {
       let el = cellRefs.current[i];
       if (el?.getAttribute('color') !== answer[i]) {
         // 오답
-        setAnswerState('incorrect');
+        isIncorrect = true;
+        break;
+      }
+    }
+    if (isIncorrect) {
+      setAnswerState('incorrect');
+    } else {
+      // 정답
+      setAnswerState('correct');
+      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setAnswerState('');
+          resolve();
+        }, 2000);
+      });
+      onGameEnd();
+    }
+  };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      const handleIncorrect = async () => {
         saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
         await new Promise<void>((resolve) => {
           setTimeout(() => {
@@ -80,20 +99,10 @@ export default function Coloring({
           }, 2000);
         });
         onGameEnd();
-        return;
-      }
+      };
+      handleIncorrect();
     }
-    // 정답
-    setAnswerState('correct');
-    saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setAnswerState('');
-        resolve();
-      }, 2000);
-    });
-    onGameEnd();
-  };
+  }, [answerState]);
 
   useEffect(() => {
     if (isNextButtonClicked) {
@@ -113,45 +122,36 @@ export default function Coloring({
   };
 
   return (
-    <>
-      <Container>
-        <PaletteWrapper>
-          {COLOR.map((color, index) => (
-            <Palette
-              key={index}
-              color={color}
-              $nowColor={nowColor}
-              onClick={() => setNowColor(color)}
-            />
+    <Container>
+      <PaletteWrapper>
+        {COLOR.map((color, index) => (
+          <Palette
+            key={index}
+            color={color}
+            $nowColor={nowColor}
+            onClick={() => setNowColor(color)}
+          />
+        ))}
+      </PaletteWrapper>
+      <PaperWrapper>
+        <Paper>
+          {answer.map((color, index) => (
+            <CellWrapper key={index}>
+              <Cell color={color} />
+            </CellWrapper>
           ))}
-        </PaletteWrapper>
-        <PaperWrapper>
-          <Paper>
-            {answer.map((color, index) => (
-              <CellWrapper key={index}>
-                <Cell color={color} />
-              </CellWrapper>
-            ))}
-          </Paper>
-          <Paper>
-            {answer.map((_, index) => (
-              <CellWrapper key={index}>
-                <Cell
-                  onClick={(e) => changeCellColor(e.target as HTMLElement)}
-                  ref={(el) => (cellRefs.current[index] = el)}
-                />
-              </CellWrapper>
-            ))}
-          </Paper>
-        </PaperWrapper>
-      </Container>
-      <AnswerFeedback>
-        {answerState === 'correct' ? (
-          <Correct />
-        ) : answerState === 'incorrect' ? (
-          <Incorrect />
-        ) : null}
-      </AnswerFeedback>
-    </>
+        </Paper>
+        <Paper>
+          {answer.map((_, index) => (
+            <CellWrapper key={index}>
+              <Cell
+                onClick={(e) => changeCellColor(e.target as HTMLElement)}
+                ref={(el) => (cellRefs.current[index] = el)}
+              />
+            </CellWrapper>
+          ))}
+        </Paper>
+      </PaperWrapper>
+    </Container>
   );
 }

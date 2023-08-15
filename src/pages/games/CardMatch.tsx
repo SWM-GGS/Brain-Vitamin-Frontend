@@ -8,11 +8,6 @@ import {
   Back,
 } from '../../components/games/CardMatch.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
-import {
-  AnswerFeedback,
-  Correct,
-  Incorrect,
-} from '../../components/common/AnswerFeedback.tsx';
 
 /**
  * 난도별 카드 개수 상이
@@ -25,6 +20,8 @@ export default function CardMatch({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   type Props = {
     imgUrl: string;
@@ -42,27 +39,41 @@ export default function CardMatch({
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
-  const [answerState, setAnswerState] = useState('');
 
   const checkAnswer = async () => {
     // 모든 카드의 상태가 true면 게임 종료
     if (mixedCards.every((card) => card.status)) {
       // 정답
-      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      setAnswerState('correct');
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setAnswerState('');
+          resolve();
+        }, 2000);
+      });
+      onGameEnd();
     } else {
       // 오답
       setAnswerState('incorrect');
-      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
     }
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setAnswerState('');
-        resolve();
-      }, 2000);
-    });
-    onGameEnd();
   };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      const handleIncorrect = async () => {
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
+        onGameEnd();
+      };
+      handleIncorrect();
+    }
+  }, [answerState]);
 
   useEffect(() => {
     if (isNextButtonClicked) {
@@ -116,31 +127,22 @@ export default function CardMatch({
   };
 
   return (
-    <>
-      <Container $difficulty={difficulty}>
-        {mixedCards.map((card) => (
-          <FlipWrapper key={card.idx}>
-            <Flip
-              $status={card.status}
-              $clickable={clickable}
-              onClick={() => {
-                !card.status ? handleClick(card.idx) : null;
-              }}>
-              <Card>
-                <Front $status={card.status} $background={card.type} />
-                <Back $status={card.status} />
-              </Card>
-            </Flip>
-          </FlipWrapper>
-        ))}
-      </Container>
-      <AnswerFeedback>
-        {answerState === 'correct' ? (
-          <Correct />
-        ) : answerState === 'incorrect' ? (
-          <Incorrect />
-        ) : null}
-      </AnswerFeedback>
-    </>
+    <Container $difficulty={difficulty}>
+      {mixedCards.map((card) => (
+        <FlipWrapper key={card.idx}>
+          <Flip
+            $status={card.status}
+            $clickable={clickable}
+            onClick={() => {
+              !card.status ? handleClick(card.idx) : null;
+            }}>
+            <Card>
+              <Front $status={card.status} $background={card.type} />
+              <Back $status={card.status} />
+            </Card>
+          </Flip>
+        </FlipWrapper>
+      ))}
+    </Container>
   );
 }

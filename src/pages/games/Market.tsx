@@ -13,10 +13,7 @@ import {
 } from '../../components/games/Market';
 import { ButtonWrapper } from '../../components/games/Overlapping.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
-import {
-  AnswerFeedback,
-  Correct,
-} from '../../components/common/AnswerFeedback.tsx';
+import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
 
 export default function Market({
@@ -24,6 +21,8 @@ export default function Market({
   onGameEnd,
   saveGameResult,
   isNextButtonClicked,
+  setAnswerState,
+  answerState,
 }: GameProps) {
   type Props = {
     contents: string;
@@ -42,7 +41,7 @@ export default function Market({
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
   let clickedPrice = useRef(0);
-  const [answerState, setAnswerState] = useState('');
+  const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
     let calculatedAnswer = problemPool.reduce(
@@ -72,21 +71,43 @@ export default function Market({
   const checkAnswer = async () => {
     if (clickedPrice.current === answer) {
       // 정답
-      setAnswerState('correct');
       saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+      setAnswerState('correct');
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setAnswerState('');
+          resolve();
+        }, 2000);
+      });
+      onGameEnd();
     } else {
       // 오답
       setAnswerState('incorrect');
-      saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
     }
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setAnswerState('');
-        resolve();
-      }, 2000);
-    });
-    onGameEnd();
   };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      const handleIncorrect = async () => {
+        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setAnswerState('');
+            resolve();
+          }, 2000);
+        });
+        setShowAnswer(true);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setShowAnswer(false);
+            resolve();
+          }, 2000);
+        });
+        onGameEnd();
+      };
+      handleIncorrect();
+    }
+  }, [answerState]);
 
   useEffect(() => {
     if (isNextButtonClicked) {
@@ -158,15 +179,13 @@ export default function Market({
           </Button>
         ))}
       </ButtonWrapper>
-      <AnswerFeedback>
-        {answerState === 'correct' ? (
-          <Correct />
-        ) : answerState === 'incorrect' ? (
+      {showAnswer && (
+        <AnswerFeedback>
           <ShowAnswer>
             <p>정답은 [{answer}원]입니다.</p>
           </ShowAnswer>
-        ) : null}
-      </AnswerFeedback>
+        </AnswerFeedback>
+      )}
     </>
   );
 }
