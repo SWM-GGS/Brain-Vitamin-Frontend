@@ -67,18 +67,28 @@ function CogTraining() {
     setGameResults((prev) => [...prev, { problemId, duration, result, score }]);
   };
 
-  const sendGameResults = async () => {
+  const sendGameResults = async (
+    finish: boolean,
+    doNotFinishGameResults?: GameResultProps[],
+  ) => {
     try {
+      const results = doNotFinishGameResults
+        ? doNotFinishGameResults
+        : gameResults;
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/vitamins/cog-training`,
-        { finish: true, cogTrainingDtos: gameResults },
+        { finish, cogTrainingDtos: results },
         { headers: { authorization: `Bearer ${accessToken}` } },
       );
-      // score: 맞으면 10점, 틀리면 0점
-      const totalScore = gameResults.reduce((p, c) => p + c.score, 0);
-      navigate('/cogTrainingResult', {
-        state: { totalScore, result: data.result },
-      });
+      // score: 맞으면 10점, 틀리면 0점, 안 풀면 -1점
+      if (finish) {
+        const totalScore = results.reduce((p, c) => p + c.score, 0);
+        navigate('/cogTrainingResult', {
+          state: { totalScore, result: data.result },
+        });
+      } else {
+        navigate('/home');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -87,7 +97,7 @@ function CogTraining() {
   const goToNextGame = () => {
     if (gameIndex === gameData.length - 1) {
       alert('모든 게임이 종료되었습니다');
-      sendGameResults();
+      sendGameResults(true);
     } else {
       setGameIndex((prev) => prev + 1);
     }
@@ -108,6 +118,19 @@ function CogTraining() {
 
   const handleNextButtonClick = () => {
     setIsNextButtonClicked(true);
+  };
+
+  const handleExitGame = async () => {
+    let restResults: GameResultProps[] = [];
+    for (let i = gameIndex; i < gameData.length; i++) {
+      restResults.push({
+        problemId: gameData[i].problemId,
+        duration: 0,
+        result: 'DONOT',
+        score: -1,
+      });
+    }
+    sendGameResults(false, [...gameResults, ...restResults]);
   };
 
   if (loading) return <Splash />;
@@ -149,7 +172,7 @@ function CogTraining() {
               label={gameData[gameIndex].trainingName}
               desc={gameData[gameIndex].explanation}
               leftButtonText="종료"
-              onClickLeftButton={() => navigate('/home')}
+              onClickLeftButton={handleExitGame}
               rightButtonText="게임 시작"
               onClickRightButton={startGame}
             />
@@ -160,7 +183,7 @@ function CogTraining() {
               leftButtonText="취소"
               onClickLeftButton={() => setExitGame(false)}
               rightButtonText="종료"
-              onClickRightButton={() => navigate('/home')}
+              onClickRightButton={handleExitGame}
             />
           )}
         </>
