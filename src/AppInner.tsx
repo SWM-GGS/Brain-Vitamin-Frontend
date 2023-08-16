@@ -74,8 +74,7 @@ function AppInner() {
         } = error;
         if (status === 401) {
           if (
-            config.url ===
-            `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`
+            config.url === `${import.meta.env.VITE_API_URL}/patient/reissue`
           ) {
             return;
           }
