@@ -18,6 +18,7 @@ function NameSet() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
+  const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value.trim());
@@ -94,8 +95,24 @@ function NameSet() {
               />
             </Section>
           </InputWrapper>
+          <CheckContainer>
+            <CheckboxLabel htmlFor="privacy">
+              <CheckboxInput
+                id="privacy"
+                type="checkbox"
+                checked={isCheckedPrivacy}
+                onChange={() => setIsCheckedPrivacy((prev) => !prev)}
+              />
+              회원가입 및 이용약관에 동의합니다.
+            </CheckboxLabel>
+            <span onClick={() => navigate('/privacy')}>
+              * 이용약관 확인하기
+            </span>
+          </CheckContainer>
         </Wrapper>
-        <Button disabled={!name || !nickname} onClick={signUp}>
+        <Button
+          disabled={!name || !nickname || !isCheckedPrivacy}
+          onClick={signUp}>
           회원가입
         </Button>
       </Box>
@@ -159,6 +176,43 @@ const Intro = styled.p`
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 0 0 1rem 0;
+  }
+`;
+const CheckContainer = styled.div`
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 41.2rem;
+  margin: 0 auto;
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    font-size: 1.6rem;
+  }
+`;
+const CheckboxLabel = styled.label`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 0 0 1rem 0;
+  @media screen and (max-width: 767px) {
+    gap: 0.5rem;
+  }
+`;
+const CheckboxInput = styled.input`
+  width: 2rem;
+  height: 2rem;
+  border: 0.1rem solid #1f1411;
+  position: relative;
+  &:checked {
+    &::before {
+      content: '\\2713';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5rem;
+      color: var(--main-color);
+    }
   }
 `;
 
