@@ -25,7 +25,7 @@ function screeningTestResult() {
               <span>{cogLevel}</span>
             </Result>
             <Desc>
-              {cogLevel === '정상'
+              {cogLevel === '양호'
                 ? `현재 ${nickname}님은 양호한 단계로 보입니다.`
                 : `현재 ${nickname}님은 경도인지장애가 의심되는 단계로 보입니다.`}
             </Desc>
@@ -85,7 +85,7 @@ const Result = styled.div<{ $cogLevel: string }>`
   width: 20rem;
   height: 20rem;
   background: ${(props) =>
-    props.$cogLevel === '정상' ? 'forestgreen' : '#FF3F3F'};
+    props.$cogLevel === '양호' ? 'forestgreen' : '#FF3F3F'};
   display: flex;
   justify-content: center;
   align-items: center;
