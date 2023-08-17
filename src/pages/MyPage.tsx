@@ -16,12 +16,22 @@ function MyPage() {
       weeklyVitaminAttendance: boolean[];
     };
     changesFromLastWeekDto: {
-      changedFromLastWeek: {};
+      changedFromLastWeek: {
+        calculation: number;
+        executive: number;
+        orientation: number;
+        memory: number;
+        sound: number;
+        attention: number;
+        visual: number;
+        language: number;
+      };
     };
     screeningTestHistoryDto: {
       totalScore: number;
       state: string;
       description: string;
+      testDate: string;
     };
   };
   const [data, setData] = useState<Props>();
@@ -33,6 +43,22 @@ function MyPage() {
   const currentMonth = currentDate.getMonth() + 1;
   const weekOfMonth = getWeekOfMonth(currentDate);
   const navigate = useNavigate();
+  const [positiveValues, setPositiveValues] = useState<{
+    [key: string]: number;
+  }>({});
+  const [negativeValues, setNegativeValues] = useState<{
+    [key: string]: number;
+  }>({});
+  const ability = {
+    calculation: '계산능력',
+    executive: '실행능력',
+    orientation: '지남력',
+    memory: '기억력',
+    sound: '소리인지력',
+    attention: '주의집중력',
+    visual: '시지각능력',
+    language: '언어능력',
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -42,6 +68,33 @@ function MyPage() {
           { headers: { authorization: `Bearer ${accessToken}` } },
         );
         setData(data.result);
+        const percentInfo =
+          data.result.changesFromLastWeekDto.changedFromLastWeek;
+        const positiveValues: {
+          [key: string]: number;
+        } = {};
+        const negativeValues: {
+          [key: string]: number;
+        } = {};
+        for (const key in percentInfo) {
+          if (percentInfo[key] > 0) {
+            positiveValues[key] = percentInfo[key];
+          } else if (percentInfo[key] < 0) {
+            negativeValues[key] = percentInfo[key];
+          }
+        }
+        const sortedPositive = Object.fromEntries(
+          Object.entries(positiveValues)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 2),
+        );
+        const sortedNegative = Object.fromEntries(
+          Object.entries(negativeValues)
+            .sort((a, b) => a[1] - b[1])
+            .slice(0, 2),
+        );
+        setPositiveValues(sortedPositive);
+        setNegativeValues(sortedNegative);
       } catch (error) {
         console.error(error);
       } finally {
@@ -102,19 +155,28 @@ function MyPage() {
             <StatusContainer>
               <StatusBox>
                 <Intro>지난 주보다 좋아졌어요!</Intro>
-                <InfoText>기억력이 30% 높아졌어요</InfoText>
+                {Object.entries(positiveValues).map(([k, v]) => (
+                  <InfoText key={k}>
+                    {ability[k as keyof typeof ability]}이 {v.toFixed(1)}%
+                    높아졌어요
+                  </InfoText>
+                ))}
                 <InfoText>집중력이 12% 높아졌어요</InfoText>
               </StatusBox>
               <StatusBox>
                 <Intro>지난 주보다 신경쓰면 좋아요!</Intro>
-                <InfoText>계산능력이 30% 낮아졌어요</InfoText>
-                <InfoText>시공간능력이 12% 낮아졌어요</InfoText>
+                {Object.entries(negativeValues).map(([k, v]) => (
+                  <InfoText key={k}>
+                    {ability[k as keyof typeof ability]}이 {-v.toFixed(1)}%
+                    낮아졌어요
+                  </InfoText>
+                ))}
               </StatusBox>
             </StatusContainer>
           </LeftContainer>
           <RightContainer>
             <IntroContainer>
-              <ResultDate>2023년 6월 5일</ResultDate>
+              <ResultDate>{data?.screeningTestHistoryDto.testDate}</ResultDate>
               <Label>지난 검사 결과</Label>
             </IntroContainer>
             <ResultBox>
