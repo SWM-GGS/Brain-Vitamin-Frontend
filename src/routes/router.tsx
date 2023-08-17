@@ -16,6 +16,7 @@ import ScreeningTest from '../pages/ScreeningTest.tsx';
 import ScreeningTestResult from '../pages/ScreeningTestResult.tsx';
 import MyPage from '../pages/MyPage.tsx';
 import Privacy from '../pages/Privacy.tsx';
+import Setting from '../pages/Setting.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -47,6 +48,7 @@ export default function Router() {
       <Route path="/screeningTestResult" element={<ScreeningTestResult />} />
       <Route path="/myPage" element={<MyPage />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/setting" element={<Setting />} />
     </Routes>
   );
 }
