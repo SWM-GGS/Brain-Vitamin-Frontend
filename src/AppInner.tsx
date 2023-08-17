@@ -83,7 +83,7 @@ function AppInner() {
           const accessToken = await localStorage.getItem('accessToken');
           // refreshToken이 유효하다면, accessToken 갱신 요청 후 실패했던 api 재요청
           const { data } = await axios.post(
-            `${import.meta.env.VITE_API_URL}/patient/reissue-tokens`,
+            `${import.meta.env.VITE_API_URL}/patient/reissue`,
             {
               accessTokenDto: {
                 accessToken: accessToken,
