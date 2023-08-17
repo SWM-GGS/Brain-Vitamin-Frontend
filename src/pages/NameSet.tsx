@@ -41,7 +41,6 @@ function NameSet() {
       );
       if (!data.isSuccess) {
         alert(data.message);
-        navigate('/logIn');
         return;
       }
       dispatch(
