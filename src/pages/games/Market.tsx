@@ -165,7 +165,12 @@ export default function Market({
           <Item key={index}>
             <Img src={item.imgUrl} />
             <Name>{item.contents}</Name>
-            <Price>{item.price}원</Price>
+            <Price>
+              {item.price
+                ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                : null}
+              원
+            </Price>
           </Item>
         ))}
       </Container>
@@ -175,7 +180,10 @@ export default function Market({
             ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
             key={i}
             onClick={(e) => onClickPrice(price, e.target as HTMLElement)}>
-            {price}원
+            {price
+              ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              : null}
+            원
           </Button>
         ))}
       </ButtonWrapper>
