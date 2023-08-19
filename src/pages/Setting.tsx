@@ -113,7 +113,25 @@ function Setting() {
       <Container2>
         <Container3>
           <Box>
-            <Version>버전 : 1.0</Version>
+            <Version>
+              <PrivacyButton
+                onClick={() =>
+                  window.open(
+                    'http://brain-vitamin-web-front-deploy.s3-website.ap-northeast-2.amazonaws.com/privacy',
+                    '_blank',
+                  )
+                }>
+                <span>개인정보처리방침 보기</span>
+                <span
+                  style={{
+                    color: 'gray',
+                    fontWeight: 'bold',
+                    margin: '0 0 0 1rem',
+                  }}>
+                  {'>'}
+                </span>
+              </PrivacyButton>
+            </Version>
             <ProfileContainer>
               <ProfileImage alt="" src="/assets/images/profile-default.svg" />
               <Name>{nickname}</Name>
@@ -184,7 +202,7 @@ const Box = styled.div`
   position: relative;
   @media screen and (max-width: 767px) {
     width: 100%;
-    padding: 3rem 2rem;
+    padding: 6rem 2rem;
     flex-direction: column;
   }
 `;
@@ -283,6 +301,18 @@ const LogoutButton = styled.button`
   font-family: 'Pretendard-Medium';
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
+  }
+`;
+const PrivacyButton = styled.button`
+  display: flex;
+  justify-content: space-between;
+  background: var(--main-bg-color);
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 2rem;
+  align-items: center;
+  @media screen and (max-width: 767px) {
+    font-size: 1.4rem;
   }
 `;
 
