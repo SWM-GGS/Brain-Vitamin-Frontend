@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
 import axios from 'axios';
@@ -93,6 +93,18 @@ function ScreeningTest() {
     }
   };
 
+  const convertNewlineToJSX = (inputString: string) => {
+    const lines = inputString.split('\n');
+    const jsxLines = lines.map((line, index) => (
+      <Fragment key={index}>
+        {line}
+        {index !== lines.length - 1 && <br />}
+      </Fragment>
+    ));
+
+    return jsxLines;
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -120,7 +132,7 @@ function ScreeningTest() {
             ? questions[currentStep - 1].map((question) => (
                 <QuestionWrapper key={question.idx}>
                   <Question>
-                    {question.idx}. {question.description}
+                    {question.idx}. {convertNewlineToJSX(question.description)}
                   </Question>
                   <ChoiceWrapper>
                     <ChoiceButton
