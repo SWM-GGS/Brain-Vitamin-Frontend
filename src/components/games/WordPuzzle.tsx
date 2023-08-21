@@ -44,10 +44,10 @@ const Img = styled.img`
 `;
 
 const Letter = styled.li`
-  font-size: 4rem;
+  font-size: 6rem;
   font-family: 'Pretendard-Bold';
   @media screen and (max-width: 767px) {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 `;
 
