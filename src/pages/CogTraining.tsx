@@ -14,10 +14,10 @@ import {
   Correct,
   Incorrect,
 } from '../components/common/AnswerFeedback';
-import correctSound from '../../public/assets/sounds/correct.mp3';
-import incorrectSound from '../../public/assets/sounds/incorrect.mp3';
-import startSound from '../../public/assets/sounds/start.mp3';
-import endSound from '../../public/assets/sounds/end.mp3';
+import correctSound from '/assets/sounds/correct.mp3';
+import incorrectSound from '/assets/sounds/incorrect.mp3';
+import startSound from '/assets/sounds/start.mp3';
+import endSound from '/assets/sounds/end.mp3';
 
 export type GameResultProps = {
   problemId: number;
