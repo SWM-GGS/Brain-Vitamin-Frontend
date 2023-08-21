@@ -107,6 +107,33 @@ export default function CardMatch({
         } else {
           // 매칭 성공
           console.log('매칭에 성공하셨습니다!');
+          // 카드가 모두 매칭된 경우 자동 정답 처리
+          endTimeRef.current = new Date();
+          if (startTimeRef.current && endTimeRef.current) {
+            duration.current =
+              (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+              1000;
+          }
+          const checkAnswer = async () => {
+            if (mixedCards.every((card) => card.status)) {
+              // 정답
+              saveGameResult(
+                gameData.problemId,
+                duration.current,
+                'SUCCESS',
+                10,
+              );
+              setAnswerState('correct');
+              await new Promise<void>((resolve) => {
+                setTimeout(() => {
+                  setAnswerState('');
+                  resolve();
+                }, 2000);
+              });
+              onGameEnd();
+            }
+          };
+          checkAnswer();
         }
         setClickedCards([]);
         setClickable(true);
