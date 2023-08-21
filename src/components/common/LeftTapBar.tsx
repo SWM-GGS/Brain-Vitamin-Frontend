@@ -31,7 +31,7 @@ function LeftTapBar() {
             color: path === '/family' ? 'var(--main-color)' : '#433D3A',
           }}
           onClick={() => onClickTap('/family')}>
-          가족 커뮤니티
+          우리 가족 이야기
         </Tap>
         <Tap
           style={{
@@ -39,7 +39,7 @@ function LeftTapBar() {
             color: path === '/myPage' ? 'var(--main-color)' : '#433D3A',
           }}
           onClick={() => onClickTap('/myPage')}>
-          마이페이지
+          내 활동 보기
         </Tap>
       </TapWrapper>
     </Container>
