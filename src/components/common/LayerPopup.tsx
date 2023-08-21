@@ -4,10 +4,12 @@ import { styled } from 'styled-components';
 type Props = {
   label: string;
   desc?: string;
-  leftButtonText: string;
-  onClickLeftButton: () => void;
-  rightButtonText: string;
-  onClickRightButton: () => void;
+  leftButtonText?: string;
+  onClickLeftButton?: () => void;
+  rightButtonText?: string;
+  onClickRightButton?: () => void;
+  centerButtonText?: string;
+  onClickCenterButton?: () => void;
 };
 function LayerPopup({
   label,
@@ -16,6 +18,8 @@ function LayerPopup({
   onClickLeftButton,
   rightButtonText,
   onClickRightButton,
+  centerButtonText,
+  onClickCenterButton,
 }: Props) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
 
@@ -25,10 +29,21 @@ function LayerPopup({
         <Label>{label}</Label>
         <Desc>{desc}</Desc>
         <ButtonWrapper>
-          <LeftButton onClick={onClickLeftButton}>{leftButtonText}</LeftButton>
-          <RightButton onClick={onClickRightButton}>
-            {rightButtonText}
-          </RightButton>
+          {leftButtonText && (
+            <LeftButton onClick={onClickLeftButton}>
+              {leftButtonText}
+            </LeftButton>
+          )}
+          {centerButtonText && (
+            <RightButton onClick={onClickCenterButton}>
+              {centerButtonText}
+            </RightButton>
+          )}
+          {rightButtonText && (
+            <RightButton onClick={onClickRightButton}>
+              {rightButtonText}
+            </RightButton>
+          )}
         </ButtonWrapper>
       </Popup>
     </Container>

@@ -44,6 +44,7 @@ function CogTraining() {
   const [isNextButtonClicked, setIsNextButtonClicked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [answerState, setAnswerState] = useState('');
+  const [showDescription, setShowDescription] = useState(false);
 
   useEffect(() => {
     const getGameData = async () => {
@@ -153,6 +154,9 @@ function CogTraining() {
                 />
               )}
               <Section>
+                <Description onClick={() => setShowDescription(true)}>
+                  ?
+                </Description>
                 <Num>
                   {gameIndex + 1}/{gameData.length}
                 </Num>
@@ -188,6 +192,14 @@ function CogTraining() {
               onClickLeftButton={handleExitGame}
               rightButtonText="게임 시작"
               onClickRightButton={startGame}
+            />
+          )}
+          {showDescription && (
+            <LayerPopup
+              label={gameData[gameIndex].trainingName}
+              desc={gameData[gameIndex].explanation}
+              centerButtonText="닫기"
+              onClickCenterButton={() => setShowDescription(false)}
             />
           )}
           {exitGame && (
@@ -235,6 +247,7 @@ const StatusWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 `;
 
 const Num = styled.div`
@@ -253,6 +266,22 @@ const Section = styled.div`
   display: flex;
   align-items: center;
   gap: 3rem;
+  @media screen and (max-width: 767px) {
+    gap: 1rem;
+  }
+`;
+const Description = styled.button`
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  border: 0.4rem solid #ccc;
+  font-size: 3rem;
+  @media screen and (max-width: 767px) {
+    width: 4.5rem;
+    height: 2.8rem;
+    border: 0.2rem solid #ccc;
+    font-size: 1.4rem;
+  }
 `;
 
 export default CogTraining;
