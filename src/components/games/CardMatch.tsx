@@ -69,8 +69,11 @@ const Front = styled.div<{ $status: boolean; $background: string }>`
   background-size: cover;
   transform: ${(props) =>
     props.$status ? 'rotateY(0deg)' : 'rotateY(180deg)'};
-  border-radius: 0.5rem;
+  border-radius: 1.5rem;
   box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.3);
+  @media screen and (max-width: 767px) {
+    border-radius: 0.5rem;
+  }
 `;
 
 const Back = styled.div<{ $status: boolean }>`
@@ -81,7 +84,7 @@ const Back = styled.div<{ $status: boolean }>`
   background: royalblue;
   transform: ${(props) =>
     props.$status ? 'rotateY(180deg)' : 'rotateY(0deg)'};
-  border-radius: 0.5rem;
+  border-radius: 1.5rem;
   box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.3);
   &::before {
     content: '';
@@ -100,6 +103,9 @@ const Back = styled.div<{ $status: boolean }>`
       width: 5rem;
       height: 5rem;
     }
+  }
+  @media screen and (max-width: 767px) {
+    border-radius: 0.5rem;
   }
 `;
 
