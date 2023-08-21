@@ -14,6 +14,10 @@ import {
   Correct,
   Incorrect,
 } from '../components/common/AnswerFeedback';
+import correctSound from '../../public/assets/sounds/correct.mp3';
+import incorrectSound from '../../public/assets/sounds/incorrect.mp3';
+import startSound from '../../public/assets/sounds/start.mp3';
+import endSound from '../../public/assets/sounds/end.mp3';
 
 export type CogTrainingProps = {
   cogArea: string;
@@ -63,7 +67,24 @@ function CogTraining() {
       }
     };
     getGameData();
+    const audio = new Audio(startSound);
+    audio.play();
+
+    return () => {
+      const audio = new Audio(endSound);
+      audio.play();
+    };
   }, []);
+
+  useEffect(() => {
+    if (answerState === 'correct') {
+      const audio = new Audio(correctSound);
+      audio.play();
+    } else if (answerState === 'incorrect') {
+      const audio = new Audio(incorrectSound);
+      audio.play();
+    }
+  }, [answerState]);
 
   const saveGameResult = (
     problemId: number,
