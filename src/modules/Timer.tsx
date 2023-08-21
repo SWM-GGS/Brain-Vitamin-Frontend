@@ -8,6 +8,8 @@ type Props = {
 
 function Timer({ timeLimit, setAnswerState }: Props) {
   const [remainingTime, setRemainingTime] = useState(timeLimit);
+  const progressBarWidth =
+    100 - ((timeLimit - remainingTime) / timeLimit) * 100;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -23,14 +25,30 @@ function Timer({ timeLimit, setAnswerState }: Props) {
     }
   }, [remainingTime]);
 
-  return <Text>남은 시간: {remainingTime}초</Text>;
+  return (
+    <ProgressBarContainer>
+      <ProgressBar $progress={progressBarWidth} />
+    </ProgressBarContainer>
+  );
 }
 
-const Text = styled.p`
-  font-size: 3rem;
+const ProgressBarContainer = styled.div`
+  width: 40rem;
+  height: 4rem;
+  background-color: #ccc;
+  border-radius: 2rem;
+  overflow: hidden;
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    width: 12.4rem;
+    height: 2rem;
   }
+`;
+const ProgressBar = styled.div<{ $progress: number }>`
+  height: 100%;
+  width: ${({ $progress }) => $progress}%;
+  background-color: ${({ $progress }) =>
+    $progress < 30 ? '#FF3F3F' : 'var(--main-color)'};
+  transition: width 1s linear;
 `;
 
 export default Timer;
