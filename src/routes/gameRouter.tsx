@@ -6,11 +6,11 @@ import Coloring from '../pages/games/Coloring.tsx';
 import Overlapping from '../pages/games/Overlapping.tsx';
 import Maze from '../pages/games/Maze.tsx';
 import Market from '../pages/games/Market.tsx';
-import { CogTrainingProps } from '../pages/CogTraining.tsx';
+import { CogTrainingProps, GameResultProps } from '../pages/CogTraining.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
-  onGameEnd: () => void;
+  onGameEnd: (lastGameResult?: GameResultProps) => void;
   saveGameResult: (
     problemId: number,
     duration: number,

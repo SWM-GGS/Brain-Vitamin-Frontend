@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { CogTrainingProps } from '../../pages/CogTraining';
+import { CogTrainingProps, GameResultProps } from '../../pages/CogTraining';
 import { AnswerFeedback } from '../common/AnswerFeedback';
 
 const DAY = ['일', '월', '화', '수', '목', '금', '토'];
@@ -9,7 +9,7 @@ type BodyProps = {
   totalDate: number[];
   today: number;
   gameData: CogTrainingProps;
-  onGameEnd: () => void;
+  onGameEnd: (lastGameResult?: GameResultProps) => void;
   saveGameResult: (
     problemId: number,
     duration: number,
@@ -51,7 +51,12 @@ const Body = ({
           resolve();
         }, 2000);
       });
-      onGameEnd();
+      onGameEnd({
+        problemId: gameData.problemId,
+        duration: duration.current,
+        result: 'SUCCESS',
+        score: 10,
+      });
     } else {
       // 오답
       setAnswerState('incorrect');
@@ -75,7 +80,12 @@ const Body = ({
             resolve();
           }, 2000);
         });
-        onGameEnd();
+        onGameEnd({
+          problemId: gameData.problemId,
+          duration: duration.current,
+          result: 'FAIL',
+          score: 0,
+        });
       };
       handleIncorrect();
     }

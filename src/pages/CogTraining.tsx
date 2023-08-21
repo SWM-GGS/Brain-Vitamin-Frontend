@@ -19,6 +19,12 @@ import incorrectSound from '../../public/assets/sounds/incorrect.mp3';
 import startSound from '../../public/assets/sounds/start.mp3';
 import endSound from '../../public/assets/sounds/end.mp3';
 
+export type GameResultProps = {
+  problemId: number;
+  duration: number;
+  result: string;
+  score: number;
+};
 export type CogTrainingProps = {
   cogArea: string;
   difficulty: number;
@@ -37,12 +43,6 @@ function CogTraining() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [exitGame, setExitGame] = useState(false);
   const navigate = useNavigate();
-  type GameResultProps = {
-    problemId: number;
-    duration: number;
-    result: string;
-    score: number;
-  };
   const [gameResults, setGameResults] = useState<GameResultProps[]>([]);
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [isNextButtonClicked, setIsNextButtonClicked] = useState(false);
@@ -97,20 +97,17 @@ function CogTraining() {
 
   const sendGameResults = async (
     finish: boolean,
-    doNotFinishGameResults?: GameResultProps[],
+    totalResults: GameResultProps[],
   ) => {
     try {
-      const results = doNotFinishGameResults
-        ? doNotFinishGameResults
-        : gameResults;
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/vitamins/cog-training`,
-        { finish, cogTrainingDtos: results },
+        { finish, cogTrainingDtos: totalResults },
         { headers: { authorization: `Bearer ${accessToken}` } },
       );
       // score: 맞으면 10점, 틀리면 0점, 안 풀면 -1점
       if (finish) {
-        const totalScore = results.reduce((p, c) => p + c.score, 0);
+        const totalScore = totalResults.reduce((p, c) => p + c.score, 0);
         navigate('/cogTrainingResult', {
           state: { totalScore, result: data.result },
         });
@@ -123,19 +120,19 @@ function CogTraining() {
   };
 
   const goToNextGame = () => {
-    if (gameIndex === gameData.length - 1) {
-      alert('모든 게임이 종료되었습니다');
-      sendGameResults(true);
-    } else {
-      setGameIndex((prev) => prev + 1);
-    }
+    setGameIndex((prev) => prev + 1);
   };
 
-  const onGameEnd = () => {
-    goToNextGame();
-    setShowLayerPopup(true);
+  const onGameEnd = (lastGameResult?: GameResultProps) => {
     setIsTimerRunning(false);
     setIsNextButtonClicked(false);
+    if (gameIndex === gameData.length - 1 && lastGameResult) {
+      // 마지막 게임인 경우 바로 결과 전송
+      sendGameResults(true, [...gameResults, lastGameResult]);
+    } else {
+      setShowLayerPopup(true);
+      goToNextGame();
+    }
   };
 
   const startGame = () => {
@@ -149,7 +146,7 @@ function CogTraining() {
   };
 
   const handleExitGame = () => {
-    let restResults: GameResultProps[] = [];
+    const restResults: GameResultProps[] = [];
     for (let i = gameIndex; i < gameData.length; i++) {
       restResults.push({
         problemId: gameData[i].problemId,
