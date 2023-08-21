@@ -49,6 +49,7 @@ const NumBtn = styled.button`
   font-size: 5rem;
   border-radius: 0.8rem;
   background: #c6c6c6;
+  border: 0.2rem solid var(--gray-bg-color);
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     padding: 1.5rem;

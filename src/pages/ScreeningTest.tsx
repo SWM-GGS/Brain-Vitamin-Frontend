@@ -144,7 +144,7 @@ function ScreeningTest() {
                         border:
                           choices[question.idx] === 0
                             ? '0.2rem solid var(--main-color)'
-                            : 'none',
+                            : '0.2rem solid var(--gray-bg-color)',
                         color:
                           choices[question.idx] === 0
                             ? 'var(--main-color)'
@@ -162,7 +162,7 @@ function ScreeningTest() {
                         border:
                           choices[question.idx] === 1
                             ? '0.2rem solid var(--main-color)'
-                            : 'none',
+                            : '0.2rem solid var(--gray-bg-color)',
                         color:
                           choices[question.idx] === 1
                             ? 'var(--main-color)'
@@ -180,7 +180,7 @@ function ScreeningTest() {
                         border:
                           choices[question.idx] === 2
                             ? '0.2rem solid var(--main-color)'
-                            : 'none',
+                            : '0.2rem solid var(--gray-bg-color)',
                         color:
                           choices[question.idx] === 2
                             ? 'var(--main-color)'

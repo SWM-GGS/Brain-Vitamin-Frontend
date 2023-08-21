@@ -124,7 +124,7 @@ export default function Market({
   const onClickPrice = (price: number, el: HTMLElement) => {
     if (clickedPrice.current === price) {
       el.style.background = '#c6c6c6';
-      el.style.border = 'none';
+      el.style.border = '0.2rem solid var(--gray-bg-color)';
       el.style.color = 'var(--black-color)';
       clickedPrice.current = 0;
     } else {
@@ -132,7 +132,7 @@ export default function Market({
         const buttonRef = buttonRefs.current[i];
         if (buttonRef?.style.background === 'var(--main-bg-color)') {
           buttonRef.style.background = '#c6c6c6';
-          buttonRef.style.border = 'none';
+          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
           buttonRef.style.color = 'var(--black-color)';
           break;
         }

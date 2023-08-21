@@ -104,7 +104,7 @@ export default function Overlapping({
   const onClickNum = (num: number, el: HTMLButtonElement) => {
     if (clickedNums.current.includes(num)) {
       el.style.background = '#c6c6c6';
-      el.style.border = 'none';
+      el.style.border = '0.2rem solid var(--gray-bg-color)';
       el.style.color = 'var(--black-color)';
       clickedNums.current = clickedNums.current.filter((v) => v !== num);
     } else {
