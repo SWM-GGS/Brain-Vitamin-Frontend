@@ -95,7 +95,7 @@ function LogIn() {
         console.error(error);
       }
     };
-    if (phoneNumber === '01012345678' && code === '12345678') {
+    if (phoneNumber === '01012345678' && code === '123456') {
       logIn();
       return;
     }
