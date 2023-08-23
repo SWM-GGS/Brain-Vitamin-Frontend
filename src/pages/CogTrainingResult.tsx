@@ -4,12 +4,19 @@ import Button from '../components/common/Button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Header from '../components/common/Header';
+import endSound from '/assets/sounds/end.mp3';
+import { useEffect } from 'react';
 
 function CogTrainingResult() {
   const { state } = useLocation();
   const { totalScore, result } = state;
   const navigate = useNavigate();
   const nickname = useSelector((state: RootState) => state.user.nickname);
+
+  useEffect(() => {
+    const audio = new Audio(endSound);
+    audio.play();
+  }, []);
 
   const toHome = () => {
     navigate('/home');
