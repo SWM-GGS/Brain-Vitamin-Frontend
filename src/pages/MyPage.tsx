@@ -157,17 +157,21 @@ function MyPage() {
                 <Intro>지난 주보다 좋아졌어요!</Intro>
                 {Object.entries(positiveValues).map(([k, v]) => (
                   <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}이 {v.toFixed(1)}%
+                    {ability[k as keyof typeof ability]}이{' '}
+                    <PercentUp>{v.toFixed(1)}% </PercentUp>
                     높아졌어요
                   </InfoText>
                 ))}
-                <InfoText>집중력이 12% 높아졌어요</InfoText>
+                <InfoText>
+                  집중력이 <PercentUp>12% </PercentUp>높아졌어요
+                </InfoText>
               </StatusBox>
               <StatusBox>
                 <Intro>지난 주보다 신경쓰면 좋아요!</Intro>
                 {Object.entries(negativeValues).map(([k, v]) => (
                   <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}이 {-v.toFixed(1)}%
+                    {ability[k as keyof typeof ability]}이{' '}
+                    <PercentDown>{-v.toFixed(1)}% </PercentDown>
                     낮아졌어요
                   </InfoText>
                 ))}
@@ -247,7 +251,7 @@ const LeftContainer = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 35rem;
+    height: 34rem;
     gap: 1rem;
   }
 `;
@@ -298,7 +302,7 @@ const StatusBox = styled.div`
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 100%;
-    padding: 2rem 1.3rem;
+    padding: 1.3rem;
   }
 `;
 const Intro = styled.p`
@@ -424,6 +428,20 @@ const Align = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+const PercentUp = styled.span`
+  color: forestgreen;
+  font-size: 3rem;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
+`;
+const PercentDown = styled.span`
+  color: #ff3f3f;
+  font-size: 3rem;
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
 `;
 
 export default MyPage;
