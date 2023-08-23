@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   onClickRightButton?: () => void;
   centerButtonText?: string;
   onClickCenterButton?: () => void;
+  sound?: string;
 };
 function LayerPopup({
   label,
@@ -20,8 +21,21 @@ function LayerPopup({
   onClickRightButton,
   centerButtonText,
   onClickCenterButton,
+  sound,
 }: Props) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sound) {
+      const audio = new Audio(sound);
+      audio.play();
+
+      return () => {
+        audio.pause();
+        audio.currentTime = 0;
+      };
+    }
+  }, []);
 
   return (
     <Container ref={layerPopupRef}>

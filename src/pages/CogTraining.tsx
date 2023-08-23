@@ -19,6 +19,14 @@ import incorrectSound from '/assets/sounds/incorrect.mp3';
 import startSound from '/assets/sounds/start.mp3';
 import endSound from '/assets/sounds/end.mp3';
 
+import cardMatchSound from '/assets/sounds/questions/cardMatch.mp3';
+import coloringSound from '/assets/sounds/questions/coloring.mp3';
+import dateQuizSound from '/assets/sounds/questions/dateQuiz.mp3';
+import marketSound from '/assets/sounds/questions/market.mp3';
+import mazeSound from '/assets/sounds/questions/maze.mp3';
+import overlappingSound from '/assets/sounds/questions/overlapping.mp3';
+import wordPuzzleSound from '/assets/sounds/questions/wordPuzzle.mp3';
+
 export type GameResultProps = {
   problemId: number;
   duration: number;
@@ -158,6 +166,25 @@ function CogTraining() {
     sendGameResults(false, [...gameResults, ...restResults]);
   };
 
+  const getSound = (gameIndex: number) => {
+    switch (gameData[gameIndex].pathUri) {
+      case 'cardMatch':
+        return cardMatchSound;
+      case 'coloring':
+        return coloringSound;
+      case 'wordPuzzle':
+        return wordPuzzleSound;
+      case 'market':
+        return marketSound;
+      case 'overlapping':
+        return overlappingSound;
+      case 'dateQuiz':
+        return dateQuizSound;
+      case 'maze':
+        return mazeSound;
+    }
+  };
+
   if (loading) return <Splash />;
   return (
     <Container>
@@ -210,6 +237,7 @@ function CogTraining() {
               onClickLeftButton={handleExitGame}
               rightButtonText="게임 시작"
               onClickRightButton={startGame}
+              sound={getSound(gameIndex)}
             />
           )}
           {showDescription && (
