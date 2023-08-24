@@ -50,6 +50,7 @@ export default function Market({
     );
     if (discountPercent) {
       calculatedAnswer = calculatedAnswer * (1 - discountPercent / 100);
+      calculatedAnswer = Math.round(calculatedAnswer);
     }
     setAnswer(calculatedAnswer);
 
