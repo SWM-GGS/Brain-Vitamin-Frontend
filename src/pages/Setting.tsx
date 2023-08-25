@@ -9,14 +9,13 @@ import userSlice from '../slices/user';
 import { useNavigate } from 'react-router';
 
 function Setting() {
-  const { nickname, familyKey, accessToken, fontSize } = useSelector(
-    (state: RootState) => state.user,
-  );
+  const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
+    useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const toProfile = () => {
-    alert('해당 기능은 향후 추가될 예정이에요.');
+    navigate('/profile');
   };
 
   const toPhoneNumberEdit = () => {
@@ -133,7 +132,11 @@ function Setting() {
               </PrivacyButton>
             </Version>
             <ProfileContainer>
-              <ProfileImage alt="" src="/assets/images/profile-default.svg" />
+              {profileImgUrl ? (
+                <ProfileImage alt="" src={profileImgUrl} />
+              ) : (
+                <ProfileImage alt="" src="/assets/images/profile-default.svg" />
+              )}
               <Name>{nickname}</Name>
               <Sub>가족 고유번호 : {familyKey}</Sub>
             </ProfileContainer>

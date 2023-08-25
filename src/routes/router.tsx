@@ -19,6 +19,7 @@ import Privacy from '../pages/Privacy.tsx';
 import Setting from '../pages/Setting.tsx';
 import FontSizeEdit from '../pages/FontSizeEdit.tsx';
 import PhoneNumberEdit from '../pages/PhoneNumberEdit.tsx';
+import Profile from '../pages/Profile.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -53,6 +54,7 @@ export default function Router() {
       <Route path="/setting" element={<Setting />} />
       <Route path="/fontSizeEdit" element={<FontSizeEdit />} />
       <Route path="/phoneNumberEdit" element={<PhoneNumberEdit />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

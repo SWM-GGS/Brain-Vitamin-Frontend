@@ -7,6 +7,8 @@ const initialState = {
   familyKey: '',
   accessToken: '',
   fontSize: 2,
+  profileImgUrl: '',
+  education: '',
 };
 const userSlice = createSlice({
   name: 'user',
@@ -19,6 +21,8 @@ const userSlice = createSlice({
       state.familyKey = action.payload.familyKey;
       state.fontSize = action.payload.fontSize;
       state.accessToken = action.payload.accessToken;
+      state.profileImgUrl = action.payload.profileImgUrl;
+      state.education = action.payload.education;
     },
     setFontSize(state, action) {
       state.fontSize = action.payload;
@@ -28,6 +32,15 @@ const userSlice = createSlice({
     },
     setPhoneNumber(state, action) {
       state.phoneNumber = action.payload;
+    },
+    setNickname(state, action) {
+      state.nickname = action.payload;
+    },
+    setProfileImgUrl(state, action) {
+      state.profileImgUrl = action.payload;
+    },
+    setEducation(state, action) {
+      state.education = action.payload;
     },
   },
 });
