@@ -11,7 +11,9 @@ function CogTrainingResult() {
   const { state } = useLocation();
   const { totalScore, result } = state;
   const navigate = useNavigate();
-  const nickname = useSelector((state: RootState) => state.user.nickname);
+  const { nickname, profileImgUrl } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   useEffect(() => {
     const audio = new Audio(endSound);
@@ -28,7 +30,11 @@ function CogTrainingResult() {
       <Wrapper>
         <Box>
           <MyWrapper>
-            <ProfileImage alt="" src="/assets/images/profile-default.svg" />
+            {profileImgUrl ? (
+              <ProfileImage alt="" src={profileImgUrl} />
+            ) : (
+              <ProfileImage alt="" src="/assets/images/profile-default.svg" />
+            )}
             <Name>{nickname}</Name>
             <Score>{totalScore}점</Score>
             <Result>{result}</Result>
