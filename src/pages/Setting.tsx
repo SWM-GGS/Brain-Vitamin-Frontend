@@ -20,7 +20,7 @@ function Setting() {
   };
 
   const toPhoneNumberEdit = () => {
-    alert('해당 기능은 향후 추가될 예정이에요.');
+    navigate('/phoneNumberEdit');
   };
 
   const toFontSizeEdit = () => {

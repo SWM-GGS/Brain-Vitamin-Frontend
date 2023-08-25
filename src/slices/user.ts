@@ -26,6 +26,9 @@ const userSlice = createSlice({
     setAccessToken(state, action) {
       state.accessToken = action.payload;
     },
+    setPhoneNumber(state, action) {
+      state.phoneNumber = action.payload;
+    },
   },
 });
 
