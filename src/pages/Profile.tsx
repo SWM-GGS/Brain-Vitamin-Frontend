@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
-import aws from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -63,20 +63,23 @@ function Profile() {
     if (profileImg) {
       const region = 'ap-northeast-2';
       const bucket = 'brain-vitamin-user-files';
-      aws.config.update({
-        region,
-        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-      });
-      const upload = new aws.S3.ManagedUpload({
-        params: {
-          Bucket: bucket,
-          Key: `profile/${generateUniqueNumber()}-${profileImg.name}`,
-          Body: profileImg,
+      const s3Client = new S3Client({
+        region, // AWS 리전을 설정하세요
+        credentials: {
+          accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+          secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
         },
       });
+      const path = `profile/${generateUniqueNumber()}-${profileImg.name}`;
+      const uploadParams = {
+        Bucket: bucket,
+        Key: path,
+        Body: profileImg,
+      };
       try {
-        uploadUrl = (await upload.promise()).Location;
+        const command = new PutObjectCommand(uploadParams);
+        await s3Client.send(command);
+        uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
       } catch (error) {
         console.error(error);
       }
