@@ -126,12 +126,12 @@ const Container3 = styled.div`
 const BoxWrapper = styled.div`
   display: flex;
   justify-content: center;
-  gap: 4.6rem;
+  gap: 3.8rem;
   flex-wrap: wrap;
   margin: 6.6rem 0 11.2rem 0;
   @media screen and (max-width: 767px) {
-    gap: 3rem;
-    margin: 2rem 0 3rem 0;
+    gap: 2rem;
+    margin: 2rem 0;
   }
 `;
 
