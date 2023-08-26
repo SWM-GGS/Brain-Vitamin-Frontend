@@ -1,0 +1,15 @@
+<svg width="52" height="51" viewBox="0 0 52 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Component 63">
+<circle id="Ellipse 120" cx="25.8659" cy="25.3732" r="25.3732" fill="url(#paint0_linear_225_13003)"/>
+<path id="Vector 149" d="M22.8569 36.2676C22.8569 35.5542 23.285 34.1274 24.9971 34.1274C26.7093 34.1274 27.1373 35.5542 27.1373 36.2676" stroke="black" stroke-width="1.71214" stroke-linecap="round"/>
+<path id="Vector 150" d="M16.9805 20.4305C16.9805 20.7159 17.4085 21.2866 19.1206 21.2866C20.8328 21.2866 21.2608 20.7159 21.2608 20.4305" stroke="black" stroke-width="1.71214" stroke-linecap="round"/>
+<path id="Vector 151" d="M30.0117 20.4305C30.0117 20.7159 30.4398 21.2866 32.1519 21.2866C33.864 21.2866 34.2921 20.7159 34.2921 20.4305" stroke="black" stroke-width="1.71214" stroke-linecap="round"/>
+<path id="Polygon 8" d="M32.58 22.1426L34.3054 25.162C35.0624 26.4867 34.1059 28.1351 32.58 28.1351C31.0542 28.1351 30.0977 26.4867 30.8547 25.162L32.58 22.1426Z" fill="#0AABF5"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_225_13003" x1="25.8659" y1="0" x2="25.8659" y2="50.7464" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E6F0FF"/>
+<stop offset="1" stop-color="#FBC86B"/>
+</linearGradient>
+</defs>
+</svg>
