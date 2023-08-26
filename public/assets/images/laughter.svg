@@ -1,0 +1,16 @@
+<svg width="52" height="51" viewBox="0 0 52 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Component 61">
+<circle id="Ellipse 120" cx="26.1198" cy="25.3732" r="25.3732" fill="url(#paint0_linear_225_12993)"/>
+<path id="Vector 147" d="M18.2886 12.2166C18.2886 11.6946 18.6018 10.6504 19.8548 10.6504C21.1078 10.6504 21.4211 11.6946 21.4211 12.2166" stroke="black" stroke-width="1.253" stroke-linecap="round"/>
+<path id="Vector 148" d="M31.4448 12.2166C31.4448 11.6946 31.7581 10.6504 33.0111 10.6504C34.2641 10.6504 34.5773 11.6946 34.5773 12.2166" stroke="black" stroke-width="1.253" stroke-linecap="round"/>
+<path id="Rectangle 6577" d="M15.1562 15.0356H37.7102V17.4332C37.7102 21.8189 35.2042 25.819 31.2578 27.7324C28.211 29.2096 24.6554 29.2096 21.6086 27.7324C17.6623 25.819 15.1562 21.8189 15.1562 17.4332V15.0356Z" fill="#5B3F32"/>
+<path id="Polygon 8" d="M36.027 12.181L38.5714 12.2368C39.6878 12.2613 40.3612 13.4826 39.7861 14.4397C39.211 15.3969 37.8164 15.3756 37.2707 14.4014L36.027 12.181Z" fill="#0AABF5"/>
+<path id="Polygon 9" d="M15.494 10.9919L13.1142 11.8938C12.07 12.2895 11.8429 13.6656 12.7045 14.3759C13.5662 15.0861 14.8736 14.6006 15.0628 13.5001L15.494 10.9919Z" fill="#0AABF5"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_225_12993" x1="26.1198" y1="0" x2="26.1198" y2="50.7464" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FBC86B"/>
+<stop offset="1" stop-color="#FFB42D"/>
+</linearGradient>
+</defs>
+</svg>

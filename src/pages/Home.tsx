@@ -50,7 +50,7 @@ function Home() {
   };
 
   const toFamily = () => {
-    alert('해당 페이지는 향후 추가될 예정이에요.');
+    navigate('/family');
   };
 
   const toMyPage = () => {
