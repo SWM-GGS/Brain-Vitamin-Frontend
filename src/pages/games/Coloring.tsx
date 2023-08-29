@@ -9,6 +9,7 @@ import {
   Palette,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import { getRandomFloat } from '../../utils/random.ts';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -47,14 +48,17 @@ export default function Coloring({
   let colors: colorsProps[] = [];
   if (cellCnt) {
     for (let i = 0; i < cellCnt; i++) {
-      let randomIndex = Math.floor(Math.random() * (COLOR.length - 1));
+      let randomIndex = Math.floor(getRandomFloat() * (COLOR.length - 1));
       colors.push({ idx: colors.length, color: COLOR[randomIndex] });
     }
     for (let i = 0; i < totalCellCnt - cellCnt; i++) {
       colors.push({ idx: colors.length, color: 'white' });
     }
   }
-  const answer = useMemo(() => [...colors].sort(() => 0.5 - Math.random()), []);
+  const answer = useMemo(
+    () => [...colors].sort(() => 0.5 - getRandomFloat()),
+    [],
+  );
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);

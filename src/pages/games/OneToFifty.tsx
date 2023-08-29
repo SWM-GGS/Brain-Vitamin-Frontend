@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Board, StartBtn } from '../../components/games/OneToFifty.tsx';
+import { getRandomFloat } from '../../utils/random.ts';
 
 const array: number[] = [];
 for (let i = 1; i <= 25; i++) {
@@ -8,7 +9,7 @@ for (let i = 1; i <= 25; i++) {
 
 const shuffleArray = (array: number[]) => {
   for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
+    let j = Math.floor(getRandomFloat() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
