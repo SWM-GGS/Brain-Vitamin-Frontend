@@ -8,6 +8,7 @@ import {
   Back,
 } from '../../components/games/CardMatch.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import { getRandomFloat } from '../../utils/random.ts';
 
 /**
  * 난도별 카드 개수 상이
@@ -34,7 +35,7 @@ export default function CardMatch({
   const cards = [...deck, ...deck].map((card, i) => {
     return { idx: i, type: card, status: false };
   });
-  const shuffle = () => [...cards].sort(() => 0.5 - Math.random());
+  const shuffle = () => [...cards].sort(() => 0.5 - getRandomFloat());
   const mixedCards = useMemo(() => shuffle(), []);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import moleHillImage from '../../assets/molehill.png';
 import moleImage from '../../assets/mole.png';
+import { getRandomFloat } from '../../utils/random';
 
 const AllMolesContainer = styled.div`
   display: grid;
@@ -23,7 +24,7 @@ type EmptySlotProps = {
 
 function EmptySlot({ setIsVisible }: EmptySlotProps) {
   useEffect(() => {
-    let numSeconds = Math.ceil(Math.random() * 4000);
+    let numSeconds = Math.ceil(getRandomFloat() * 4000);
     let timer = setTimeout(() => {
       setIsVisible(true);
     }, numSeconds);
@@ -44,7 +45,7 @@ type MoleProps = {
 
 function Mole({ setIsVisible, handleWhack }: MoleProps) {
   useEffect(() => {
-    let numSeconds = Math.ceil(Math.random() * 5000);
+    let numSeconds = Math.ceil(getRandomFloat() * 5000);
     let timer = setTimeout(() => {
       setIsVisible(false);
     }, numSeconds);

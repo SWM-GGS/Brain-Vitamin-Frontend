@@ -10,6 +10,7 @@ import {
 import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
+import { getRandomFloat } from '../../utils/random.ts';
 
 export default function WordPuzzle({
   gameData,
@@ -56,12 +57,12 @@ export default function WordPuzzle({
         const dropRefRect = lastDropRef.getBoundingClientRect();
         const randomTop =
           Math.floor(
-            Math.random() * (containerRect.bottom - dropRefRect.bottom) +
+            getRandomFloat() * (containerRect.bottom - dropRefRect.bottom) +
               dropRefRect.bottom,
           ) - 10;
         const randomLeft =
           Math.floor(
-            Math.random() * (containerRect.right - containerRect.left) +
+            getRandomFloat() * (containerRect.right - containerRect.left) +
               containerRect.left,
           ) - 40;
         return { top: randomTop, left: randomLeft };

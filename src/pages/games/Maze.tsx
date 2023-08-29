@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Container, MazeBox, Target } from '../../components/games/Maze';
 import { GameProps } from '../../routes/gameRouter';
+import { getRandomFloat } from '../../utils/random';
 
 export default function Maze({
   gameData,
@@ -111,7 +112,9 @@ export default function Maze({
               key={`(${item.x},${item.y})`}
               x={item.x}
               y={item.y}
-              $bgColor={'#' + Math.floor(Math.random() * 0xffffff).toString(16)}
+              $bgColor={
+                '#' + Math.floor(getRandomFloat() * 0xffffff).toString(16)
+              }
               $difficulty={difficulty}
               onClick={(e) => onClickTarget(e.target as HTMLElement, index)}
             />

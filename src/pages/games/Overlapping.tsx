@@ -10,6 +10,7 @@ import {
 import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
+import { getRandomFloat } from '../../utils/random.ts';
 
 /**
  * 난도별 겹쳐진 숫자의 개수 상이
@@ -36,7 +37,7 @@ export default function Overlapping({
   useEffect(() => {
     let newAnswer: number[] = [];
     while (newAnswer.length < difficulty + 1) {
-      newAnswer.push(Math.floor(Math.random() * 10));
+      newAnswer.push(Math.floor(getRandomFloat() * 10));
       newAnswer = [...new Set(newAnswer)];
     }
     setAnswer(newAnswer);
@@ -129,8 +130,8 @@ export default function Overlapping({
           {answer.map((num) => (
             <Num
               key={num}
-              $top={50 + Math.floor(Math.random() * 8)}
-              $left={50 + Math.floor(Math.random() * 8)}>
+              $top={50 + Math.floor(getRandomFloat() * 8)}
+              $left={50 + Math.floor(getRandomFloat() * 8)}>
               {num}
             </Num>
           ))}

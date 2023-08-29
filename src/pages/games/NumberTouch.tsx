@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Num } from '../../components/games/NumberTouch';
+import { getRandomFloat } from '../../utils/random';
 
 export default function NumberTouch() {
   const [boxSize, setBoxSize] = useState({ width: 100, height: 100 });
@@ -48,8 +49,8 @@ export default function NumberTouch() {
             $zIndex={100 - num}
             style={{
               position: 'absolute',
-              top: Math.ceil(Math.random() * boxSize.height),
-              left: Math.ceil(Math.random() * boxSize.width),
+              top: Math.ceil(getRandomFloat() * boxSize.height),
+              left: Math.ceil(getRandomFloat() * boxSize.width),
             }}>
             {num}
           </Num>

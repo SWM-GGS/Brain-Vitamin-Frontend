@@ -15,6 +15,7 @@ import { ButtonWrapper } from '../../components/games/Overlapping.tsx';
 import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
+import { getRandomFloat } from '../../utils/random.ts';
 
 export default function Market({
   gameData,
@@ -58,13 +59,13 @@ export default function Market({
     while (calculatedCandidate.length < candidateCnt) {
       const price =
         calculatedAnswer +
-        (Math.random() > 0.5 ? 1 : -1) *
-          Math.floor(Math.random() * 5) *
+        (getRandomFloat() > 0.5 ? 1 : -1) *
+          Math.floor(getRandomFloat() * 5) *
           difference;
       if (price > 0 && !calculatedCandidate.includes(price))
         calculatedCandidate.push(price);
     }
-    calculatedCandidate.sort(() => Math.random() - 0.5);
+    calculatedCandidate.sort(() => getRandomFloat() - 0.5);
     setCandidate(calculatedCandidate);
     // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
   }, []);
