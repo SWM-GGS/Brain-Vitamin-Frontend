@@ -5,26 +5,31 @@ const Container = styled.div<{ $difficulty: number }>`
   grid-gap: 2rem;
   height: 100%;
   place-items: center;
-  ${(props) =>
-    props.$difficulty === 1
-      ? `
+  ${(props) => {
+    if (props.$difficulty === 1) {
+      return `
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   max-width: 100rem;
-  margin: 0 auto;`
-      : props.$difficulty === 2
-      ? `
+  margin: 0 auto;`;
+    }
+    if (props.$difficulty === 2) {
+      return `
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
   max-width: 140rem;
-  margin: 0 auto;`
-      : `
+  margin: 0 auto;`;
+    }
+    if (props.$difficulty === 3) {
+      return `
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(2, 1fr);
   @media screen and (max-width: 767px) {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
-  }`}
+  }`;
+    }
+  }}
 `;
 
 const Card = styled.div`

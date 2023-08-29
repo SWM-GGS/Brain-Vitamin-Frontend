@@ -20,7 +20,7 @@ const Body = ({ totalDate, today, month, year }: BodyProps) => {
     <Form>
       {totalDate.map((elm, idx) => (
         <Dates
-          key={idx}
+          key={elm}
           idx={idx}
           lastdate={lastDate}
           firstdate={firstDate}

@@ -44,11 +44,11 @@ function AppInner() {
             accessToken: data.result.tokenDto.accessTokenDto.accessToken,
           }),
         );
-        await localStorage.setItem(
+        localStorage.setItem(
           'refreshToken',
           data.result.tokenDto.refreshTokenDto.refreshToken,
         );
-        await localStorage.setItem(
+        localStorage.setItem(
           'accessToken',
           data.result.tokenDto.accessTokenDto.accessToken,
         );
@@ -99,11 +99,11 @@ function AppInner() {
               data.result.tokenDto.accessTokenDto.accessToken,
             ),
           );
-          await localStorage.setItem(
+          localStorage.setItem(
             'refreshToken',
             data.result.tokenDto.refreshTokenDto.refreshToken,
           );
-          await localStorage.setItem(
+          localStorage.setItem(
             'accessToken',
             data.result.tokenDto.accessTokenDto.accessToken,
           );

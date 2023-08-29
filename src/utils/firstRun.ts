@@ -1,7 +1,7 @@
 export const checkIsFirstRun = () => {
   const isFirstRun = localStorage.getItem('isFirstRun');
 
-  return isFirstRun === null ? true : false;
+  return isFirstRun === null;
 };
 
 export const setFirstRun = () => {

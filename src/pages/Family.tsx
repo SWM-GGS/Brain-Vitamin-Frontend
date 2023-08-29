@@ -73,78 +73,6 @@ function Family() {
       }
     };
     getData();
-    // setData({
-    //   emotionInfoDtoList: [
-    //     {
-    //       id: 5,
-    //       codeDetail: 'EMOT01',
-    //       codeDetailName: '행복',
-    //       commonCode: {
-    //         id: 2,
-    //         code: 'EMOT',
-    //         codeName: '감정표현',
-    //       },
-    //     },
-    //     {
-    //       id: 6,
-    //       codeDetail: 'EMOT02',
-    //       codeDetailName: '폭소',
-    //       commonCode: {
-    //         id: 2,
-    //         code: 'EMOT',
-    //         codeName: '감정표현',
-    //       },
-    //     },
-    //     {
-    //       id: 7,
-    //       codeDetail: 'EMOT03',
-    //       codeDetailName: '슬픔',
-    //       commonCode: {
-    //         id: 2,
-    //         code: 'EMOT',
-    //         codeName: '감정표현',
-    //       },
-    //     },
-    //     {
-    //       id: 8,
-    //       codeDetail: 'EMOT04',
-    //       codeDetailName: '놀람',
-    //       commonCode: {
-    //         id: 2,
-    //         code: 'EMOT',
-    //         codeName: '감정표현',
-    //       },
-    //     },
-    //     {
-    //       id: 9,
-    //       codeDetail: 'EMOT05',
-    //       codeDetailName: '화남',
-    //       commonCode: {
-    //         id: 2,
-    //         code: 'EMOT',
-    //         codeName: '감정표현',
-    //       },
-    //     },
-    //   ],
-    //   postPreviewDtoList: [
-    //     { id: 0, thumbnailUrl: '' },
-    //     { id: 0, thumbnailUrl: '' },
-    //     { id: 0, thumbnailUrl: '' },
-    //     { id: 0, thumbnailUrl: '' },
-    //     { id: 0, thumbnailUrl: '' },
-    //   ],
-    //   familyMemberDtoList: [
-    //     { name: '봉지수', relationship: '딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //     { name: '봉봉봉', relationship: '큰 딸', profileImgUrl: '' },
-    //   ],
-    // });
-    // setLoading(false);
   }, []);
 
   const toPostRead = (postId: number) => {
@@ -153,64 +81,72 @@ function Family() {
     });
   };
 
+  const renderImages = () => {
+    if (!data) return;
+    if (!data.postPreviewDtoList || data.postPreviewDtoList.length === 0) {
+      return <Empty>아직 게시물이 없어요.</Empty>;
+    }
+    if (!isMobile && data.postPreviewDtoList.length >= 5) {
+      return (
+        <>
+          <ImageContainer2>
+            <LargeImage
+              alt=""
+              src={data.postPreviewDtoList[0].thumbnailUrl}
+              onClick={() => toPostRead(data.postPreviewDtoList[0].id)}
+            />
+            <SmallContainer>
+              <SmallImage
+                alt=""
+                src={data.postPreviewDtoList[3].thumbnailUrl}
+                onClick={() => toPostRead(data.postPreviewDtoList[3].id)}
+              />
+              <SmallImage
+                alt=""
+                src={data.postPreviewDtoList[4].thumbnailUrl}
+                onClick={() => toPostRead(data.postPreviewDtoList[4].id)}
+              />
+            </SmallContainer>
+          </ImageContainer2>
+          <ImageContainer3>
+            <MediumImage
+              alt=""
+              src={data.postPreviewDtoList[1].thumbnailUrl}
+              onClick={() => toPostRead(data.postPreviewDtoList[1].id)}
+            />
+            <MediumImage
+              alt=""
+              src={data.postPreviewDtoList[2].thumbnailUrl}
+              onClick={() => toPostRead(data.postPreviewDtoList[2].id)}
+            />
+          </ImageContainer3>
+        </>
+      );
+    } else {
+      return (
+        <BigImage
+          alt=""
+          src={data.postPreviewDtoList[0].thumbnailUrl}
+          onClick={() => toPostRead(data.postPreviewDtoList[0].id)}
+        />
+      );
+    }
+  };
+
   if (loading || !data) return <Splash />;
   return (
     <Container>
       <LeftTapBar />
       <Container2>
-        <ImageContainer>
-          {!data.postPreviewDtoList || data.postPreviewDtoList.length === 0 ? (
-            <Empty>아직 게시물이 없어요.</Empty>
-          ) : !isMobile && data.postPreviewDtoList.length >= 5 ? (
-            <>
-              <ImageContainer2>
-                <LargeImage
-                  alt=""
-                  src={data.postPreviewDtoList[0].thumbnailUrl}
-                  onClick={() => toPostRead(data.postPreviewDtoList[0].id)}
-                />
-                <SmallContainer>
-                  <SmallImage
-                    alt=""
-                    src={data.postPreviewDtoList[3].thumbnailUrl}
-                    onClick={() => toPostRead(data.postPreviewDtoList[3].id)}
-                  />
-                  <SmallImage
-                    alt=""
-                    src={data.postPreviewDtoList[4].thumbnailUrl}
-                    onClick={() => toPostRead(data.postPreviewDtoList[4].id)}
-                  />
-                </SmallContainer>
-              </ImageContainer2>
-              <ImageContainer3>
-                <MediumImage
-                  alt=""
-                  src={data.postPreviewDtoList[1].thumbnailUrl}
-                  onClick={() => toPostRead(data.postPreviewDtoList[1].id)}
-                />
-                <MediumImage
-                  alt=""
-                  src={data.postPreviewDtoList[2].thumbnailUrl}
-                  onClick={() => toPostRead(data.postPreviewDtoList[2].id)}
-                />
-              </ImageContainer3>
-            </>
-          ) : (
-            <BigImage
-              alt=""
-              src={data.postPreviewDtoList[0].thumbnailUrl}
-              onClick={() => toPostRead(data.postPreviewDtoList[0].id)}
-            />
-          )}
-        </ImageContainer>
+        <ImageContainer>{renderImages()}</ImageContainer>
         <MemberContainer>
           <Label>가족 구성원</Label>
           <MemberBox>
             {data.familyMemberDtoList.length === 0 ? (
               <Empty>아직 구성원이 없어요.</Empty>
             ) : (
-              data.familyMemberDtoList.map((v, i) => (
-                <MemberContainer2 key={i}>
+              data.familyMemberDtoList.map((v) => (
+                <MemberContainer2 key={v.name}>
                   {v.profileImgUrl ? (
                     <ProfileImage alt="" src={v.profileImgUrl} />
                   ) : (
@@ -367,11 +303,6 @@ const Name = styled.div`
     font-size: 1.8rem;
   }
 `;
-// const Sub = styled.div`
-//   color: var(--main-color);
-//   font-family: 'Pretendard-Medium';
-//   font-size: 2.6rem;
-// `;
 const Empty = styled.div`
   margin: auto;
   font-size: 3rem;

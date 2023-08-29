@@ -55,9 +55,9 @@ const Dates = ({
         {Boolean(evtList[0]) && (
           <Lists>
             {evtList.map(
-              (list, index) =>
-                list.slice(0, list.indexOf('_')) === dateKey && (
-                  <List key={index}>
+              (list) =>
+                list.slice(0, list.indexOf('_')).startsWith(dateKey) && (
+                  <List key={list}>
                     {list.slice(list.indexOf('_') + 1, list.length)}
                   </List>
                 ),

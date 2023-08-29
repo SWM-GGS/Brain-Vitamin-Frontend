@@ -26,7 +26,7 @@ function Profile() {
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
     const maxImageLength = 1;
-    if (!imageArr || !imageArr.length) return;
+    if (!imageArr?.length) return;
     if (imageArr.length > maxImageLength) {
       alert('최대 등록 가능한 이미지 개수를 초과했습니다.');
       return;
@@ -131,6 +131,17 @@ function Profile() {
     return uniqueNumber;
   };
 
+  const renderProfileImage = () => {
+    if (profileImgPreviewUrl) {
+      return <ProfileImage alt="" src={profileImgPreviewUrl} />;
+    }
+    if (profileImgUrl) {
+      return <ProfileImage alt="" src={profileImgUrl} />;
+    } else {
+      return <ProfileImage alt="" src="/assets/images/profile-default.svg" />;
+    }
+  };
+
   return (
     <Container>
       <LeftTapBar />
@@ -149,16 +160,7 @@ function Profile() {
                 />
                 <ImageContainer>
                   <label htmlFor="image">
-                    {profileImgPreviewUrl ? (
-                      <ProfileImage alt="" src={profileImgPreviewUrl} />
-                    ) : profileImgUrl ? (
-                      <ProfileImage alt="" src={profileImgUrl} />
-                    ) : (
-                      <ProfileImage
-                        alt=""
-                        src="/assets/images/profile-default.svg"
-                      />
-                    )}
+                    {renderProfileImage()}
                     <ChangeImageText>사진 변경</ChangeImageText>
                   </label>
                 </ImageContainer>

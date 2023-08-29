@@ -47,8 +47,8 @@ function Setting() {
           },
         },
       );
-      await localStorage.removeItem('refreshToken');
-      await localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessToken');
       dispatch(
         userSlice.actions.setUser({
           name: '',
@@ -87,8 +87,8 @@ function Setting() {
           },
         },
       );
-      await localStorage.removeItem('refreshToken');
-      await localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessToken');
       dispatch(
         userSlice.actions.setUser({
           name: '',

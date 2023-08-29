@@ -96,7 +96,7 @@ function ScreeningTest() {
   const convertNewlineToJSX = (inputString: string) => {
     const lines = inputString.split('\n');
     const jsxLines = lines.map((line, index) => (
-      <Fragment key={index}>
+      <Fragment key={line}>
         {line}
         {index !== lines.length - 1 && <br />}
       </Fragment>
@@ -109,16 +109,16 @@ function ScreeningTest() {
     <Container>
       <Wrapper>
         <ProgressBarWrapper>
-          {Array.from({ length: stepCnt }).map((_, i) => (
+          {Array.from({ length: stepCnt }, (_, i) => i).map((v, idx) => (
             <Circle
               style={{
                 background:
-                  i + 1 <= currentStep ? 'var(--main-color)' : '#E1E1E1',
+                  idx + 1 <= currentStep ? 'var(--main-color)' : '#E1E1E1',
               }}
-              key={i}
-              $step={i + 1}
+              key={v}
+              $step={idx + 1}
               $currentStep={currentStep}>
-              <span>{i + 1}</span>
+              <span>{idx + 1}</span>
             </Circle>
           ))}
         </ProgressBarWrapper>
@@ -136,56 +136,20 @@ function ScreeningTest() {
                   </Question>
                   <ChoiceWrapper>
                     <ChoiceButton
-                      style={{
-                        background:
-                          choices[question.idx] === 0
-                            ? 'var(--main-bg-color)'
-                            : '#C6C6C6',
-                        border:
-                          choices[question.idx] === 0
-                            ? '0.2rem solid var(--main-color)'
-                            : '0.2rem solid var(--gray-bg-color)',
-                        color:
-                          choices[question.idx] === 0
-                            ? 'var(--main-color)'
-                            : 'var(--black-color)',
-                      }}
+                      $choice={choices[question.idx]}
+                      $idx={0}
                       onClick={() => onClickChoice(question.idx, 0)}>
                       0
                     </ChoiceButton>
                     <ChoiceButton
-                      style={{
-                        background:
-                          choices[question.idx] === 1
-                            ? 'var(--main-bg-color)'
-                            : '#C6C6C6',
-                        border:
-                          choices[question.idx] === 1
-                            ? '0.2rem solid var(--main-color)'
-                            : '0.2rem solid var(--gray-bg-color)',
-                        color:
-                          choices[question.idx] === 1
-                            ? 'var(--main-color)'
-                            : 'var(--black-color)',
-                      }}
+                      $choice={choices[question.idx]}
+                      $idx={1}
                       onClick={() => onClickChoice(question.idx, 1)}>
                       1
                     </ChoiceButton>
                     <ChoiceButton
-                      style={{
-                        background:
-                          choices[question.idx] === 2
-                            ? 'var(--main-bg-color)'
-                            : '#C6C6C6',
-                        border:
-                          choices[question.idx] === 2
-                            ? '0.2rem solid var(--main-color)'
-                            : '0.2rem solid var(--gray-bg-color)',
-                        color:
-                          choices[question.idx] === 2
-                            ? 'var(--main-color)'
-                            : 'var(--black-color)',
-                      }}
+                      $choice={choices[question.idx]}
+                      $idx={2}
                       onClick={() => onClickChoice(question.idx, 2)}>
                       2
                     </ChoiceButton>
@@ -315,10 +279,18 @@ const ChoiceWrapper = styled.div`
   }
 `;
 
-const ChoiceButton = styled.button`
+const ChoiceButton = styled.button<{ $choice: number; $idx: number }>`
   border-radius: 0.8rem;
   font-size: 4rem;
   padding: 2rem 2.5rem;
+  background: ${(props) =>
+    props.$choice === props.$idx ? 'var(--main-bg-color)' : '#C6C6C6'}
+  border: ${(props) =>
+    props.$choice === props.$idx
+      ? '0.2rem solid var(--main-color)'
+      : '0.2rem solid var(--gray-bg-color)'}
+  color: ${(props) =>
+    props.$choice === props.$idx ? 'var(--main-color)' : 'var(--black-color)'}
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     padding: 1rem 1.5rem;

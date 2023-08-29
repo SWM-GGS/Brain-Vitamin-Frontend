@@ -126,9 +126,9 @@ export default function Overlapping({
           겹쳐진 {answer.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?
         </Text>
         <NumWrapper>
-          {answer.map((num, index) => (
+          {answer.map((num) => (
             <Num
-              key={index}
+              key={num}
               $top={50 + Math.floor(Math.random() * 8)}
               $left={50 + Math.floor(Math.random() * 8)}>
               {num}
@@ -136,11 +136,11 @@ export default function Overlapping({
           ))}
         </NumWrapper>
         <ButtonWrapper>
-          {Array.from({ length: 10 }).map((_, index) => (
+          {Array.from({ length: 10 }, (_, i) => i).map((v) => (
             <NumBtn
-              key={index}
-              onClick={(e) => onClickNum(index, e.target as HTMLButtonElement)}>
-              {index}
+              key={v}
+              onClick={(e) => onClickNum(v, e.target as HTMLButtonElement)}>
+              {v}
             </NumBtn>
           ))}
         </ButtonWrapper>

@@ -109,7 +109,7 @@ export default function Maze({
           {problemPool.map((item, index) => (
             <Target
               ref={(el) => (targetRefs.current[targetRefs.current.length] = el)}
-              key={index}
+              key={`(${item.x},${item.y})`}
               x={item.x}
               y={item.y}
               $bgColor={'#' + Math.floor(Math.random() * 0xffffff).toString(16)}

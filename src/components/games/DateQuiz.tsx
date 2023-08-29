@@ -31,8 +31,6 @@ const Body = ({
   setAnswerState,
   answerState,
 }: BodyProps) => {
-  // const lastDate = totalDate.indexOf(1);
-  // const firstDate = totalDate.indexOf(1, 7);
   let clickedDate = useRef(0);
   const formRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const startTimeRef = useRef<Date | null>(new Date());
@@ -110,8 +108,7 @@ const Body = ({
       el.style.color = 'var(--black-color)';
       clickedDate.current = 0;
     } else {
-      for (let i = 0; i < formRefs.current.length; i++) {
-        const formRef = formRefs.current[i];
+      for (let formRef of formRefs.current) {
         if (formRef?.style.background === 'var(--main-bg-color)') {
           formRef.style.background = '#c6c6c6';
           formRef.style.border = '0.1rem solid #e4e3e6';
@@ -134,42 +131,24 @@ const Body = ({
   };
 
   const week = getWeek(new Date());
-  // const quizDate = Math.floor(Math.random() * (30 - 1) + 1);
-
-  // const checkAnswer2 = (index: number) => {
-  //   if (totalDate.indexOf(quizDate, lastDate) % 7 === index) {
-  //     alert('정답입니다!');
-  //   } else {
-  //     alert('틀렸습니다 ㅜ.ㅜ');
-  //   }
-  // };
 
   return (
     <>
       <Days>
-        {DAY.map((item, index) => (
-          <Day key={index}>{item}</Day>
+        {DAY.map((item) => (
+          <Day key={item}>{item}</Day>
         ))}
       </Days>
       <Wrapper>
-        {totalDate.slice((week - 1) * 7, week * 7).map((date, idx) => (
+        {totalDate.slice((week - 1) * 7, week * 7).map((date) => (
           <Form
             ref={(el) => (formRefs.current[formRefs.current.length] = el)}
-            key={idx}
+            key={date}
             onClick={(e) => onClickDate(date, e.target as HTMLElement)}>
             {date}일
           </Form>
         ))}
       </Wrapper>
-      {/* <h1>
-        {new Date().getMonth() + 1}월 {quizDate}
-        일은 무슨 요일일까요?
-      </h1>
-      {DAY.map((item, index) => (
-        <Button key={index} onClick={() => checkAnswer2(index)}>
-          {item}
-        </Button>
-      ))} */}
       {showAnswer && (
         <AnswerFeedback>
           <ShowAnswer>
@@ -241,12 +220,6 @@ const Form = styled.button`
     padding: 1.5rem 0;
   }
 `;
-
-// const Button = styled.button`
-//   padding: 1rem;
-//   margin: 2rem;
-//   font-size: 5rem;
-// `;
 
 const ShowAnswer = styled.div`
   font-size: 5rem;

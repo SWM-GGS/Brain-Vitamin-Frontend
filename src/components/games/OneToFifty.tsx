@@ -30,7 +30,7 @@ type CellProps = {
 function Cell({ num, handleClick, $gameFlag }: CellProps) {
   return (
     <Container1 onClick={() => handleClick(num)} $gameFlag={$gameFlag}>
-      <span>{num ? num : null}</span>
+      <span>{num}</span>
     </Container1>
   );
 }
@@ -53,8 +53,8 @@ type BoardProps = {
 function Board({ numbers, handleClick, $gameFlag }: BoardProps) {
   return (
     <Container2>
-      {numbers.map((num, index) => (
-        <CellWrapper key={index}>
+      {numbers.map((num) => (
+        <CellWrapper key={num}>
           <Cell num={num} handleClick={handleClick} $gameFlag={$gameFlag} />
         </CellWrapper>
       ))}

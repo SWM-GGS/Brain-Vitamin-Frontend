@@ -25,8 +25,8 @@ const Head = ({ year, month, goToday, setMonth }: HeadProps) => {
         </BtnBox>
       </Nav>
       <Days>
-        {DAY.map((item, index) => (
-          <Day key={index}>{item}</Day>
+        {DAY.map((item) => (
+          <Day key={item}>{item}</Day>
         ))}
       </Days>
     </Form>

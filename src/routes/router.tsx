@@ -28,16 +28,20 @@ export default function Router() {
   );
   const isFirstRun = checkIsFirstRun();
 
+  const renderPath = () => {
+    if (isLoggedIn) {
+      return '/home';
+    }
+    if (isFirstRun) {
+      return '/fontSizeSet';
+    } else {
+      return '/logIn';
+    }
+  };
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Navigate
-            to={isLoggedIn ? '/home' : isFirstRun ? '/fontSizeSet' : '/logIn'}
-          />
-        }
-      />
+      <Route path="/" element={<Navigate to={renderPath()} />} />
       <Route path="/fontSizeSet" element={<FontSizeSet />} />
       <Route path="/logIn" element={<LogIn />} />
       <Route path="/phoneNumberSet" element={<PhoneNumberSet />} />
