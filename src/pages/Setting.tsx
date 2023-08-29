@@ -109,7 +109,8 @@ function Setting() {
                 onClick={() =>
                   window.open(
                     'http://brain-vitamin-web-front-deploy.s3-website.ap-northeast-2.amazonaws.com/privacy',
-                    '_blank',
+                    '개인정보처리방침',
+                    'noopener',
                   )
                 }>
                 <span>개인정보처리방침 보기</span>
