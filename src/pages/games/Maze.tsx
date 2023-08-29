@@ -87,8 +87,7 @@ export default function Maze({
       el.style.border = 'none';
       clickedTarget.current = -1;
     } else {
-      for (let i = 0; i < targetRefs.current.length; i++) {
-        const targetRef = targetRefs.current[i];
+      for (let targetRef of targetRefs.current) {
         if (targetRef?.style.border === '0.5rem solid var(--main-color)') {
           targetRef.style.border = 'none';
           break;

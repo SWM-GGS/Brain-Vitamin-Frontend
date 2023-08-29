@@ -129,8 +129,7 @@ export default function Market({
       el.style.color = 'var(--black-color)';
       clickedPrice.current = 0;
     } else {
-      for (let i = 0; i < buttonRefs.current.length; i++) {
-        const buttonRef = buttonRefs.current[i];
+      for (let buttonRef of buttonRefs.current) {
         if (buttonRef?.style.background === 'var(--main-bg-color)') {
           buttonRef.style.background = '#c6c6c6';
           buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
