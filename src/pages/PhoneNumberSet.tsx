@@ -8,6 +8,8 @@ import Button from '../components/common/Button';
 import axios from 'axios';
 import Header from '../components/common/Header';
 
+export const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
+
 function PhoneNumberSet() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
@@ -24,7 +26,6 @@ function PhoneNumberSet() {
   };
 
   const sendCode = async () => {
-    const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
       alert('전화번호를 올바르게 입력해주세요.');
       return;

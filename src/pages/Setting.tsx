@@ -26,6 +26,22 @@ function Setting() {
     navigate('/fontSizeEdit');
   };
 
+  const handleOut = () => {
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('accessToken');
+    dispatch(
+      userSlice.actions.setUser({
+        name: '',
+        nickname: '',
+        fontSize,
+        phoneNumber: '',
+        familyKey: '',
+        accessToken: '',
+      }),
+    );
+    navigate('/logIn');
+  };
+
   const handleSignout = async () => {
     const confirmed = window.confirm('정말 회원탈퇴하시겠습니까?');
     if (!confirmed) return;
@@ -47,20 +63,8 @@ function Setting() {
           },
         },
       );
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('accessToken');
-      dispatch(
-        userSlice.actions.setUser({
-          name: '',
-          nickname: '',
-          fontSize,
-          phoneNumber: '',
-          familyKey: '',
-          accessToken: '',
-        }),
-      );
       alert(data.result);
-      navigate('/logIn');
+      handleOut();
     } catch (error) {
       console.error(error);
     }
@@ -87,20 +91,8 @@ function Setting() {
           },
         },
       );
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('accessToken');
-      dispatch(
-        userSlice.actions.setUser({
-          name: '',
-          nickname: '',
-          fontSize,
-          phoneNumber: '',
-          familyKey: '',
-          accessToken: '',
-        }),
-      );
       alert(data.result);
-      navigate('/logIn');
+      handleOut();
     } catch (error) {
       console.error(error);
     }
