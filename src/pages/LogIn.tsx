@@ -31,7 +31,7 @@ function LogIn() {
       );
       return;
     }
-    const phoneNumberRegex = /^01(0|1|[6-9])[0-9]{3,4}[0-9]{4}$/;
+    const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
       alert('전화번호를 올바르게 입력해주세요.');
       return;
@@ -82,11 +82,11 @@ function LogIn() {
             accessToken: data.result.tokenDto.accessTokenDto.accessToken,
           }),
         );
-        await localStorage.setItem(
+        localStorage.setItem(
           'refreshToken',
           data.result.tokenDto.refreshTokenDto.refreshToken,
         );
-        await localStorage.setItem(
+        localStorage.setItem(
           'accessToken',
           data.result.tokenDto.accessTokenDto.accessToken,
         );

@@ -9,6 +9,7 @@ import {
   Palette,
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
+import { getRandomFloat } from '../../utils/random.ts';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -40,24 +41,31 @@ export default function Coloring({
       cellCnt = 18;
   }
   const COLOR = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white'];
-  let colors: string[] = [];
+  type colorsProps = {
+    idx: number;
+    color: string;
+  };
+  let colors: colorsProps[] = [];
   if (cellCnt) {
     for (let i = 0; i < cellCnt; i++) {
-      let randomIndex = Math.floor(Math.random() * (COLOR.length - 1));
-      colors.push(COLOR[randomIndex]);
+      let randomIndex = Math.floor(getRandomFloat() * (COLOR.length - 1));
+      colors.push({ idx: colors.length, color: COLOR[randomIndex] });
     }
     for (let i = 0; i < totalCellCnt - cellCnt; i++) {
-      colors.push('white');
+      colors.push({ idx: colors.length, color: 'white' });
     }
   }
-  const answer = useMemo(() => colors.sort(() => 0.5 - Math.random()), []);
+  const answer = useMemo(
+    () => [...colors].sort(() => 0.5 - getRandomFloat()),
+    [],
+  );
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
-  answer.forEach((color, i) => {
-    if (color === 'white') {
+  answer.forEach((v, i) => {
+    if (v.color === 'white') {
       cellRefs.current[i]?.setAttribute('color', 'white');
     }
   });
@@ -66,7 +74,7 @@ export default function Coloring({
     let isIncorrect = false;
     for (let i = 0; i < cellRefs.current.length; i++) {
       let el = cellRefs.current[i];
-      if (el?.getAttribute('color') !== answer[i]) {
+      if (el?.getAttribute('color') !== answer[i].color) {
         // 오답
         isIncorrect = true;
         break;
@@ -124,9 +132,9 @@ export default function Coloring({
   return (
     <Container>
       <PaletteWrapper>
-        {COLOR.map((color, index) => (
+        {COLOR.map((color) => (
           <Palette
-            key={index}
+            key={color}
             color={color}
             $nowColor={nowColor}
             onClick={() => setNowColor(color)}
@@ -135,15 +143,15 @@ export default function Coloring({
       </PaletteWrapper>
       <PaperWrapper>
         <Paper>
-          {answer.map((color, index) => (
-            <CellWrapper key={index}>
-              <Cell color={color} />
+          {answer.map((v) => (
+            <CellWrapper key={v.idx}>
+              <Cell color={v.color} />
             </CellWrapper>
           ))}
         </Paper>
         <Paper>
-          {answer.map((_, index) => (
-            <CellWrapper key={index}>
+          {answer.map((v, index) => (
+            <CellWrapper key={v.idx}>
               <Cell
                 onClick={(e) => changeCellColor(e.target as HTMLElement)}
                 ref={(el) => (cellRefs.current[index] = el)}

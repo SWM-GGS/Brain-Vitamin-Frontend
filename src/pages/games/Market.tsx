@@ -154,16 +154,16 @@ export default function Market({
           </Coupon>
         ) : null}
         <Memo>
-          {problemPool.map((v, i) => (
-            <span key={i}>
+          {problemPool.map((v) => (
+            <span key={v.contents}>
               {v.contents} {v.count}개
             </span>
           ))}
         </Memo>
       </Wrapper>
       <Container>
-        {problemPool.map((item, index) => (
-          <Item key={index}>
+        {problemPool.map((item) => (
+          <Item key={item.contents}>
             <Img src={item.imgUrl} />
             <Name>{item.contents}</Name>
             <Price>
@@ -176,10 +176,10 @@ export default function Market({
         ))}
       </Container>
       <ButtonWrapper>
-        {candidate.map((price, i) => (
+        {candidate.map((price) => (
           <Button
             ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
-            key={i}
+            key={price}
             onClick={(e) => onClickPrice(price, e.target as HTMLElement)}>
             {price
               ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')

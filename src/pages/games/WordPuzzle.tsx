@@ -255,13 +255,13 @@ export default function WordPuzzle({
     <>
       <Container ref={containerRef}>
         <Wrapper>
-          {answers.map((item, index) => (
-            <div key={index}>
+          {answers.map((item) => (
+            <div key={item.contents}>
               <Img src={item.imgUrl} />
-              <DropBoxWrapper key={index}>
-                {item.contents.split('').map((_, i) => (
+              <DropBoxWrapper>
+                {item.contents.split('').map((v) => (
                   <DropBox
-                    key={`${index}-${i}`}
+                    key={v}
                     ref={(el) =>
                       (dropRefs.current[dropRefs.current.length] = el)
                     }
@@ -273,14 +273,14 @@ export default function WordPuzzle({
         </Wrapper>
         <ul>
           {problemPool.map((item, index) =>
-            item.contents.split('').map((letter, i) => (
+            item.contents.split('').map((letter) => (
               <Letter
                 style={{
                   position: 'absolute',
                   ...calculateRandomPosition(),
                   touchAction: 'none',
                 }}
-                key={`${index}^_^${i}`}
+                key={item.contents}
                 ref={(el) => (dragRefs.current[index] = el)}
                 draggable
                 onDragStart={dragStartHandler}

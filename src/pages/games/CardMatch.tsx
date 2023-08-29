@@ -34,7 +34,7 @@ export default function CardMatch({
   const cards = [...deck, ...deck].map((card, i) => {
     return { idx: i, type: card, status: false };
   });
-  const shuffle = () => cards.sort(() => 0.5 - Math.random());
+  const shuffle = () => [...cards].sort(() => 0.5 - Math.random());
   const mixedCards = useMemo(() => shuffle(), []);
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
@@ -90,67 +90,61 @@ export default function CardMatch({
   useEffect(() => {
     // 클릭된 카드가 두 장인 경우, 매칭 여부 검사
     setClickable(false);
-    if (clickedCards.length === 2) {
-      setTimeout(() => {
-        let firstCard = mixedCards.find((card) => card.idx === clickedCards[0])
-          ?.type;
-        let secondCard = mixedCards.find((card) => card.idx === clickedCards[1])
-          ?.type;
-        // 두 카드가 같지 않은 경우, 클릭된 두 장의 카드 다시 뒤집기
-        if (firstCard !== secondCard) {
-          mixedCards.forEach((card) => {
-            if (card.idx === clickedCards[0] || card.idx === clickedCards[1]) {
-              card.status = false;
-            }
-          });
-          console.log('매칭에 실패하셨습니다ㅠㅠ');
-        } else {
-          // 매칭 성공
-          console.log('매칭에 성공하셨습니다!');
-          // 카드가 모두 매칭된 경우 자동 정답 처리
-          endTimeRef.current = new Date();
-          if (startTimeRef.current && endTimeRef.current) {
-            duration.current =
-              (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-              1000;
-          }
-          const checkAnswer = async () => {
-            if (mixedCards.every((card) => card.status)) {
-              // 정답
-              saveGameResult(
-                gameData.problemId,
-                duration.current,
-                'SUCCESS',
-                10,
-              );
-              setAnswerState('correct');
-              await new Promise<void>((resolve) => {
-                setTimeout(() => {
-                  setAnswerState('');
-                  resolve();
-                }, 2000);
-              });
-              onGameEnd();
-            }
-          };
-          checkAnswer();
-        }
-        setClickedCards([]);
-        setClickable(true);
-      }, 500);
-    } else {
+    if (clickedCards.length < 2) {
       setClickable(true);
+      return;
     }
+    setTimeout(() => {
+      let firstCard = mixedCards.find((card) => card.idx === clickedCards[0])
+        ?.type;
+      let secondCard = mixedCards.find((card) => card.idx === clickedCards[1])
+        ?.type;
+      // 두 카드가 같지 않은 경우, 클릭된 두 장의 카드 다시 뒤집기
+      if (firstCard !== secondCard) {
+        const card1 = mixedCards.find((card) => card.idx === clickedCards[0]);
+        const card2 = mixedCards.find((card) => card.idx === clickedCards[1]);
+        if (card1 && card2) {
+          card1.status = false;
+          card2.status = false;
+        }
+        console.log('매칭에 실패하셨습니다ㅠㅠ');
+      } else {
+        // 매칭 성공
+        console.log('매칭에 성공하셨습니다!');
+        // 카드가 모두 매칭된 경우 자동 정답 처리
+        endTimeRef.current = new Date();
+        if (startTimeRef.current) {
+          duration.current =
+            (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+            1000;
+        }
+        const checkAnswer = async () => {
+          if (mixedCards.every((card) => card.status)) {
+            // 정답
+            saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+            setAnswerState('correct');
+            await new Promise<void>((resolve) => {
+              setTimeout(() => {
+                setAnswerState('');
+                resolve();
+              }, 2000);
+            });
+            onGameEnd();
+          }
+        };
+        checkAnswer();
+      }
+      setClickedCards([]);
+      setClickable(true);
+    }, 500);
   }, [clickedCards]);
 
   const handleClick = (idx: number) => {
     setClickedCards((prev) => [...prev, idx]);
-    mixedCards.forEach((card) => {
-      if (card.idx === idx) {
-        card.status = !card.status;
-        return;
-      }
-    });
+    const card = mixedCards.find((card) => card.idx === idx);
+    if (card) {
+      card.status = !card.status;
+    }
   };
 
   return (
@@ -160,9 +154,7 @@ export default function CardMatch({
           <Flip
             $status={card.status}
             $clickable={clickable}
-            onClick={() => {
-              !card.status ? handleClick(card.idx) : null;
-            }}>
+            onClick={() => (!card.status ? handleClick(card.idx) : null)}>
             <Card>
               <Front $status={card.status} $background={card.type} />
               <Back $status={card.status} />

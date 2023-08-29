@@ -105,144 +105,6 @@ function FamilyPostRead() {
       }
     };
     getData();
-    // const data = {
-    //   id: 1,
-    //   contents: '안녕하세요!',
-    //   postImgDtoList: [
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card19.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card3.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card6.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card25.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card25.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card25.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //     {
-    //       id: 0,
-    //       imgUrl:
-    //         'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/card/card25.svg',
-    //       description: '이미지 설명입니다.',
-    //     },
-    //   ],
-    //   createdAt: '20230826',
-    //   userId: 1,
-    //   userName: '봉지수',
-    //   relationship: '큰 딸',
-    //   profileImgUrl: '',
-    //   viewersCount: 283,
-    //   viewerDtoList: [],
-    //   emotionsCount: 4,
-    //   emotionDtoList: [
-    //     { id: 1, userName: '지수봉', profileImgUrl: '', emotionType: '행복' },
-    //     { id: 1, userName: '코코넛', profileImgUrl: '', emotionType: '폭소' },
-    //     { id: 1, userName: '스무디', profileImgUrl: '', emotionType: '슬픔' },
-    //     {
-    //       id: 1,
-    //       userName: '자몽에이드',
-    //       profileImgUrl: '',
-    //       emotionType: '화남',
-    //     },
-    //   ],
-    //   commentsCount: 5,
-    //   commentDtoList: [
-    //     {
-    //       id: 0,
-    //       contents: '댓글입니다!!',
-    //       postId: 1,
-    //       parentsId: 0,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '봉지수',
-    //       profileImgUrl: '',
-    //     },
-    //     {
-    //       id: 1,
-    //       contents: '댓글입니다',
-    //       postId: 1,
-    //       parentsId: 1,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '봉봉봉',
-    //       profileImgUrl: '',
-    //     },
-    //     {
-    //       id: 2,
-    //       contents: '댓글입니다',
-    //       postId: 1,
-    //       parentsId: 2,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '오소리',
-    //       profileImgUrl: '',
-    //     },
-    //     {
-    //       id: 3,
-    //       contents: '댓글입니다',
-    //       postId: 1,
-    //       parentsId: 0,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '하이루',
-    //       profileImgUrl: '',
-    //     },
-    //     {
-    //       id: 4,
-    //       contents: '댓글입니다',
-    //       postId: 1,
-    //       parentsId: 0,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '아몬드봉봉',
-    //       profileImgUrl: '',
-    //     },
-    //     {
-    //       id: 5,
-    //       contents: '댓글입니다',
-    //       postId: 1,
-    //       parentsId: 2,
-    //       createdAt: '20230826',
-    //       userId: 1,
-    //       userName: '콩벌레',
-    //       profileImgUrl: '',
-    //     },
-    //   ],
-    // };
-    // setData(data);
-    // setImages(data.postImgDtoList.map((v) => v.imgUrl));
-    // setParentComments(data.commentDtoList.filter((v) => v.id === v.parentsId));
-    // setCurrentEmotionType(
-    //   data.emotionDtoList.find((v) => v.userName === nickname)?.emotionType ||
-    //     '',
-    // );
-    // setLoading(false);
   }, []);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -330,7 +192,7 @@ function FamilyPostRead() {
                       ? '0.2rem solid var(--main-color)'
                       : '0.2rem solid var(--gray-bg-color)',
                 }}
-                key={i}
+                key={v}
                 alt={`Sub Image ${i}`}
                 src={v}
                 onClick={() => setCurrentIndex(i)}
@@ -363,8 +225,8 @@ function FamilyPostRead() {
               <SubInfoText>표정</SubInfoText>
               <SubInfoText>{data.emotionsCount}</SubInfoText>
               <ToggleList $visible={listVisible}>
-                {data.emotionDtoList.map((v, i) => (
-                  <ToggleListItem key={i}>
+                {data.emotionDtoList.map((v) => (
+                  <ToggleListItem key={v.userName}>
                     {v.profileImgUrl ? (
                       <CommentProfileImage alt="" src={v.profileImgUrl} />
                     ) : (
@@ -413,8 +275,8 @@ function FamilyPostRead() {
           </EmotionBox>
           <Intro>댓글({data.commentsCount})</Intro>
           <CommentContainer>
-            {parentComments.map((parentComment, parentIndex) => (
-              <CommentSection key={parentIndex}>
+            {parentComments.map((parentComment) => (
+              <CommentSection key={parentComment.id}>
                 <CommentProfileContainer>
                   {parentComment.profileImgUrl ? (
                     <CommentProfileImage
@@ -437,10 +299,10 @@ function FamilyPostRead() {
                 <CommentContentsContainer>
                   <CommentContents>{parentComment.contents}</CommentContents>
                   {data.commentDtoList.map(
-                    (v, i) =>
+                    (v) =>
                       parentComment.id !== v.id &&
                       parentComment.id === v.parentsId && (
-                        <ReplySection key={`${parentIndex}-${i}`}>
+                        <ReplySection key={v.id}>
                           <CommentProfileContainer>
                             {v.profileImgUrl ? (
                               <CommentProfileImage

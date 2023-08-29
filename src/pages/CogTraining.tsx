@@ -179,6 +179,15 @@ function CogTraining() {
     }
   };
 
+  const renderAnswerState = () => {
+    if (answerState === 'correct') {
+      return <Correct />;
+    }
+    if (answerState === 'incorrect') {
+      return <Incorrect />;
+    }
+  };
+
   if (loading) return <Splash />;
   return (
     <Container>
@@ -216,13 +225,7 @@ function CogTraining() {
               <Button onClick={handleNextButtonClick}>다음</Button>
             </ButtonWrapper>
           </Wrapper>
-          <AnswerFeedback>
-            {answerState === 'correct' ? (
-              <Correct />
-            ) : answerState === 'incorrect' ? (
-              <Incorrect />
-            ) : null}
-          </AnswerFeedback>
+          <AnswerFeedback>{renderAnswerState()}</AnswerFeedback>
           {showLayerPopup && (
             <LayerPopup
               label={gameData[gameIndex].trainingName}
