@@ -5,12 +5,15 @@ import { useState } from 'react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Header from '../components/common/Header';
+import LayerPopup from '../components/common/LayerPopup';
 
 function BirthDateSet() {
   const { state } = useLocation();
   const [birthDate, setBirthDate] = useState('');
   const [gender, setGender] = useState('');
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   const onChangeBirthDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBirthDate(e.target.value.trim());
@@ -19,7 +22,8 @@ function BirthDateSet() {
   const goNext = () => {
     const birthDateRegex = /^\d{4}\d{2}\d{2}$/;
     if (!birthDateRegex.test(birthDate)) {
-      alert('생년월일을 올바르게 입력해주세요.');
+      setModalText('생년월일을 올바르게 입력해주세요.');
+      setIsModalOpen(true);
       return;
     }
     navigate('/educationSet', {
@@ -73,6 +77,13 @@ function BirthDateSet() {
           다음
         </Button>
       </Box>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={() => setIsModalOpen(false)}
+        />
+      )}
     </Container>
   );
 }

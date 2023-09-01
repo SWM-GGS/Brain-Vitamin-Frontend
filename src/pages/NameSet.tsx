@@ -10,6 +10,7 @@ import userSlice from '../slices/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Header from '../components/common/Header';
+import LayerPopup from '../components/common/LayerPopup';
 
 function NameSet() {
   const { state } = useLocation();
@@ -18,6 +19,9 @@ function NameSet() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [movePage, setMovePage] = useState('');
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value.trim());
@@ -39,7 +43,8 @@ function NameSet() {
         },
       );
       if (!data.isSuccess) {
-        alert(data.message);
+        setModalText(data.message);
+        setIsModalOpen(true);
         return;
       }
       dispatch(
@@ -60,8 +65,9 @@ function NameSet() {
         'accessToken',
         data.result.tokenDto.accessTokenDto.accessToken,
       );
-      alert('회원가입에 성공하였습니다.');
-      navigate('/home');
+      setModalText('회원가입에 성공하였습니다.');
+      setIsModalOpen(true);
+      setMovePage('/home');
     } catch (error) {
       console.error(error);
     }
@@ -98,6 +104,16 @@ function NameSet() {
           회원가입
         </Button>
       </Box>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={() => {
+            setIsModalOpen(false);
+            if (movePage) navigate(movePage);
+          }}
+        />
+      )}
     </Container>
   );
 }

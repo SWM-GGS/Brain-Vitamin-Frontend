@@ -10,12 +10,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import BottomTapBar from '../components/common/BottomTapBar';
 import LeftTapBar from '../components/common/LeftTapBar';
+import LayerPopup from '../components/common/LayerPopup';
 
 function FontSizeEdit() {
   const [fontSize, setFontSize] = useState(0);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   const handleSave = async () => {
     try {
@@ -31,8 +34,8 @@ function FontSizeEdit() {
         },
       );
       dispatch(userSlice.actions.setFontSize(fontSize));
-      alert(data.result);
-      navigate('/setting');
+      setModalText(data.result);
+      setIsModalOpen(true);
     } catch (error) {
       console.error(error);
     }
@@ -85,6 +88,16 @@ function FontSizeEdit() {
         </Container3>
       </Container2>
       <BottomTapBar />
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={() => {
+            setIsModalOpen(false);
+            navigate('/setting');
+          }}
+        />
+      )}
     </Container>
   );
 }

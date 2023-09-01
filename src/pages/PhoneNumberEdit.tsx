@@ -13,6 +13,7 @@ import { RootState } from '../store/reducer';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { phoneNumberRegex } from './PhoneNumberSet';
+import LayerPopup from '../components/common/LayerPopup';
 
 function PhoneNumberEdit() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -21,6 +22,9 @@ function PhoneNumberEdit() {
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [movePage, setMovePage] = useState('');
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value.trim());
@@ -32,10 +36,12 @@ function PhoneNumberEdit() {
 
   const sendCode = async () => {
     if (!phoneNumberRegex.test(phoneNumber)) {
-      alert('전화번호를 올바르게 입력해주세요.');
+      setModalText('전화번호를 올바르게 입력해주세요.');
+      setIsModalOpen(true);
       return;
     }
-    alert('인증번호가 전송되었습니다.');
+    setModalText('인증번호가 전송되었습니다.');
+    setIsModalOpen(true);
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/sms`,
@@ -52,7 +58,8 @@ function PhoneNumberEdit() {
 
   const handleSave = async () => {
     if (code !== authNum) {
-      alert('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
+      setModalText('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
+      setIsModalOpen(true);
       return;
     }
     try {
@@ -68,8 +75,9 @@ function PhoneNumberEdit() {
         },
       );
       dispatch(userSlice.actions.setPhoneNumber(phoneNumber));
-      alert(data.result);
-      navigate('/setting');
+      setModalText(data.result);
+      setIsModalOpen(true);
+      setMovePage('/setting');
     } catch (error) {
       console.error(error);
     }
@@ -107,6 +115,16 @@ function PhoneNumberEdit() {
         </Container3>
       </Container2>
       <BottomTapBar />
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={() => {
+            setIsModalOpen(false);
+            if (movePage) navigate(movePage);
+          }}
+        />
+      )}
     </Container>
   );
 }

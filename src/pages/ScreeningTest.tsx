@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
+import LayerPopup from '../components/common/LayerPopup';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -18,6 +19,8 @@ function ScreeningTest() {
   const stepCnt = 5;
   const chunkSize = 3;
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   useEffect(() => {
     const getData = async () => {
@@ -71,7 +74,8 @@ function ScreeningTest() {
   const onSubmit = async () => {
     const submittedChoices = choices.slice(1);
     if (submittedChoices.includes(-1)) {
-      alert('체크하지 않은 문항이 있습니다. 다시 확인해주세요.');
+      setModalText('체크하지 않은 문항이 있습니다. 다시 확인해주세요.');
+      setIsModalOpen(true);
       return;
     }
     const totalScore = submittedChoices.reduce((p, c) => p + c, 0);
@@ -169,6 +173,13 @@ function ScreeningTest() {
           )}
         </ButtonWrapper>
       </Wrapper>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={() => setIsModalOpen(false)}
+        />
+      )}
     </Container>
   );
 }
