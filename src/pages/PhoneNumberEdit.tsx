@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
@@ -14,17 +13,15 @@ import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { phoneNumberRegex } from './PhoneNumberSet';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function PhoneNumberEdit() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const [authNum, setAuthNum] = useState('');
-  const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
-  const [movePage, setMovePage] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value.trim());
@@ -36,12 +33,10 @@ function PhoneNumberEdit() {
 
   const sendCode = async () => {
     if (!phoneNumberRegex.test(phoneNumber)) {
-      setModalText('전화번호를 올바르게 입력해주세요.');
-      setIsModalOpen(true);
+      openModal('전화번호를 올바르게 입력해주세요.');
       return;
     }
-    setModalText('인증번호가 전송되었습니다.');
-    setIsModalOpen(true);
+    openModal('인증번호가 전송되었습니다.');
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/sms`,
@@ -58,8 +53,7 @@ function PhoneNumberEdit() {
 
   const handleSave = async () => {
     if (code !== authNum) {
-      setModalText('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
-      setIsModalOpen(true);
+      openModal('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
       return;
     }
     try {
@@ -75,9 +69,7 @@ function PhoneNumberEdit() {
         },
       );
       dispatch(userSlice.actions.setPhoneNumber(phoneNumber));
-      setModalText(data.result);
-      setIsModalOpen(true);
-      setMovePage('/setting');
+      openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
     }
@@ -119,10 +111,7 @@ function PhoneNumberEdit() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => {
-            setIsModalOpen(false);
-            if (movePage) navigate(movePage);
-          }}
+          onClickCenterButton={closeModal}
         />
       )}
     </Container>
