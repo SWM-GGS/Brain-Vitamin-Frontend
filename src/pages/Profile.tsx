@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
@@ -23,7 +22,6 @@ function Profile() {
   const [newNickname, setNewNickname] = useState(nickname);
   const [newEducation, setNewEducation] = useState(education);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
