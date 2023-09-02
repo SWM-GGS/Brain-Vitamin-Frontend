@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
@@ -10,14 +10,16 @@ import userSlice from '../slices/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Header from '../components/common/Header';
+import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function NameSet() {
   const { state } = useLocation();
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value.trim());
@@ -39,7 +41,7 @@ function NameSet() {
         },
       );
       if (!data.isSuccess) {
-        alert(data.message);
+        openModal(data.message);
         return;
       }
       dispatch(
@@ -60,8 +62,7 @@ function NameSet() {
         'accessToken',
         data.result.tokenDto.accessTokenDto.accessToken,
       );
-      alert('회원가입에 성공하였습니다.');
-      navigate('/home');
+      openModal('회원가입에 성공하였습니다.', '/home');
     } catch (error) {
       console.error(error);
     }
@@ -98,6 +99,13 @@ function NameSet() {
           회원가입
         </Button>
       </Box>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+        />
+      )}
     </Container>
   );
 }

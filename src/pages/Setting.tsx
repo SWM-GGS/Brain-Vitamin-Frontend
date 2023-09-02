@@ -7,12 +7,18 @@ import axios from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
     useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [isConfirmSignoutOpen, setIsConfirmSignoutOpen] = useState(false);
+  const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
 
   const toProfile = () => {
     navigate('/profile');
@@ -43,8 +49,6 @@ function Setting() {
   };
 
   const handleSignout = async () => {
-    const confirmed = window.confirm('정말 회원탈퇴하시겠습니까?');
-    if (!confirmed) return;
     const refreshToken = await localStorage.getItem('refreshToken');
     try {
       const { data } = await axios.post(
@@ -63,7 +67,7 @@ function Setting() {
           },
         },
       );
-      alert(data.result);
+      openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
@@ -71,8 +75,6 @@ function Setting() {
   };
 
   const handleLogout = async () => {
-    const confirmed = window.confirm('정말 로그아웃하시겠습니까?');
-    if (!confirmed) return;
     const refreshToken = await localStorage.getItem('refreshToken');
     try {
       const { data } = await axios.post(
@@ -91,7 +93,7 @@ function Setting() {
           },
         },
       );
-      alert(data.result);
+      openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
@@ -144,12 +146,41 @@ function Setting() {
             </ButtonContainer>
           </Box>
           <SubButtonContainer>
-            <SignoutButton onClick={handleSignout}>회원탈퇴</SignoutButton>
-            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+            <SignoutButton onClick={() => setIsConfirmSignoutOpen(true)}>
+              회원탈퇴
+            </SignoutButton>
+            <LogoutButton onClick={() => setIsConfirmLogoutOpen(true)}>
+              로그아웃
+            </LogoutButton>
           </SubButtonContainer>
         </Container3>
       </Container2>
       <BottomTapBar />
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+        />
+      )}
+      {isConfirmSignoutOpen && (
+        <LayerPopup
+          label="정말 회원탈퇴하시겠습니까?"
+          leftButtonText="취소"
+          onClickLeftButton={() => setIsConfirmSignoutOpen(false)}
+          rightButtonText="확인"
+          onClickRightButton={handleSignout}
+        />
+      )}
+      {isConfirmLogoutOpen && (
+        <LayerPopup
+          label="정말 로그아웃하시겠습니까?"
+          leftButtonText="취소"
+          onClickLeftButton={() => setIsConfirmLogoutOpen(false)}
+          rightButtonText="확인"
+          onClickRightButton={handleLogout}
+        />
+      )}
     </Container>
   );
 }

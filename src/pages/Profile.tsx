@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
@@ -12,6 +11,8 @@ import { RootState } from '../store/reducer';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -21,14 +22,14 @@ function Profile() {
   const [newNickname, setNewNickname] = useState(nickname);
   const [newEducation, setNewEducation] = useState(education);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
     const maxImageLength = 1;
     if (!imageArr?.length) return;
     if (imageArr.length > maxImageLength) {
-      alert('최대 등록 가능한 이미지 개수를 초과했습니다.');
+      openModal('최대 등록 가능한 이미지 개수를 초과했습니다.');
       return;
     }
     const image = imageArr[0];
@@ -37,7 +38,7 @@ function Profile() {
       image.type !== 'image/jpg' &&
       image.type !== 'image/png'
     ) {
-      alert('JPG 혹은 PNG 확장자의 이미지 파일만 등록 가능합니다.');
+      openModal('JPG 혹은 PNG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
     setProfileImg(image);
@@ -102,10 +103,9 @@ function Profile() {
       dispatch(userSlice.actions.setEducation(newEducation));
       dispatch(userSlice.actions.setProfileImgUrl(uploadUrl));
       if (data.isSuccess) {
-        alert(data.result);
-        navigate('/setting');
+        openModal(data.result, '/setting');
       } else {
-        alert(data.message);
+        openModal(data.message);
       }
     } catch (error) {
       console.error(error);
@@ -204,6 +204,13 @@ function Profile() {
         </Container3>
       </Container2>
       <BottomTapBar />
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+        />
+      )}
     </Container>
   );
 }

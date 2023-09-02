@@ -8,6 +8,8 @@ import Button from '../components/common/Button';
 import axios from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
+import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function LogIn() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -15,6 +17,7 @@ function LogIn() {
   const [authNum, setAuthNum] = useState('');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value.trim());
@@ -26,17 +29,17 @@ function LogIn() {
 
   const sendCode = async () => {
     if (phoneNumber === '01012345678') {
-      alert(
+      openModal(
         '해당 계정은 어드민 계정입니다. 인증번호 입력란에 제공된 비밀번호를 입력하고 로그인해주세요.',
       );
       return;
     }
     const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
-      alert('전화번호를 올바르게 입력해주세요.');
+      openModal('전화번호를 올바르게 입력해주세요.');
       return;
     }
-    alert('인증번호가 전송되었습니다.');
+    openModal('인증번호가 전송되었습니다.');
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/sms`,
@@ -67,7 +70,7 @@ function LogIn() {
           },
         );
         if (!data.isSuccess) {
-          alert(data.message);
+          openModal(data.message);
           return;
         }
         const { name, nickname, fontSize, familyKey } =
@@ -100,7 +103,7 @@ function LogIn() {
       return;
     }
     if (code !== authNum) {
-      alert('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
+      openModal('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
       return;
     }
     logIn();
@@ -138,6 +141,13 @@ function LogIn() {
         </Wrapper>
         <Button onClick={toSignUp}>처음이신가요? 회원가입하기</Button>
       </Box>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+        />
+      )}
     </Container>
   );
 }
