@@ -5,54 +5,26 @@ import { useState } from 'react';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
-import axios from 'axios';
 import Header from '../components/common/Header';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
-
-export const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
+import { usePhoneNumber } from '../hooks/usePhoneNumber';
 
 function PhoneNumberSet() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [code, setCode] = useState('');
-  const [authNum, setAuthNum] = useState('');
   const navigate = useNavigate();
   const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
-
-  const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value.trim());
-  };
-
-  const onChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value.trim());
-  };
-
-  const sendCode = async () => {
-    if (!phoneNumberRegex.test(phoneNumber)) {
-      openModal('전화번호를 올바르게 입력해주세요.');
-      return;
-    }
-    openModal('인증번호가 전송되었습니다.');
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/patient/sms`,
-        {
-          to: phoneNumber,
-          content: '',
-        },
-      );
-      setAuthNum(data.result.authNum);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const {
+    phoneNumber,
+    code,
+    onChangePhoneNumber,
+    onChangeCode,
+    sendCode,
+    checkCodeCorrect,
+  } = usePhoneNumber(openModal);
 
   const goNext = () => {
-    if (code !== authNum) {
-      openModal('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
-      return;
-    }
+    if (!checkCodeCorrect()) return;
     navigate('/nameSet', {
       state: { phoneNumber },
     });

@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
-import { useState } from 'react';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
@@ -11,51 +10,25 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
-import { phoneNumberRegex } from './PhoneNumberSet';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { usePhoneNumber } from '../hooks/usePhoneNumber';
 
 function PhoneNumberEdit() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [code, setCode] = useState('');
-  const [authNum, setAuthNum] = useState('');
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
-
-  const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value.trim());
-  };
-
-  const onChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value.trim());
-  };
-
-  const sendCode = async () => {
-    if (!phoneNumberRegex.test(phoneNumber)) {
-      openModal('전화번호를 올바르게 입력해주세요.');
-      return;
-    }
-    openModal('인증번호가 전송되었습니다.');
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/patient/sms`,
-        {
-          to: phoneNumber,
-          content: '',
-        },
-      );
-      setAuthNum(data.result.authNum);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const {
+    phoneNumber,
+    code,
+    onChangePhoneNumber,
+    onChangeCode,
+    sendCode,
+    checkCodeCorrect,
+  } = usePhoneNumber(openModal);
 
   const handleSave = async () => {
-    if (code !== authNum) {
-      openModal('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
-      return;
-    }
+    if (!checkCodeCorrect()) return;
     try {
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/patient/phone-number`,
