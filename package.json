@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
+    "emptyBucket": "aws s3 rm --recursive s3://brain-vitamin-web-front-deploy/assets/ --profile=bongjisu",
     "deploy": "aws s3 sync ./dist s3://brain-vitamin-web-front-deploy --profile=bongjisu"
   },
   "dependencies": {
