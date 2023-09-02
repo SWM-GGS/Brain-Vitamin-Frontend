@@ -9,14 +9,14 @@ import userSlice from '../slices/user';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
     useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
   const [isConfirmSignoutOpen, setIsConfirmSignoutOpen] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
 
@@ -67,8 +67,7 @@ function Setting() {
           },
         },
       );
-      setModalText(data.result);
-      setIsModalOpen(true);
+      openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
@@ -94,8 +93,7 @@ function Setting() {
           },
         },
       );
-      setModalText(data.result);
-      setIsModalOpen(true);
+      openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
@@ -162,7 +160,7 @@ function Setting() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => setIsModalOpen(false)}
+          onClickCenterButton={closeModal}
         />
       )}
       {isConfirmSignoutOpen && (

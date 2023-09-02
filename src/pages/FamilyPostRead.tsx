@@ -9,6 +9,7 @@ import { styled } from 'styled-components';
 import { useLocation, useParams } from 'react-router';
 import { EmotionInfoDtoListProps } from './Family';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function FamilyPostRead() {
   const { accessToken, familyKey, nickname } = useSelector(
@@ -25,8 +26,8 @@ function FamilyPostRead() {
     state: { emotionInfoDtoList },
   } = useLocation();
   const [listVisible, setListVisible] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
+
   type PostImgDtoListProps = {
     id: number;
     imgUrl: string;
@@ -140,8 +141,7 @@ function FamilyPostRead() {
         },
       );
       if (!data.isSuccess) {
-        setModalText(data.message);
-        setIsModalOpen(true);
+        openModal(data.message);
       } else {
         setCurrentEmotionType('');
       }
@@ -160,8 +160,7 @@ function FamilyPostRead() {
           { headers: { authorization: `Bearer ${accessToken}` } },
         );
         if (!data.isSuccess) {
-          setModalText(data.message);
-          setIsModalOpen(true);
+          openModal(data.message);
         } else {
           setCurrentEmotionType(type);
         }
@@ -344,7 +343,7 @@ function FamilyPostRead() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => setIsModalOpen(false)}
+          onClickCenterButton={closeModal}
         />
       )}
     </Container>

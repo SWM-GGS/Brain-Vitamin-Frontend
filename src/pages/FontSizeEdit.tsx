@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import Label from '../components/common/Label';
 import { styled } from 'styled-components';
 import Button from '../components/common/Button';
@@ -11,14 +10,13 @@ import { RootState } from '../store/reducer';
 import BottomTapBar from '../components/common/BottomTapBar';
 import LeftTapBar from '../components/common/LeftTapBar';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function FontSizeEdit() {
   const [fontSize, setFontSize] = useState(0);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const handleSave = async () => {
     try {
@@ -34,8 +32,7 @@ function FontSizeEdit() {
         },
       );
       dispatch(userSlice.actions.setFontSize(fontSize));
-      setModalText(data.result);
-      setIsModalOpen(true);
+      openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
     }
@@ -92,10 +89,7 @@ function FontSizeEdit() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => {
-            setIsModalOpen(false);
-            navigate('/setting');
-          }}
+          onClickCenterButton={closeModal}
         />
       )}
     </Container>

@@ -8,6 +8,7 @@ import Button from '../components/common/Button';
 import axios from 'axios';
 import Header from '../components/common/Header';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 export const phoneNumberRegex = /^01(0|1|[6-9])\d{3,4}\d{4}$/;
 
@@ -17,8 +18,7 @@ function PhoneNumberSet() {
   const [authNum, setAuthNum] = useState('');
   const navigate = useNavigate();
   const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value.trim());
@@ -30,12 +30,10 @@ function PhoneNumberSet() {
 
   const sendCode = async () => {
     if (!phoneNumberRegex.test(phoneNumber)) {
-      setModalText('전화번호를 올바르게 입력해주세요.');
-      setIsModalOpen(true);
+      openModal('전화번호를 올바르게 입력해주세요.');
       return;
     }
-    setModalText('인증번호가 전송되었습니다.');
-    setIsModalOpen(true);
+    openModal('인증번호가 전송되었습니다.');
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/sms`,
@@ -52,8 +50,7 @@ function PhoneNumberSet() {
 
   const goNext = () => {
     if (code !== authNum) {
-      setModalText('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
-      setIsModalOpen(true);
+      openModal('인증번호가 올바르지 않습니다. 다시 입력해주세요.');
       return;
     }
     navigate('/nameSet', {
@@ -116,7 +113,7 @@ function PhoneNumberSet() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => setIsModalOpen(false)}
+          onClickCenterButton={closeModal}
         />
       )}
     </Container>

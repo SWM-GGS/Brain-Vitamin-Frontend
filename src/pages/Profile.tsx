@@ -13,6 +13,7 @@ import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -23,17 +24,14 @@ function Profile() {
   const [newEducation, setNewEducation] = useState(education);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
-  const [movePage, setMovePage] = useState('');
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
     const maxImageLength = 1;
     if (!imageArr?.length) return;
     if (imageArr.length > maxImageLength) {
-      setModalText('최대 등록 가능한 이미지 개수를 초과했습니다.');
-      setIsModalOpen(true);
+      openModal('최대 등록 가능한 이미지 개수를 초과했습니다.');
       return;
     }
     const image = imageArr[0];
@@ -42,8 +40,7 @@ function Profile() {
       image.type !== 'image/jpg' &&
       image.type !== 'image/png'
     ) {
-      setModalText('JPG 혹은 PNG 확장자의 이미지 파일만 등록 가능합니다.');
-      setIsModalOpen(true);
+      openModal('JPG 혹은 PNG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
     setProfileImg(image);
@@ -108,12 +105,9 @@ function Profile() {
       dispatch(userSlice.actions.setEducation(newEducation));
       dispatch(userSlice.actions.setProfileImgUrl(uploadUrl));
       if (data.isSuccess) {
-        setModalText(data.result);
-        setIsModalOpen(true);
-        setMovePage('/setting');
+        openModal(data.result, '/setting');
       } else {
-        setModalText(data.message);
-        setIsModalOpen(true);
+        openModal(data.message);
       }
     } catch (error) {
       console.error(error);
@@ -216,10 +210,7 @@ function Profile() {
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
-          onClickCenterButton={() => {
-            setIsModalOpen(false);
-            if (movePage) navigate(movePage);
-          }}
+          onClickCenterButton={closeModal}
         />
       )}
     </Container>
