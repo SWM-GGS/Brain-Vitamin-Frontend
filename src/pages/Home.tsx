@@ -102,13 +102,13 @@ const Wrapper = styled.div`
     flex-wrap: wrap;
     padding: 0;
     gap: 1rem;
-    align-content: center;
+    align-content: flex-start;
   }
 `;
 
 const BigBox = styled.div`
-  width: 80rem;
-  height: 84rem;
+  width: 71rem;
+  height: 80rem;
   border-radius: 3rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -119,12 +119,12 @@ const BigBox = styled.div`
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 30rem;
-    margin: 1.6rem 1.6rem 0 1.6rem;
+    margin: 2rem 1.6rem 0 1.6rem;
   }
 `;
 
 const Box = styled.div`
-  width: 50rem;
+  width: 42rem;
   height: 100%;
   border-radius: 3rem;
   background: #fff;
@@ -147,7 +147,7 @@ const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  height: 84rem;
+  height: 80rem;
   @media screen and (max-width: 767px) {
     flex-direction: row;
     width: 100%;

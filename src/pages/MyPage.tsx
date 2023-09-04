@@ -215,7 +215,7 @@ const Container = styled.div`
   }
 `;
 const Container2 = styled.div`
-  padding: 5rem;
+  padding: 3rem 5rem;
   display: flex;
   gap: 2.8rem;
   justify-content: center;
@@ -242,12 +242,13 @@ const Container3 = styled.div`
   }
 `;
 const LeftContainer = styled.div`
-  width: 86.6rem;
+  width: 75rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 2.8rem;
   @media screen and (min-width: 768px) {
-    height: 83rem;
+    height: 80rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -255,8 +256,8 @@ const LeftContainer = styled.div`
   }
 `;
 const RightContainer = styled.div`
-  width: 43.8rem;
-  height: 83rem;
+  width: 38rem;
+  height: 80rem;
   border-radius: 2.1rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -286,13 +287,14 @@ const DateBox = styled.div`
 const StatusContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 2.8rem;
   @media screen and (max-width: 767px) {
     gap: 1rem;
   }
 `;
 const StatusBox = styled.div`
-  width: 41.9rem;
-  height: 55rem;
+  width: 100%;
+  height: 52rem;
   border-radius: 2.1rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
