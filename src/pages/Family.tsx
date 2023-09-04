@@ -1,7 +1,7 @@
 import LeftTapBar from '../components/common/LeftTapBar';
 import BottomTapBar from '../components/common/BottomTapBar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Splash from './Splash';
@@ -58,7 +58,7 @@ function Family() {
 
   useEffect(() => {
     if (!familyKey) {
-      openModal('아직 가족 그룹이 없습니다.', '/home');
+      openModal('아직 가족 그룹이 없어요.', '/home');
       return;
     }
     const getData = async () => {
@@ -75,6 +75,9 @@ function Family() {
         setData(data.result);
       } catch (error) {
         console.error(error);
+        if ((error as AxiosError).response?.status === 400) {
+          openModal('아직 가족 그룹이 없어요.', '/home');
+        }
       } finally {
         setLoading(false);
       }
@@ -140,54 +143,54 @@ function Family() {
     }
   };
 
-  if (loading || !data)
-    return (
-      <>
-        <Splash />
-        {isModalOpen && (
-          <LayerPopup
-            label={modalText}
-            centerButtonText="확인"
-            onClickCenterButton={closeModal}
-          />
-        )}
-      </>
-    );
   return (
-    <Container>
-      <LeftTapBar />
-      <Container2>
-        <ImageContainer>{renderImages()}</ImageContainer>
-        <MemberContainer>
-          <Label>가족 구성원</Label>
-          <MemberBox>
-            {data.familyMemberDtoList.length === 0 ? (
-              <Empty>아직 구성원이 없어요.</Empty>
-            ) : (
-              data.familyMemberDtoList.map((v) => (
-                <MemberContainer2 key={v.name}>
-                  {v.profileImgUrl ? (
-                    <ProfileImage alt="" src={v.profileImgUrl} />
-                  ) : (
-                    <ProfileImage
-                      alt=""
-                      src="/assets/images/profile-default.svg"
-                    />
-                  )}
-                  <Align>
-                    <Name>
-                      {v.name}({v.relationship})
-                    </Name>
-                    {/* <Sub>접속중</Sub> */}
-                  </Align>
-                </MemberContainer2>
-              ))
-            )}
-          </MemberBox>
-        </MemberContainer>
-      </Container2>
-      <BottomTapBar />
-    </Container>
+    <>
+      {loading || !data ? (
+        <Splash />
+      ) : (
+        <Container>
+          <LeftTapBar />
+          <Container2>
+            <ImageContainer>{renderImages()}</ImageContainer>
+            <MemberContainer>
+              <Label>가족 구성원</Label>
+              <MemberBox>
+                {data.familyMemberDtoList.length === 0 ? (
+                  <Empty>아직 구성원이 없어요.</Empty>
+                ) : (
+                  data.familyMemberDtoList.map((v) => (
+                    <MemberContainer2 key={v.name}>
+                      {v.profileImgUrl ? (
+                        <ProfileImage alt="" src={v.profileImgUrl} />
+                      ) : (
+                        <ProfileImage
+                          alt=""
+                          src="/assets/images/profile-default.svg"
+                        />
+                      )}
+                      <Align>
+                        <Name>
+                          {v.name}({v.relationship})
+                        </Name>
+                        {/* <Sub>접속중</Sub> */}
+                      </Align>
+                    </MemberContainer2>
+                  ))
+                )}
+              </MemberBox>
+            </MemberContainer>
+          </Container2>
+          <BottomTapBar />
+        </Container>
+      )}
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+        />
+      )}
+    </>
   );
 }
 
