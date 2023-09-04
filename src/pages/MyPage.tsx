@@ -162,9 +162,6 @@ function MyPage() {
                     높아졌어요
                   </InfoText>
                 ))}
-                <InfoText>
-                  집중력이 <PercentUp>12% </PercentUp>높아졌어요
-                </InfoText>
               </StatusBox>
               <StatusBox>
                 <Intro>지난 주보다 신경쓰면 좋아요!</Intro>
@@ -232,6 +229,7 @@ const Container2 = styled.div`
     padding: 1.6rem;
     gap: 1rem;
     align-content: flex-start;
+    margin: 0 0 7rem 0;
   }
 `;
 const Container3 = styled.div`
@@ -245,13 +243,14 @@ const Container3 = styled.div`
 `;
 const LeftContainer = styled.div`
   width: 86.6rem;
-  height: 83rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media screen and (min-width: 768px) {
+    height: 83rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 34rem;
     gap: 1rem;
   }
 `;
@@ -281,7 +280,7 @@ const DateBox = styled.div`
   padding: 2.4rem 3rem;
   @media screen and (max-width: 767px) {
     height: 12rem;
-    padding: 1.2rem 1rem;
+    padding: 1.6rem;
   }
 `;
 const StatusContainer = styled.div`
@@ -289,7 +288,6 @@ const StatusContainer = styled.div`
   justify-content: space-between;
   @media screen and (max-width: 767px) {
     gap: 1rem;
-    height: 100%;
   }
 `;
 const StatusBox = styled.div`
@@ -302,7 +300,7 @@ const StatusBox = styled.div`
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 100%;
-    padding: 1.3rem;
+    padding: 1.6rem;
   }
 `;
 const Intro = styled.p`
@@ -421,7 +419,7 @@ const Desc = styled.span`
   word-break: keep-all;
   text-align: center;
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 `;
 const Align = styled.div`
