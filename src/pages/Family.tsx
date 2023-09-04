@@ -8,6 +8,8 @@ import Splash from './Splash';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useNavigate } from 'react-router';
+import LayerPopup from '../components/common/LayerPopup';
+import { useModal } from '../hooks/useModal';
 
 export type EmotionInfoDtoListProps = {
   id: number;
@@ -41,6 +43,7 @@ function Family() {
   };
   const [data, setData] = useState<Props>();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,6 +57,10 @@ function Family() {
   }, []);
 
   useEffect(() => {
+    if (!familyKey) {
+      openModal('아직 가족 그룹이 없습니다.', '/home');
+      return;
+    }
     const getData = async () => {
       try {
         const { data } = await axios.get(
@@ -133,7 +140,19 @@ function Family() {
     }
   };
 
-  if (loading || !data) return <Splash />;
+  if (loading || !data)
+    return (
+      <>
+        <Splash />
+        {isModalOpen && (
+          <LayerPopup
+            label={modalText}
+            centerButtonText="확인"
+            onClickCenterButton={closeModal}
+          />
+        )}
+      </>
+    );
   return (
     <Container>
       <LeftTapBar />
