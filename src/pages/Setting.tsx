@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
-import LeftTapBar from '../components/common/LeftTapBar';
-import BottomTapBar from '../components/common/BottomTapBar';
+import LeftTapBar from '../components/common/LeftTabBar';
+import BottomTapBar from '../components/common/BottomTabBar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import axios from 'axios';

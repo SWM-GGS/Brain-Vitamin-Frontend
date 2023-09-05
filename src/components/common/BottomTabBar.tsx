@@ -49,6 +49,7 @@ const Container = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
+  box-shadow: 0 -2px 15px 4px rgba(0, 0, 0, 0.1);
   @media screen and (min-width: 768px) {
     display: none;
   }
