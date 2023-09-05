@@ -12,6 +12,15 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
   const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // 앱 실행 시 refreshToken 있으면 자동 로그인
   useEffect(() => {
@@ -117,7 +126,7 @@ function AppInner() {
 
   return (
     <>
-      {loading ? (
+      {loading || showSplash ? (
         <Splash />
       ) : (
         <>
