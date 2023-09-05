@@ -1,5 +1,5 @@
-import LeftTapBar from '../components/common/LeftTapBar';
-import BottomTapBar from '../components/common/BottomTapBar';
+import LeftTapBar from '../components/common/LeftTabBar';
+import BottomTapBar from '../components/common/BottomTabBar';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
