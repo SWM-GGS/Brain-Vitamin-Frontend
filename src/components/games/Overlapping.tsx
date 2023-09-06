@@ -10,6 +10,9 @@ const Container = styled.div`
 const Text = styled.p`
   font-size: 3.2rem;
   text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
   }
@@ -32,6 +35,9 @@ const Num = styled.span<{ $top: number; $left: number }>`
   left: ${(props) => props.$left}%;
   transform: translate(-50%, -50%);
   font-size: 30rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 15rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 10rem;
   }
@@ -50,6 +56,10 @@ const NumBtn = styled.button`
   border-radius: 0.8rem;
   background: #c6c6c6;
   border: 0.2rem solid var(--gray-bg-color);
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+    padding: 1.7rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     padding: 1.5rem;

@@ -113,6 +113,9 @@ const Container2 = styled.div`
     flex-direction: column;
     width: 140rem;
   }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
+  }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 3rem 1.6rem;
@@ -136,6 +139,10 @@ const BoxWrapper = styled.div`
   gap: 3.8rem;
   flex-wrap: wrap;
   margin: 6.6rem 0 11.2rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 5rem 0 7rem 0;
+    gap: 3rem;
+  }
   @media screen and (max-width: 767px) {
     gap: 2rem;
     margin: 2rem 0;
@@ -149,6 +156,11 @@ const Box = styled.button`
   box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.1);
   padding: 3.7rem 2.2rem;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 19rem;
+    height: 22rem;
+    padding: 1.5rem;
+  }
   @media screen and (max-width: 767px) {
     width: 17.9rem;
     height: 12.25rem;

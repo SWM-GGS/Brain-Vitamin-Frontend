@@ -28,6 +28,9 @@ const Wrapper = styled.div`
   position: fixed;
   top: 1rem;
   left: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     top: 0;
@@ -39,6 +42,10 @@ const Back = styled.img`
   padding: 1rem;
   width: 6rem;
   height: 6rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 5rem;
+    height: 5rem;
+  }
   @media screen and (max-width: 767px) {
     width: 4rem;
     height: 4rem;

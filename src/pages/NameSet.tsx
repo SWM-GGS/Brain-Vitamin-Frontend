@@ -130,6 +130,10 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 43rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 35rem;
     height: 50rem;
@@ -146,6 +150,9 @@ const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 8.2rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 2rem 0 0 0;
+  }
   @media screen and (max-width: 767px) {
     margin: 4rem 0 0 0;
   }
@@ -163,6 +170,9 @@ const Intro = styled.p`
   font-family: 'Pretendard-Medium';
   font-size: 2.2rem;
   margin: 0 0 2.4rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 0 0 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 0 0 1rem 0;

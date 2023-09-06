@@ -50,6 +50,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 22rem;
+  }
   @media screen and (max-width: 767px) {
     display: none;
   }
@@ -58,11 +61,18 @@ const Container = styled.div`
 const Logo = styled.img`
   width: 20rem;
   height: 20rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 15rem;
+  }
 `;
 
 const TapWrapper = styled.div`
   width: 100%;
   margin: 15rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 2rem 0 0 0;
+  }
 `;
 
 const Tap = styled.div`
@@ -71,6 +81,11 @@ const Tap = styled.div`
   font-size: 2.2rem;
   padding: 2.6rem 2rem;
   margin: 0 0 3rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+    padding: 2rem;
+    margin: 0 0 2rem 0;
+  }
 `;
 
 export default LeftTapBar;

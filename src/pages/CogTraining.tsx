@@ -278,6 +278,11 @@ const GameWrapper = styled.div`
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 3rem;
   margin: 2.55rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
+    height: 33rem;
+    margin: 2rem 0;
+  }
   @media screen and (max-width: 767px) {
     width: 30rem;
     height: 50rem;
@@ -295,6 +300,9 @@ const StatusWrapper = styled.div`
 
 const Num = styled.div`
   font-size: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
   }
@@ -319,6 +327,11 @@ const Description = styled.button`
   border-radius: 50%;
   border: 0.4rem solid #ccc;
   font-size: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 4.8rem;
+    height: 4.8rem;
+    font-size: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 4.5rem;
     height: 2.8rem;

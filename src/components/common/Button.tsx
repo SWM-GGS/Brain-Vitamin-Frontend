@@ -9,6 +9,10 @@ const Button = styled.button`
   font-size: 1.6rem;
   color: white;
   padding: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 25rem;
+    height: 4rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 4rem;

@@ -222,7 +222,7 @@ const Container = styled.div`
   }
 `;
 const Container2 = styled.div`
-  padding: 5rem;
+  padding: 3rem 5rem;
   display: flex;
   gap: 2.8rem;
   justify-content: center;
@@ -231,6 +231,9 @@ const Container2 = styled.div`
     align-items: center;
     flex-direction: column;
     width: 140rem;
+  }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
@@ -256,6 +259,11 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 60rem;
+    height: 40rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 53rem;
@@ -267,6 +275,9 @@ const Contents = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 4rem;
+  }
   @media screen and (max-width: 767px) {
     flex-direction: column;
     gap: 1rem;
@@ -297,6 +308,9 @@ const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 3rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 2rem 0 0 0;
+  }
   @media screen and (max-width: 767px) {
     margin: 2rem 0 0 0;
   }
@@ -312,6 +326,10 @@ const Intro = styled.p`
   font-family: 'Pretendard-Medium';
   font-size: 2.2rem;
   margin: 0 0 2.4rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+    margin: 0 0 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 0 0 1rem 0;
@@ -327,6 +345,9 @@ const InfoContainer = styled.div`
   flex-direction: column;
   gap: 2rem;
   width: 41.2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 30rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
   }
@@ -366,6 +387,10 @@ const ImageContainer = styled.div`
   }
   width: 20rem;
   height: 20rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 15rem;
+  }
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
@@ -379,6 +404,9 @@ const ChangeImageText = styled.span`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.3rem;
   }

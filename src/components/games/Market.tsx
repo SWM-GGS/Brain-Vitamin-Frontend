@@ -5,6 +5,10 @@ const Wrapper = styled.div`
   justify-content: center;
   gap: 3rem;
   margin: 0 0 2rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+    margin: 0 0 1rem 0;
+  }
 `;
 
 const Item = styled.div`
@@ -14,6 +18,9 @@ const Item = styled.div`
 const Name = styled.div`
   font-size: 4rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
@@ -22,6 +29,9 @@ const Name = styled.div`
 const Price = styled.div`
   font-size: 3.4rem;
   font-family: 'Pretendard-Medium';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
   }
@@ -40,6 +50,12 @@ const Coupon = styled.div`
   word-break: keep-all;
   display: flex;
   flex-direction: column;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 10rem;
+    height: 10rem;
+    font-size: 1.8rem;
+    padding: 1rem;
+  }
   @media screen and (max-width: 767px) {
     width: 11rem;
     height: 11rem;
@@ -50,9 +66,11 @@ const Coupon = styled.div`
 const Percent = styled.span`
   font-size: 4.5rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
-    font-family: 'Pretendard-Bold';
   }
 `;
 
@@ -67,6 +85,12 @@ const Memo = styled.div`
   font-size: 3.5rem;
   padding: 1rem;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 13rem;
+    height: 10rem;
+    font-size: 1.8rem;
+    padding: 1rem;
+  }
   @media screen and (max-width: 767px) {
     width: 11rem;
     height: 11rem;
@@ -86,6 +110,10 @@ const Container = styled.div`
 const Img = styled.img`
   width: 20rem;
   height: 20rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 6rem;
+    height: 6rem;
+  }
   @media screen and (max-width: 767px) {
     width: 7rem;
     height: 7rem;
@@ -99,6 +127,11 @@ const Button = styled.button`
   border-radius: 0.8rem;
   background: #c6c6c6;
   border: 0.2rem solid var(--gray-bg-color);
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+    padding: 1rem;
+    margin: 0.5rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     padding: 1rem;

@@ -82,8 +82,17 @@ const Popup = styled.div`
   border-radius: 1.6rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
-  padding: 12.8rem 6rem;
+  padding: 10rem 6rem;
   word-break: keep-all;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 50rem;
+    min-height: 25rem;
+    padding: 3rem;
+  }
   @media screen and (max-width: 767px) {
     width: 25rem;
     min-height: 20rem;
@@ -95,10 +104,11 @@ const Label = styled.div`
   font-family: 'Pretendard-Bold';
   font-size: 3.2rem;
   text-align: center;
-  margin: 0 0 3rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
-    margin: 0 0 1.5rem 0;
   }
 `;
 
@@ -106,6 +116,9 @@ const Desc = styled.div`
   font-family: 'Pretendard-Bold';
   font-size: 2.8rem;
   text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
@@ -115,10 +128,6 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 2.9rem;
-  margin: 6rem 0 0 0;
-  @media screen and (max-width: 767px) {
-    margin: 3rem 0 0 0;
-  }
 `;
 
 const LeftButton = styled.button`

@@ -2,7 +2,6 @@ import { styled } from 'styled-components';
 import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import Button from '../components/common/Button';
-import Label from '../components/common/Label';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Splash from './Splash';
@@ -178,7 +177,7 @@ function MyPage() {
           <RightContainer>
             <IntroContainer>
               <ResultDate>{data?.screeningTestHistoryDto.testDate}</ResultDate>
-              <Label>지난 검사 결과</Label>
+              <Intro>지난 검사 결과</Intro>
             </IntroContainer>
             <ResultBox>
               <Align>
@@ -224,12 +223,15 @@ const Container2 = styled.div`
     align-items: center;
     flex-direction: column;
   }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 1.6rem;
     gap: 1rem;
     align-content: flex-start;
-    margin: 0 0 7rem 0;
+    margin: 0 0 11rem 0;
   }
 `;
 const Container3 = styled.div`
@@ -250,6 +252,11 @@ const LeftContainer = styled.div`
   @media screen and (min-width: 768px) {
     height: 80rem;
   }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 42rem;
+    height: 36rem;
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     gap: 1rem;
@@ -266,6 +273,12 @@ const RightContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 25rem;
+    height: 36rem;
+    padding: 2rem;
+    gap: 1rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 22rem;
@@ -279,6 +292,10 @@ const DateBox = styled.div`
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 2.4rem 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 13rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     height: 12rem;
     padding: 1.6rem;
@@ -299,6 +316,10 @@ const StatusBox = styled.div`
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 2.4rem 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 27rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 100%;
@@ -310,6 +331,10 @@ const Intro = styled.p`
   font-size: 2.6rem;
   color: #433d3a;
   margin: 0 0 2.2rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+    margin: 0 0 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 0 0 1rem 0;
@@ -321,6 +346,10 @@ const ResultDate = styled.p`
   font-size: 2.2rem;
   color: #433d3a;
   margin: 0 0 1.3rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     margin: 0 0 0.5rem 0;
@@ -335,6 +364,10 @@ const ResultBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding: 1rem;
+    gap: 1rem;
+  }
   @media screen and (max-width: 767px) {
     padding: 1rem;
     flex-direction: row;
@@ -344,6 +377,9 @@ const ResultBox = styled.div`
 const DayContainer = styled.div`
   display: flex;
   gap: 2.7rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 1rem;
+  }
   @media screen and (max-width: 767px) {
     gap: 0.5rem;
   }
@@ -358,6 +394,9 @@ const DayBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 6rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 4.8rem;
@@ -368,6 +407,9 @@ const DayBox = styled.div`
 const DayText = styled.span`
   font-size: 2.8rem;
   color: #433d3a;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }
@@ -375,6 +417,10 @@ const DayText = styled.span`
 const PillImage = styled.img`
   width: 5.2rem;
   height: 5.2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 3rem;
+    height: 3rem;
+  }
   @media screen and (max-width: 767px) {
     width: 2.6rem;
     height: 2.6rem;
@@ -385,6 +431,11 @@ const InfoText = styled.p`
   color: #433d3a;
   font-family: 'Pretendard-Medium';
   margin: 0 0 1.8rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.6rem;
+    margin: 0 0 1rem 0;
+    word-break: keep-all;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     margin: 0 0 1rem 0;
@@ -401,6 +452,11 @@ const ResultCircle = styled.div`
   font-size: 4rem;
   font-family: 'Pretendard-Medium';
   color: white;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 10rem;
+    height: 10rem;
+    font-size: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 7rem;
     height: 7rem;
@@ -411,6 +467,10 @@ const ResultScore = styled.span`
   font-size: 3rem;
   font-family: 'Pretendard-Medium';
   margin: 3rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    margin: 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 1rem 0;
@@ -420,6 +480,9 @@ const Desc = styled.span`
   font-size: 2.4rem;
   word-break: keep-all;
   text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }
@@ -439,6 +502,9 @@ const PercentUp = styled.span`
 const PercentDown = styled.span`
   color: #ff3f3f;
   font-size: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
   }

@@ -38,6 +38,9 @@ const ProgressBarContainer = styled.div`
   background-color: #ccc;
   border-radius: 2rem;
   overflow: hidden;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 35rem;
+  }
   @media screen and (max-width: 767px) {
     width: 12.4rem;
     height: 2rem;

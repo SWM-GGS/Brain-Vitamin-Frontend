@@ -61,6 +61,11 @@ const Box = styled.div`
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 3rem;
   margin: 2.55rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
+    height: 36rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 30rem;
     height: 50rem;
@@ -76,6 +81,9 @@ const ResultWrapper = styled.div`
   justify-content: center;
   width: 100rem;
   margin: 0 auto;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 57rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
   }
@@ -93,6 +101,11 @@ const Result = styled.div<{ $cogLevel: string }>`
   border-radius: 50%;
   font-family: 'Pretendard-Bold';
   color: white;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 13rem;
+    height: 13rem;
+    font-size: 2.4rem;
+  }
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
@@ -106,6 +119,10 @@ const Desc = styled.p`
   margin: 7rem 0 6rem 0;
   text-align: center;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    margin: 2rem 0 1.5rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 2rem 0 1.5rem 0;
@@ -119,6 +136,10 @@ const Sub = styled.p`
   text-align: center;
   word-break: keep-all;
   margin: 0 0 6.8rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.6rem;
+    margin: 0 0 3.5rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     margin: 0 0 3.5rem 0;

@@ -13,6 +13,10 @@ const MazeBox = styled.div<{ $imgUrl: string }>`
   background-size: cover;
   width: 63rem;
   height: 63rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 30rem;
+    height: 30rem;
+  }
   @media screen and (max-width: 768px) {
     width: 26rem;
     height: 26rem;
@@ -33,6 +37,12 @@ const Target = styled.div<{
   height: ${(props) => (props.$difficulty === 3 ? '3.5rem' : '5rem')};
   background: ${(props) => props.$bgColor};
   cursor: pointer;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    top: ${(props) => props.y * 30}rem;
+    left: ${(props) => props.x * 30}rem;
+    width: ${(props) => (props.$difficulty === 3 ? '1.6rem' : '2.1rem')};
+    height: ${(props) => (props.$difficulty === 3 ? '1.6rem' : '2.1rem')};
+  }
   @media screen and (max-width: 768px) {
     top: ${(props) => props.y * 26}rem;
     left: ${(props) => props.x * 26}rem;

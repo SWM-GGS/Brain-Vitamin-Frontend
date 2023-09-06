@@ -98,6 +98,10 @@ const Wrapper = styled.div`
   @media screen and (min-width: 768px) {
     align-items: center;
   }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding: 4rem;
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 0;
@@ -116,10 +120,32 @@ const BigBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 43rem;
+    height: 40rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 30rem;
     margin: 2rem 1.6rem 0 1.6rem;
+  }
+`;
+
+const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  height: 80rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 40rem;
+  }
+  @media screen and (max-width: 767px) {
+    flex-direction: row;
+    width: 100%;
+    gap: 1.3rem;
+    height: 20rem;
+    padding: 1.6rem;
   }
 `;
 
@@ -133,7 +159,10 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem;
+  padding: 2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 27rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 16rem;
@@ -143,22 +172,11 @@ const Box = styled.div`
   }
 `;
 
-const BoxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  height: 80rem;
-  @media screen and (max-width: 767px) {
-    flex-direction: row;
-    width: 100%;
-    gap: 1.3rem;
-    height: 20rem;
-    padding: 1.6rem;
-  }
-`;
-
 const VitaminImage = styled.img`
   margin: 0 0 4.9rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 0 0 2rem 0;
+  }
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
@@ -174,6 +192,9 @@ const Sub = styled.p`
   background: var(--main-bg-color);
   border-radius: 5.9rem;
   margin: 3.4rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }

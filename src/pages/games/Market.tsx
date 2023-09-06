@@ -212,6 +212,12 @@ const ShowAnswer = styled.div`
   padding: 4rem;
   word-break: keep-all;
   text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    width: 25rem;
+    height: 25rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     width: 20rem;

@@ -112,6 +112,10 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    height: 43rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 35rem;
     height: 50rem;
@@ -123,6 +127,9 @@ const Wrapper = styled.div``;
 
 const Margin1 = styled.div`
   margin: 8.2rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 2rem 0 0 0;
+  }
   @media screen and (max-width: 767px) {
     margin: 4rem 0 0 0;
   }
@@ -150,6 +157,9 @@ const CheckboxLabel = styled.label`
   gap: 1rem;
   align-items: center;
   margin: 2rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     gap: 0.5rem;
   }
@@ -179,6 +189,9 @@ const PrivacyButton = styled.button`
   border-radius: 1rem;
   font-size: 2rem;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export default PhoneNumberSet;

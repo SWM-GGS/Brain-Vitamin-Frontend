@@ -195,7 +195,7 @@ const Wrapper = styled.div``;
 
 const Box = styled.div`
   width: 146.3rem;
-  height: 75rem;
+  height: 65rem;
   border-radius: 1.6rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -204,9 +204,14 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
+    height: 33rem;
+    margin: 2rem 0;
+  }
   @media screen and (max-width: 767px) {
     width: 30rem;
-    height: 40rem;
+    height: 30rem;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -216,6 +221,9 @@ const ProgressBarWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     gap: 1rem;
   }
@@ -232,6 +240,12 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
   justify-content: center;
   align-items: center;
   position: relative;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.4rem;
+    border: 0.2rem solid white;
+  }
   @media screen and (max-width: 767px) {
     width: 4rem;
     height: 4rem;
@@ -251,6 +265,9 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
         : '#e1e1e1'};
     transform: translateY(-50%);
     z-index: -1;
+    @media screen and (min-width: 768px) and (max-height: 1079px) {
+      height: 0.7rem;
+    }
     @media screen and (max-width: 767px) {
       width: 3rem;
       height: 0.5rem;
@@ -263,7 +280,6 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
 
 const QuestionWrapper = styled.div`
   display: flex;
-  display: flex;
   justify-content: space-between;
   width: 130rem;
   margin: 0 auto;
@@ -272,6 +288,10 @@ const QuestionWrapper = styled.div`
   padding: 4rem 0;
   &:last-child {
     border: none;
+  }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 60rem;
+    padding: 2rem 0;
   }
   @media screen and (max-width: 767px) {
     width: 26rem;
@@ -284,6 +304,9 @@ const QuestionWrapper = styled.div`
 const ChoiceWrapper = styled.div`
   display: flex;
   gap: 11rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     gap: 2rem;
   }
@@ -294,13 +317,17 @@ const ChoiceButton = styled.button<{ $choice: number; $idx: number }>`
   font-size: 4rem;
   padding: 2rem 2.5rem;
   background: ${(props) =>
-    props.$choice === props.$idx ? 'var(--main-bg-color)' : '#C6C6C6'}
+    props.$choice === props.$idx ? 'var(--main-bg-color)' : '#C6C6C6'};
   border: ${(props) =>
     props.$choice === props.$idx
       ? '0.2rem solid var(--main-color)'
-      : '0.2rem solid var(--gray-bg-color)'}
+      : '0.2rem solid var(--gray-bg-color)'};
   color: ${(props) =>
-    props.$choice === props.$idx ? 'var(--main-color)' : 'var(--black-color)'}
+    props.$choice === props.$idx ? 'var(--main-color)' : 'var(--black-color)'};
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+    padding: 1rem 1.5rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     padding: 1rem 1.5rem;
@@ -311,6 +338,9 @@ const Question = styled.p`
   font-size: 4rem;
   word-break: keep-all;
   font-family: 'Pretendard-Medium';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     margin: 0 0 1rem 0;
@@ -323,6 +353,10 @@ const Desc = styled.div`
   margin: 0 auto;
   text-align: end;
   font-size: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 72rem;
+    font-size: 1.6rem;
+  }
   @media screen and (max-width: 767px) {
     width: 27rem;
     font-size: 1.4rem;

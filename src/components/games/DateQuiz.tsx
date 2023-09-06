@@ -172,6 +172,10 @@ const Desc = styled.p`
   text-align: center;
   margin: 0 0 10rem 0;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    margin: 0 0 2rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
     margin: 0 0 2rem 0;
@@ -234,6 +238,12 @@ const ShowAnswer = styled.div`
   padding: 4rem;
   word-break: keep-all;
   text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    width: 25rem;
+    height: 25rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     width: 20rem;
