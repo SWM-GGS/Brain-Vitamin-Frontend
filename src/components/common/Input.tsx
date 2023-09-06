@@ -32,6 +32,11 @@ const InputBox = styled.div`
   height: 7.8rem;
   border-radius: 0.8rem;
   padding: 1.4rem 0.9rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 30rem;
+    height: 7rem;
+    padding: 1rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 7rem;

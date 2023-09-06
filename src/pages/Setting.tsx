@@ -192,7 +192,7 @@ const Container = styled.div`
   }
 `;
 const Container2 = styled.div`
-  padding: 5rem;
+  padding: 3rem 5rem;
   display: flex;
   gap: 2.8rem;
   justify-content: center;
@@ -201,6 +201,9 @@ const Container2 = styled.div`
     align-items: center;
     flex-direction: column;
     width: 140rem;
+  }
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
@@ -227,6 +230,11 @@ const Box = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 60rem;
+    height: 36rem;
+    padding: 4rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     padding: 6rem 2rem;
@@ -243,6 +251,9 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 2rem;
   width: 41.2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 30rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
   }
@@ -250,6 +261,10 @@ const ButtonContainer = styled.div`
 const ProfileImage = styled.img`
   width: 20rem;
   height: 20rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 15rem;
+  }
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
@@ -260,6 +275,10 @@ const Name = styled.span`
   font-size: 2.6rem;
   color: #433d3a;
   margin: 2.9rem 0 1.3rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    margin: 1.5rem 0 1rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2.2rem;
     margin: 1.5rem 0 1rem 0;
@@ -288,6 +307,10 @@ const Version = styled.span`
   position: absolute;
   top: 4rem;
   right: 7rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    top: 2rem;
+    right: 4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
     top: 2rem;
@@ -300,6 +323,10 @@ const SubButtonContainer = styled.div`
   width: 87rem;
   gap: 1.2rem;
   margin: 4.5rem 0 0 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 60rem;
+    margin: 2rem 0 0 0;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 2rem 0 0 0;
@@ -313,6 +340,11 @@ const SignoutButton = styled.button`
   color: #ff3c3c;
   font-size: 2.2rem;
   font-family: 'Pretendard-Medium';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 4rem;
+    font-size: 1.6rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
@@ -326,6 +358,11 @@ const LogoutButton = styled.button`
   color: #6d6b69;
   font-size: 2.2rem;
   font-family: 'Pretendard-Medium';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 4rem;
+    font-size: 1.6rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
@@ -338,6 +375,9 @@ const PrivacyButton = styled.button`
   border-radius: 1rem;
   font-size: 2rem;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.4rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
   }

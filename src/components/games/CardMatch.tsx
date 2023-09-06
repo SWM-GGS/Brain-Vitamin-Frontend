@@ -45,6 +45,9 @@ const FlipWrapper = styled.div`
   width: 100%;
   height: 0;
   padding-bottom: 100%;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding-bottom: 50%;
+  }
   @media screen and (max-width: 767px) {
     padding-bottom: 150%;
   }
@@ -104,6 +107,10 @@ const Back = styled.div<{ $status: boolean }>`
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.8;
+    @media screen and (min-width: 768px) and (max-height: 1079px) {
+      width: 7rem;
+      height: 7rem;
+    }
     @media screen and (max-width: 767px) {
       width: 5rem;
       height: 5rem;

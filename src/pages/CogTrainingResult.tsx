@@ -66,6 +66,11 @@ const Box = styled.div`
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 3rem;
   margin: 2.55rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 80rem;
+    height: 36rem;
+    padding: 2rem;
+  }
   @media screen and (max-width: 767px) {
     width: 30rem;
     height: 50rem;
@@ -85,6 +90,10 @@ const MyWrapper = styled.div`
 const ProfileImage = styled.img`
   width: 20rem;
   height: 20rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 15rem;
+    height: 15rem;
+  }
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
@@ -95,6 +104,10 @@ const Name = styled.span`
   font-family: 'Pretendard-Bold';
   font-size: 2.6rem;
   margin: 2rem 0 6rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+    margin: 1rem 0 3rem 0;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     margin: 1rem 0 3rem 0;

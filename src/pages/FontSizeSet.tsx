@@ -69,6 +69,7 @@ const Container = styled.div`
   padding: 1.6rem;
   height: 100vh;
   align-items: center;
+  margin: 0 auto;
 `;
 
 const BoxWrapper = styled.div`
@@ -77,6 +78,10 @@ const BoxWrapper = styled.div`
   gap: 4.6rem;
   flex-wrap: wrap;
   margin: 6.6rem 0 11.2rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    margin: 5rem 0 7rem 0;
+    gap: 3rem;
+  }
   @media screen and (max-width: 767px) {
     margin: 3.3rem 0 5.6rem 0;
   }
@@ -89,6 +94,11 @@ const Box = styled.button`
   box-shadow: 0 0.4rem 1.8rem 0 rgba(0, 0, 0, 0.1);
   padding: 3.7rem 2.2rem;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 19rem;
+    height: 22rem;
+    padding: 1.5rem;
+  }
   @media screen and (max-width: 767px) {
     width: 17.9rem;
     height: 12.25rem;

@@ -28,6 +28,10 @@ const DropBox = styled.div`
   height: 10rem;
   border-radius: 8px;
   border: 0.2rem solid var(--main-color);
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 5rem;
+    height: 5rem;
+  }
   @media screen and (max-width: 767px) {
     width: 3.5rem;
     height: 3.5rem;
@@ -37,6 +41,10 @@ const DropBox = styled.div`
 const Img = styled.img`
   width: 30rem;
   height: 30rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 13rem;
+    height: 13rem;
+  }
   @media screen and (max-width: 767px) {
     width: 8rem;
     height: 8rem;
@@ -46,6 +54,9 @@ const Img = styled.img`
 const Letter = styled.li`
   font-size: 6rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 3rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2.5rem;
   }

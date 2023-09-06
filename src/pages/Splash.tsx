@@ -18,6 +18,10 @@ const Container = styled.div`
 const Logo = styled.img`
   width: 40rem;
   height: 40rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 25rem;
+    height: 25rem;
+  }
   @media screen and (max-width: 767px) {
     width: 20rem;
     height: 20rem;
