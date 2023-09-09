@@ -222,7 +222,11 @@ function CogTraining() {
               />
             </GameWrapper>
             <ButtonWrapper>
-              <Button onClick={handleNextButtonClick}>다음</Button>
+              <Button
+                disabled={isNextButtonClicked}
+                onClick={handleNextButtonClick}>
+                다음
+              </Button>
             </ButtonWrapper>
           </Wrapper>
           <AnswerFeedback>{renderAnswerState()}</AnswerFeedback>

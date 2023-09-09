@@ -155,7 +155,7 @@ export default function Market({
         ) : null}
         <Memo>
           {problemPool.map((v) => (
-            <span key={v.contents}>
+            <span key={v.imgUrl}>
               {v.contents} {v.count}개
             </span>
           ))}
