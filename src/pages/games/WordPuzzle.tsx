@@ -47,6 +47,54 @@ export default function WordPuzzle({
   const endTimeRef = useRef<Date | null>(null);
   let duration = useRef(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  type RandomPositionsProps = { top: number; left: number };
+  const [randomPositions, setRandomPositions] = useState<
+    RandomPositionsProps[]
+  >([]);
+  let positionIndex = -1;
+
+  useEffect(() => {
+    for (let i = 0; i < letters.length; i++) {
+      const box = dropRefs?.current[i]?.getBoundingClientRect();
+      if (typeof box?.top === 'number') {
+        setBoxs((prev) => [
+          ...prev,
+          {
+            top: box?.top,
+            left: box?.left,
+            bottom: box?.top + box?.height,
+            right: box?.left + box?.width,
+          },
+        ]);
+      }
+    }
+  }, []);
+
+  // 글자가 처음 흩뿌려질 위치 배열 초기화
+  useEffect(() => {
+    const positions: RandomPositionsProps[] = [];
+    const len = problemPool.reduce((p, v) => p + v.contents.length, 0);
+
+    while (positions.length < len) {
+      const newPosition = calculateRandomPosition();
+
+      if (positions.some((position) => isOverlap(position, newPosition))) {
+        continue;
+      }
+      positions.push(newPosition);
+    }
+    setRandomPositions(positions);
+  }, []);
+
+  // 위치가 겹치는지 확인하는 함수
+  const isOverlap = (
+    positionA: RandomPositionsProps,
+    positionB: RandomPositionsProps,
+  ) => {
+    const dx = Math.abs(positionA.left - positionB.left);
+    const dy = Math.abs(positionA.top - positionB.top);
+    return dx < 60 && dy < 60;
+  };
 
   // 글자가 처음 흩뿌려질 위치 조정
   const calculateRandomPosition = () => {
@@ -70,23 +118,6 @@ export default function WordPuzzle({
     }
     return { top: 0, left: 0 };
   };
-
-  useEffect(() => {
-    for (let i = 0; i < letters.length; i++) {
-      const box = dropRefs?.current[i]?.getBoundingClientRect();
-      if (typeof box?.top === 'number') {
-        setBoxs((prev) => [
-          ...prev,
-          {
-            top: box?.top,
-            left: box?.left,
-            bottom: box?.top + box?.height,
-            right: box?.left + box?.width,
-          },
-        ]);
-      }
-    }
-  }, []);
 
   const checkAnswer = async () => {
     // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
@@ -274,26 +305,29 @@ export default function WordPuzzle({
         </Wrapper>
         <ul>
           {problemPool.map((item, index) =>
-            item.contents.split('').map((letter) => (
-              <Letter
-                style={{
-                  position: 'absolute',
-                  ...calculateRandomPosition(),
-                  touchAction: 'none',
-                }}
-                key={item.contents}
-                ref={(el) => (dragRefs.current[index] = el)}
-                draggable
-                onDragStart={dragStartHandler}
-                onDragEnd={dragEndHandler}
-                onDrag={dragHandler}
-                onDragOver={dragOverHandler}
-                onTouchStart={dragStartHandler}
-                onTouchMove={dragHandler}
-                onTouchEnd={dragEndHandler}>
-                {letter}
-              </Letter>
-            )),
+            item.contents.split('').map((letter) => {
+              positionIndex++;
+              return (
+                <Letter
+                  style={{
+                    position: 'absolute',
+                    ...randomPositions[positionIndex],
+                    touchAction: 'none',
+                  }}
+                  key={positionIndex}
+                  ref={(el) => (dragRefs.current[index] = el)}
+                  draggable
+                  onDragStart={dragStartHandler}
+                  onDragEnd={dragEndHandler}
+                  onDrag={dragHandler}
+                  onDragOver={dragOverHandler}
+                  onTouchStart={dragStartHandler}
+                  onTouchMove={dragHandler}
+                  onTouchEnd={dragEndHandler}>
+                  {letter}
+                </Letter>
+              );
+            }),
           )}
         </ul>
       </Container>
