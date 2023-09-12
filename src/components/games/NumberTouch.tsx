@@ -1,17 +1,30 @@
 import { styled } from 'styled-components';
 
-const Box = styled.div<{ $width: number; $height: number }>`
-  position: relative;
-  width: ${(props) => props.$width}px;
-  height: ${(props) => props.$height}px;
+const Container = styled.div`
+  padding: 1.6rem;
   margin: 0 auto;
+  height: 100%;
+`;
+const Text = styled.p`
+  font-size: 3.2rem;
+  text-align: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
+  }
+`;
+const Num = styled.span`
+  font-size: 6rem;
   padding: 1rem;
+  font-family: Pretendard-Bold;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 5rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 3rem;
+  }
 `;
 
-const Num = styled.span<{ $zIndex: number }>`
-  font-size: 3rem;
-  padding: 1rem;
-  z-index: ${(props) => props.$zIndex};
-`;
-
-export { Box, Num };
+export { Container, Text, Num };
