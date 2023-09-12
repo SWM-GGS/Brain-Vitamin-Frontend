@@ -47,12 +47,10 @@ function NearTime({
       setAnswer(hour);
     } else if (min > 30) {
       setAnswer(hour + 1);
+    } else if (sec < 30) {
+      setAnswer(hour);
     } else {
-      if (sec < 30) {
-        setAnswer(hour);
-      } else {
-        setAnswer(hour + 1);
-      }
+      setAnswer(hour + 1);
     }
     setHour(hour);
     setHh(hour * 30);
