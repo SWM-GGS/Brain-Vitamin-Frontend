@@ -112,11 +112,8 @@ function BasicCalculate({
 
     if (operation === 'x') {
       setOperation1('x');
-      if (answerPosition === 1) {
+      if (answerPosition === 1 || answerPosition === 2) {
         // ? * x = y
-        answer = getValue2();
-        setNumber(answerPosition, x, answer * x);
-      } else if (answerPosition === 2) {
         // x * ? = y
         answer = getValue2();
         setNumber(answerPosition, x, answer * x);
@@ -131,11 +128,8 @@ function BasicCalculate({
         // ? / x = y
         answer = x * y;
         setNumber(answerPosition, x, y);
-      } else if (answerPosition === 2) {
-        // x / ? = y
-        answer = getValue2();
-        setNumber(answerPosition, answer * y, y);
       } else {
+        // x / ? = y
         // x / y = ?
         answer = getValue2();
         setNumber(answerPosition, answer * y, y);
