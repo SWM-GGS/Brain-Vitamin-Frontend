@@ -451,6 +451,58 @@ function BasicCalculate({
     return answer;
   };
 
+  const handleP = (answerPosition: number, oper2: string) => {
+    let answer: number;
+    setOperation1('+');
+    if (oper2 === '+') {
+      answer = handlePP(answerPosition);
+    } else if (oper2 === '-') {
+      answer = handlePM(answerPosition);
+    } else if (oper2 === 'x') {
+      answer = handlePMul(answerPosition);
+    } else {
+      answer = handlePD(answerPosition);
+    }
+    return answer;
+  };
+
+  const handleM = (answerPosition: number, oper2: string) => {
+    let answer: number;
+    setOperation1('-');
+    if (oper2 === '+') {
+      answer = handleMP(answerPosition);
+    } else if (oper2 === '-') {
+      answer = handleMM(answerPosition);
+    } else if (oper2 === 'x') {
+      answer = handleMMul(answerPosition);
+    } else {
+      answer = handleMD(answerPosition);
+    }
+    return answer;
+  };
+
+  const handleMul = (answerPosition: number, oper2: string) => {
+    let answer = 0;
+    setOperation1('x');
+    if (oper2 === '+') {
+      answer = handleMulP(answerPosition);
+    } else if (oper2 === '-') {
+      answer = handleMulM(answerPosition);
+    }
+    return answer;
+  };
+
+  const handleD = (answerPosition: number, oper2: string) => {
+    let answer = 0;
+    setOperation1('÷');
+    if (oper2 === '+') {
+      answer = handleDP(answerPosition);
+    } else if (oper2 === '-') {
+      answer = handleDM(answerPosition);
+    }
+    return answer;
+  };
+
   const makeProblem3 = () => {
     const answerPosition = Math.floor(getRandomFloat() * 3 + 1);
     let answer = 0;
@@ -458,41 +510,13 @@ function BasicCalculate({
     const oper2 = getRandomOperation();
 
     if (oper1 === '+') {
-      setOperation1('+');
-      if (oper2 === '+') {
-        answer = handlePP(answerPosition);
-      } else if (oper2 === '-') {
-        answer = handlePM(answerPosition);
-      } else if (oper2 === 'x') {
-        answer = handlePMul(answerPosition);
-      } else {
-        answer = handlePD(answerPosition);
-      }
+      answer = handleP(answerPosition, oper2);
     } else if (oper1 === '-') {
-      setOperation1('-');
-      if (oper2 === '+') {
-        answer = handleMP(answerPosition);
-      } else if (oper2 === '-') {
-        answer = handleMM(answerPosition);
-      } else if (oper2 === 'x') {
-        answer = handleMMul(answerPosition);
-      } else {
-        answer = handleMD(answerPosition);
-      }
+      answer = handleM(answerPosition, oper2);
     } else if (oper1 === 'x') {
-      setOperation1('x');
-      if (oper2 === '+') {
-        answer = handleMulP(answerPosition);
-      } else if (oper2 === '-') {
-        answer = handleMulM(answerPosition);
-      }
+      answer = handleMul(answerPosition, oper2);
     } else {
-      setOperation1('÷');
-      if (oper2 === '+') {
-        answer = handleDP(answerPosition);
-      } else if (oper2 === '-') {
-        answer = handleDM(answerPosition);
-      }
+      answer = handleD(answerPosition, oper2);
     }
     setAnswer(answer);
     setCandidates(
