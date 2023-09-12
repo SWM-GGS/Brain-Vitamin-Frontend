@@ -10,6 +10,7 @@ import { CogTrainingProps, GameResultProps } from '../pages/CogTraining.tsx';
 import NumberTouch from '../pages/games/NumberTouch.tsx';
 import NearTime from '../pages/games/NearTime.tsx';
 import BasicCalculate from '../pages/games/BasicCalculate.tsx';
+import PatternNumber from '../pages/games/PatternNumber.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -155,6 +156,19 @@ export default function GameRouter({
         path="/basicCalculate"
         element={
           <BasicCalculate
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/patternNumber"
+        element={
+          <PatternNumber
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
