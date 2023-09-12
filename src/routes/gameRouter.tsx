@@ -8,6 +8,7 @@ import Maze from '../pages/games/Maze.tsx';
 import Market from '../pages/games/Market.tsx';
 import { CogTrainingProps, GameResultProps } from '../pages/CogTraining.tsx';
 import NumberTouch from '../pages/games/NumberTouch.tsx';
+import NearTime from '../pages/games/NearTime.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -127,6 +128,19 @@ export default function GameRouter({
         path="/numberTouch"
         element={
           <NumberTouch
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/nearTime"
+        element={
+          <NearTime
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
