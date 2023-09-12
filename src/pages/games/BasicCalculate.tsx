@@ -143,279 +143,355 @@ function BasicCalculate({
     );
   };
 
+  const getRandomOperation = () => {
+    let oper: string;
+    const random = getRandomFloat();
+    if (random < 0.25) {
+      oper = '+';
+    } else if (random < 0.5) {
+      oper = '-';
+    } else if (random < 0.75) {
+      oper = 'x';
+    } else {
+      oper = '÷';
+    }
+    return oper;
+  };
+
+  const handlePP = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('+');
+    const x = getValue1();
+    const y = getValue1();
+    const z = getValue1();
+    if (answerPosition === 4) {
+      // x + y + z = ?
+      answer = x + y + z;
+    } else {
+      // ? + x + y = z
+      // x + ? + y = z
+      // x + y + ? = z
+      answer = z - y - x;
+    }
+    setNumber(answerPosition, x, y, z);
+    return answer;
+  };
+
+  const handlePM = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('-');
+    const x = getValue1();
+    const y = getValue1();
+    const z = getValue1();
+    if (answerPosition === 1 || answerPosition === 2) {
+      // ? + x - y = z
+      // x + ? - y = z
+      answer = z + y - x;
+    } else {
+      answer = x + y - z;
+    }
+    setNumber(answerPosition, x, y, z);
+    return answer;
+  };
+
+  const handlePMul = (answerPosition: number) => {
+    let answer: number;
+    setOperation1('x');
+    const y = getValue2();
+    if (answerPosition === 1) {
+      // ? + x * y = z
+      const x = getValue2();
+      const z = getValue1();
+      answer = z - x * y;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 2 || answerPosition === 3) {
+      // x + ? * y = z
+      // x + y * ? = z
+      answer = getValue2();
+      const x = getValue1();
+      setNumber(answerPosition, x, y, x + answer * y);
+    } else {
+      // x + y * z = ?
+      const x = getValue1();
+      const z = getValue2();
+      answer = x + y * z;
+      setNumber(answerPosition, x, y, z);
+    }
+    return answer;
+  };
+
+  const handlePD = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('÷');
+    const y = getValue2();
+    if (answerPosition === 1) {
+      // ? + x / y = z
+      answer = getValue1();
+      const z = getValue1();
+      setNumber(answerPosition, (z - answer) * y, y, z);
+    } else if (answerPosition === 2) {
+      // x + ? / y = z
+      const z = getValue1();
+      const x = getValue1();
+      answer = (z - x) * y;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 3) {
+      // x + y / ? = z
+      answer = getValue2();
+      const z = getValue1();
+      const x = getValue2();
+      setNumber(answerPosition, x, (z - x) * answer, z);
+    } else {
+      // x + y / z = ?
+      answer = getValue1();
+      const x = getValue1();
+      const z = getValue2();
+      setNumber(answerPosition, x, (answer - x) * z, z);
+    }
+    return answer;
+  };
+
+  const handleMP = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('+');
+    const x = getValue1();
+    const y = getValue1();
+    const z = getValue1();
+
+    if (answerPosition === 1) {
+      // ? - x + y = z
+      answer = z + x - y;
+    } else if (answerPosition === 2) {
+      // x - ? + y = z
+      answer = x + y - z;
+    } else if (answerPosition === 3) {
+      // x - y + ? = z
+      answer = z - x + y;
+    } else {
+      // x - y + z = ?
+      answer = x - y + z;
+    }
+    setNumber(answerPosition, x, y, z);
+    return answer;
+  };
+
+  const handleMM = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('-');
+    const x = getValue1();
+    const y = getValue1();
+    const z = getValue1();
+
+    if (answerPosition === 1) {
+      // ? - x - y = z
+      answer = z + x + y;
+    } else {
+      // x - ? - y = z
+      // x - y - ? = z
+      // x - y - z = ?
+      answer = x - y - z;
+    }
+    setNumber(answerPosition, x, y, z);
+    return answer;
+  };
+
+  const handleMMul = (answerPosition: number) => {
+    let answer: number;
+    setOperation1('x');
+    const z = getValue1();
+    const y = getValue2();
+    if (answerPosition === 1) {
+      // ? - x * y = z
+      const x = getValue2();
+      answer = z + x * y;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 2 || answerPosition === 3) {
+      // x - ? * y = z
+      // x - y * ? = z
+      answer = getValue2();
+      setNumber(answerPosition, z + answer * y, y, z);
+    } else {
+      // x - y * z = ?
+      const x = getValue1();
+      answer = x - y * z;
+      setNumber(answerPosition, x, y, z);
+    }
+    return answer;
+  };
+
+  const handleMD = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('÷');
+    const x = getValue1();
+    const y = getValue2();
+    if (answerPosition === 1) {
+      // ? - x / y = z
+      answer = getValue1();
+      const z = getValue1();
+      setNumber(answerPosition, (answer - z) * y, y, z);
+    } else if (answerPosition === 2) {
+      // x - ? / y = z
+      const z = getValue1();
+      answer = (x - z) * y;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 3) {
+      // x - y / ? = z
+      answer = getValue2();
+      const z = getValue1();
+      setNumber(answerPosition, x, (x - z) * answer, z);
+    } else {
+      // x - y / z = ?
+      answer = getValue1();
+      const z = getValue2();
+      setNumber(answerPosition, x, (x - answer) * z, z);
+    }
+    return answer;
+  };
+
+  const handleMulP = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('+');
+    const z = getValue1();
+    const x = getValue2();
+    if (answerPosition === 1 || answerPosition === 2) {
+      // ? * x + y = z
+      answer = getValue2();
+      const y = getValue1();
+      setNumber(answerPosition, x, y, answer * x + y);
+    } else if (answerPosition === 3) {
+      // x * y + ? = z
+      const y = getValue2();
+      answer = z - x * y;
+      setNumber(answerPosition, x, y, z);
+    } else {
+      // x * y + z = ?
+      const y = getValue2();
+      answer = x * y + z;
+      setNumber(answerPosition, x, y, z);
+    }
+    return answer;
+  };
+
+  const handleMulM = (answerPosition: number) => {
+    let answer: number;
+    setOperation1('-');
+    const z = getValue1();
+    const x = getValue2();
+    if (answerPosition === 1 || answerPosition === 2) {
+      // ? * x - y = z
+      // x * ? - y = z
+      answer = getValue2();
+      const y = getValue1();
+      setNumber(answerPosition, x, y, answer * x - y);
+    } else {
+      // x * y - ? = z
+      // x * y - z = ?
+      const y = getValue2();
+      answer = x + y - z;
+      setNumber(answerPosition, x, y, z);
+    }
+    return answer;
+  };
+
+  const handleDP = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('+');
+    const x = getValue2();
+    const z = getValue1();
+    if (answerPosition === 1) {
+      // ? / x + y = z
+      const y = getValue1();
+      answer = (z - y) * x;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 2) {
+      // x / ? + y = z
+      answer = getValue2();
+      const y = getValue1();
+      setNumber(answerPosition, (z - y) * answer, y, z);
+    } else if (answerPosition === 3) {
+      // x / y + ? = z
+      answer = getValue1();
+      const y = getValue2();
+      setNumber(answerPosition, (z - answer) * y, y, z);
+    } else {
+      // x / y + z = ?
+      answer = getValue1();
+      const y = getValue2();
+      setNumber(answerPosition, (answer - z) * y, y, z);
+    }
+    return answer;
+  };
+
+  const handleDM = (answerPosition: number) => {
+    let answer: number;
+    setOperation2('-');
+    const x = getValue2();
+    const z = getValue1();
+    if (answerPosition === 1) {
+      // ? / x - y = z
+      const y = getValue1();
+      answer = (z + y) * x;
+      setNumber(answerPosition, x, y, z);
+    } else if (answerPosition === 2) {
+      // x / ? - y = z
+      answer = getValue2();
+      const y = getValue1();
+      setNumber(answerPosition, (z + y) * answer, y, z);
+    } else if (answerPosition === 3) {
+      // x / y - ? = z
+      answer = getValue1();
+      const y = getValue2();
+      setNumber(answerPosition, (z + answer) * y, y, z);
+    } else {
+      // x / y - z = ?
+      answer = getValue2();
+      const y = getValue2();
+      setNumber(answerPosition, (answer + z) * y, y, z);
+    }
+    return answer;
+  };
+
   const makeProblem3 = () => {
-    const random1 = getRandomFloat();
-    const random2 = getRandomFloat();
     const answerPosition = Math.floor(getRandomFloat() * 3 + 1);
     let answer = 0;
-    const oper1 = random1 < 0.5 ? '+' : '-';
-    let oper2: string;
-    if (random2 < 0.25) {
-      oper2 = '+';
-    } else if (random2 < 0.5) {
-      oper2 = '-';
-    } else if (random2 < 0.75) {
-      oper2 = 'x';
-    } else {
-      oper2 = '÷';
-    }
+    const oper1 = getRandomFloat() < 0.5 ? '+' : '-';
+    const oper2 = getRandomOperation();
 
     if (oper1 === '+') {
       setOperation1('+');
       if (oper2 === '+') {
-        setOperation2('+');
-        const x = getValue1();
-        const y = getValue1();
-        const z = getValue1();
-        if (answerPosition === 4) {
-          // x + y + z = ?
-          answer = x + y + z;
-        } else {
-          // ? + x + y = z
-          // x + ? + y = z
-          // x + y + ? = z
-          answer = z - y - x;
-        }
-        setNumber(answerPosition, x, y, z);
+        answer = handlePP(answerPosition);
       } else if (oper2 === '-') {
-        setOperation2('-');
-        const x = getValue1();
-        const y = getValue1();
-        const z = getValue1();
-        if (answerPosition === 1 || answerPosition === 2) {
-          // ? + x - y = z
-          // x + ? - y = z
-          answer = z + y - x;
-        } else {
-          answer = x + y - z;
-        }
-        setNumber(answerPosition, x, y, z);
+        answer = handlePM(answerPosition);
       } else if (oper2 === 'x') {
-        setOperation1('x');
-        const y = getValue2();
-        if (answerPosition === 1) {
-          // ? + x * y = z
-          const x = getValue2();
-          const z = getValue1();
-          answer = z - x * y;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 2 || answerPosition === 3) {
-          // x + ? * y = z
-          // x + y * ? = z
-          answer = getValue2();
-          const x = getValue1();
-          setNumber(answerPosition, x, y, x + answer * y);
-        } else {
-          // x + y * z = ?
-          const x = getValue1();
-          const z = getValue2();
-          answer = x + y * z;
-          setNumber(answerPosition, x, y, z);
-        }
+        answer = handlePMul(answerPosition);
       } else {
-        setOperation2('÷');
-        const y = getValue2();
-        if (answerPosition === 1) {
-          // ? + x / y = z
-          answer = getValue1();
-          const z = getValue1();
-          setNumber(answerPosition, (z - answer) * y, y, z);
-        } else if (answerPosition === 2) {
-          // x + ? / y = z
-          const z = getValue1();
-          const x = getValue1();
-          answer = (z - x) * y;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 3) {
-          // x + y / ? = z
-          answer = getValue2();
-          const z = getValue1();
-          const x = getValue2();
-          setNumber(answerPosition, x, (z - x) * answer, z);
-        } else {
-          // x + y / z = ?
-          answer = getValue1();
-          const x = getValue1();
-          const z = getValue2();
-          setNumber(answerPosition, x, (answer - x) * z, z);
-        }
+        answer = handlePD(answerPosition);
       }
     } else if (oper1 === '-') {
       setOperation1('-');
       if (oper2 === '+') {
-        setOperation2('+');
-        const x = getValue1();
-        const y = getValue1();
-        const z = getValue1();
-
-        if (answerPosition === 1) {
-          // ? - x + y = z
-          answer = z + x - y;
-        } else if (answerPosition === 2) {
-          // x - ? + y = z
-          answer = x + y - z;
-        } else if (answerPosition === 3) {
-          // x - y + ? = z
-          answer = z - x + y;
-        } else {
-          // x - y + z = ?
-          answer = x - y + z;
-        }
-        setNumber(answerPosition, x, y, z);
+        answer = handleMP(answerPosition);
       } else if (oper2 === '-') {
-        setOperation2('-');
-        const x = getValue1();
-        const y = getValue1();
-        const z = getValue1();
-
-        if (answerPosition === 1) {
-          // ? - x - y = z
-          answer = z + x + y;
-        } else {
-          // x - ? - y = z
-          // x - y - ? = z
-          // x - y - z = ?
-          answer = x - y - z;
-        }
-        setNumber(answerPosition, x, y, z);
+        answer = handleMM(answerPosition);
       } else if (oper2 === 'x') {
-        setOperation1('x');
-        const z = getValue1();
-        const y = getValue2();
-        if (answerPosition === 1) {
-          // ? - x * y = z
-          const x = getValue2();
-          answer = z + x * y;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 2 || answerPosition === 3) {
-          // x - ? * y = z
-          // x - y * ? = z
-          answer = getValue2();
-          setNumber(answerPosition, z + answer * y, y, z);
-        } else {
-          // x - y * z = ?
-          const x = getValue1();
-          answer = x - y * z;
-          setNumber(answerPosition, x, y, z);
-        }
+        answer = handleMMul(answerPosition);
       } else {
-        setOperation2('÷');
-        const x = getValue1();
-        const y = getValue2();
-        if (answerPosition === 1) {
-          // ? - x / y = z
-          answer = getValue1();
-          const z = getValue1();
-          setNumber(answerPosition, (answer - z) * y, y, z);
-        } else if (answerPosition === 2) {
-          // x - ? / y = z
-          const z = getValue1();
-          answer = (x - z) * y;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 3) {
-          // x - y / ? = z
-          answer = getValue2();
-          const z = getValue1();
-          setNumber(answerPosition, x, (x - z) * answer, z);
-        } else {
-          // x - y / z = ?
-          answer = getValue1();
-          const z = getValue2();
-          setNumber(answerPosition, x, (x - answer) * z, z);
-        }
+        answer = handleMD(answerPosition);
       }
     } else if (oper1 === 'x') {
       setOperation1('x');
       if (oper2 === '+') {
-        setOperation2('+');
-        const z = getValue1();
-        const x = getValue2();
-        if (answerPosition === 1 || answerPosition === 2) {
-          // ? * x + y = z
-          answer = getValue2();
-          const y = getValue1();
-          setNumber(answerPosition, x, y, answer * x + y);
-        } else if (answerPosition === 3) {
-          // x * y + ? = z
-          const y = getValue2();
-          answer = z - x * y;
-          setNumber(answerPosition, x, y, z);
-        } else {
-          // x * y + z = ?
-          const y = getValue2();
-          answer = x * y + z;
-          setNumber(answerPosition, x, y, z);
-        }
+        answer = handleMulP(answerPosition);
       } else if (oper2 === '-') {
-        setOperation1('-');
-        const z = getValue1();
-        const x = getValue2();
-        if (answerPosition === 1 || answerPosition === 2) {
-          // ? * x - y = z
-          // x * ? - y = z
-          answer = getValue2();
-          const y = getValue1();
-          setNumber(answerPosition, x, y, answer * x - y);
-        } else {
-          // x * y - ? = z
-          // x * y - z = ?
-          const y = getValue2();
-          answer = x + y - z;
-          setNumber(answerPosition, x, y, z);
-        }
+        answer = handleMulM(answerPosition);
       }
     } else {
       setOperation1('÷');
       if (oper2 === '+') {
-        setOperation2('+');
-        const x = getValue2();
-        const z = getValue1();
-        if (answerPosition === 1) {
-          // ? / x + y = z
-          const y = getValue1();
-          answer = (z - y) * x;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 2) {
-          // x / ? + y = z
-          answer = getValue2();
-          const y = getValue1();
-          setNumber(answerPosition, (z - y) * answer, y, z);
-        } else if (answerPosition === 3) {
-          // x / y + ? = z
-          answer = getValue1();
-          const y = getValue2();
-          setNumber(answerPosition, (z - answer) * y, y, z);
-        } else {
-          // x / y + z = ?
-          answer = getValue1();
-          const y = getValue2();
-          setNumber(answerPosition, (answer - z) * y, y, z);
-        }
+        answer = handleDP(answerPosition);
       } else if (oper2 === '-') {
-        setOperation2('-');
-        const x = getValue2();
-        const z = getValue1();
-        if (answerPosition === 1) {
-          // ? / x - y = z
-          const y = getValue1();
-          answer = (z + y) * x;
-          setNumber(answerPosition, x, y, z);
-        } else if (answerPosition === 2) {
-          // x / ? - y = z
-          answer = getValue2();
-          const y = getValue1();
-          setNumber(answerPosition, (z + y) * answer, y, z);
-        } else if (answerPosition === 3) {
-          // x / y - ? = z
-          answer = getValue1();
-          const y = getValue2();
-          setNumber(answerPosition, (z + answer) * y, y, z);
-        } else {
-          // x / y - z = ?
-          answer = getValue2();
-          const y = getValue2();
-          setNumber(answerPosition, (answer + z) * y, y, z);
-        }
+        answer = handleDM(answerPosition);
       }
     }
     setAnswer(answer);
