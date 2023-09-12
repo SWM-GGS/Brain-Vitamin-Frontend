@@ -23,6 +23,7 @@ function BasicCalculate({
   const clickedNum = useRef(10000);
   const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const [answer, setAnswer] = useState<number>();
+  const [candidates, setCandidates] = useState<number[]>([]);
   const [number1, setNumber1] = useState<number | null>(null);
   const [number2, setNumber2] = useState<number | null>(null);
   const [number3, setNumber3] = useState<number | null>(null);
@@ -32,571 +33,412 @@ function BasicCalculate({
   const getValue1 = () => Math.floor(getRandomFloat() * 200);
   const getValue2 = () => Math.floor(getRandomFloat() * 19 + 1);
 
-  useEffect(() => {
-    if (difficulty === 1) {
-      const operation = getRandomFloat() < 0.5 ? '+' : '-';
-      const answerPosition = Math.floor(getRandomFloat() * 2 + 1);
-      const x = getValue1();
-      const y = getValue1();
+  const setNumber = (
+    answerPosition: number,
+    n1: number,
+    n2: number,
+    n3?: number,
+  ) => {
+    if (answerPosition === 1) {
+      setNumber2(n1);
+      setNumber3(n2);
+      if (n3) {
+        setNumber4(n3);
+      }
+    } else if (answerPosition === 2) {
+      setNumber1(n1);
+      setNumber3(n2);
+      if (n3) {
+        setNumber4(n3);
+      }
+    } else if (answerPosition === 3) {
+      setNumber1(n1);
+      setNumber2(n2);
+      if (n3) {
+        setNumber4(n3);
+      }
+    } else {
+      setNumber1(n1);
+      setNumber2(n2);
+      if (n3) {
+        setNumber3(n3);
+      }
+    }
+  };
 
-      if (operation === '+') {
-        setOperation1('+');
-        if (answerPosition === 1) {
-          // ? + x = y
-          const answer = y - x;
-          setAnswer(answer);
-          setNumber2(x);
-          setNumber3(y);
-        } else if (answerPosition === 2) {
-          // x + ? = y
-          const answer = y - x;
-          setAnswer(answer);
-          setNumber1(x);
-          setNumber3(y);
+  const makeProblem1 = () => {
+    const operation = getRandomFloat() < 0.5 ? '+' : '-';
+    const answerPosition = Math.floor(getRandomFloat() * 2 + 1);
+    const x = getValue1();
+    const y = getValue1();
+    let answer: number;
+
+    if (operation === '+') {
+      setOperation1('+');
+      if (answerPosition === 1 || answerPosition === 2) {
+        // ? + x = y
+        // x + ? = y
+        answer = y - x;
+      } else {
+        // x + y = ?
+        answer = x + y;
+      }
+    } else {
+      setOperation1('-');
+      if (answerPosition === 1) {
+        // ? - x = y
+        answer = x + y;
+      } else {
+        // x - ? = y
+        // x - y = ?
+        answer = x - y;
+      }
+    }
+    setAnswer(answer);
+    setNumber(answerPosition, x, y);
+    setCandidates(
+      [answer, getRandomFloat() < 0.5 ? answer + 2 : answer - 2].sort(
+        () => getRandomFloat() - 0.5,
+      ),
+    );
+  };
+
+  const makeProblem2 = () => {
+    const operation = getRandomFloat() < 0.5 ? 'x' : '÷';
+    const answerPosition = Math.floor(getRandomFloat() * 2 + 1);
+    const x = getValue2();
+    const y = getValue2();
+    let answer: number;
+
+    if (operation === 'x') {
+      setOperation1('x');
+      if (answerPosition === 1) {
+        // ? * x = y
+        answer = getValue2();
+        setNumber(answerPosition, x, answer * x);
+      } else if (answerPosition === 2) {
+        // x * ? = y
+        answer = getValue2();
+        setNumber(answerPosition, x, answer * x);
+      } else {
+        // x * y = ?
+        answer = x * y;
+        setNumber(answerPosition, x, y);
+      }
+    } else {
+      setOperation1('÷');
+      if (answerPosition === 1) {
+        // ? / x = y
+        answer = x * y;
+        setNumber(answerPosition, x, y);
+      } else if (answerPosition === 2) {
+        // x / ? = y
+        answer = getValue2();
+        setNumber(answerPosition, answer * y, y);
+      } else {
+        // x / y = ?
+        answer = getValue2();
+        setNumber(answerPosition, answer * y, y);
+      }
+    }
+    setAnswer(answer);
+    setCandidates(
+      [answer, getRandomFloat() < 0.5 ? answer + 2 : answer - 2].sort(
+        () => getRandomFloat() - 0.5,
+      ),
+    );
+  };
+
+  const makeProblem3 = () => {
+    const random1 = getRandomFloat();
+    const random2 = getRandomFloat();
+    const answerPosition = Math.floor(getRandomFloat() * 3 + 1);
+    let answer = 0;
+    const oper1 = random1 < 0.5 ? '+' : '-';
+    let oper2: string;
+    if (random2 < 0.25) {
+      oper2 = '+';
+    } else if (random2 < 0.5) {
+      oper2 = '-';
+    } else if (random2 < 0.75) {
+      oper2 = 'x';
+    } else {
+      oper2 = '÷';
+    }
+
+    if (oper1 === '+') {
+      setOperation1('+');
+      if (oper2 === '+') {
+        setOperation2('+');
+        const x = getValue1();
+        const y = getValue1();
+        const z = getValue1();
+        if (answerPosition === 4) {
+          // x + y + z = ?
+          answer = x + y + z;
         } else {
-          // x + y = ?
-          const answer = x + y;
-          setAnswer(answer);
-          setNumber1(x);
-          setNumber2(y);
+          // ? + x + y = z
+          // x + ? + y = z
+          // x + y + ? = z
+          answer = z - y - x;
+        }
+        setNumber(answerPosition, x, y, z);
+      } else if (oper2 === '-') {
+        setOperation2('-');
+        const x = getValue1();
+        const y = getValue1();
+        const z = getValue1();
+        if (answerPosition === 1 || answerPosition === 2) {
+          // ? + x - y = z
+          // x + ? - y = z
+          answer = z + y - x;
+        } else {
+          answer = x + y - z;
+        }
+        setNumber(answerPosition, x, y, z);
+      } else if (oper2 === 'x') {
+        setOperation1('x');
+        const y = getValue2();
+        if (answerPosition === 1) {
+          // ? + x * y = z
+          const x = getValue2();
+          const z = getValue1();
+          answer = z - x * y;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 2 || answerPosition === 3) {
+          // x + ? * y = z
+          // x + y * ? = z
+          answer = getValue2();
+          const x = getValue1();
+          setNumber(answerPosition, x, y, x + answer * y);
+        } else {
+          // x + y * z = ?
+          const x = getValue1();
+          const z = getValue2();
+          answer = x + y * z;
+          setNumber(answerPosition, x, y, z);
         }
       } else {
-        setOperation1('-');
+        setOperation2('÷');
+        const y = getValue2();
         if (answerPosition === 1) {
-          // ? - x = y
-          const answer = x + y;
-          setAnswer(answer);
-          setNumber2(x);
-          setNumber3(y);
+          // ? + x / y = z
+          answer = getValue1();
+          const z = getValue1();
+          setNumber(answerPosition, (z - answer) * y, y, z);
         } else if (answerPosition === 2) {
-          // x - ? = y
-          const answer = x - y;
-          setAnswer(answer);
-          setNumber1(x);
-          setNumber3(y);
+          // x + ? / y = z
+          const z = getValue1();
+          const x = getValue1();
+          answer = (z - x) * y;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 3) {
+          // x + y / ? = z
+          answer = getValue2();
+          const z = getValue1();
+          const x = getValue2();
+          setNumber(answerPosition, x, (z - x) * answer, z);
         } else {
-          // x - y = ?
-          const answer = x - y;
-          setAnswer(answer);
-          setNumber1(x);
-          setNumber2(y);
+          // x + y / z = ?
+          answer = getValue1();
+          const x = getValue1();
+          const z = getValue2();
+          setNumber(answerPosition, x, (answer - x) * z, z);
         }
       }
-    } else if (difficulty === 2) {
-      const operation = getRandomFloat() < 0.5 ? 'x' : '÷';
-      const answerPosition = Math.floor(getRandomFloat() * 2 + 1);
+    } else if (oper1 === '-') {
+      setOperation1('-');
+      if (oper2 === '+') {
+        setOperation2('+');
+        const x = getValue1();
+        const y = getValue1();
+        const z = getValue1();
 
-      if (operation === 'x') {
-        setOperation1('x');
         if (answerPosition === 1) {
-          // ? * x = y
-          const answer = getValue2();
-          const x = getValue2();
-          setAnswer(answer);
-          setNumber2(x);
-          setNumber3(answer * x);
+          // ? - x + y = z
+          answer = z + x - y;
         } else if (answerPosition === 2) {
-          // x * ? = y
-          const answer = getValue2();
-          const x = getValue2();
-          setAnswer(answer);
-          setNumber1(x);
-          setNumber3(answer * x);
+          // x - ? + y = z
+          answer = x + y - z;
+        } else if (answerPosition === 3) {
+          // x - y + ? = z
+          answer = z - x + y;
         } else {
-          // x * y = ?
+          // x - y + z = ?
+          answer = x - y + z;
+        }
+        setNumber(answerPosition, x, y, z);
+      } else if (oper2 === '-') {
+        setOperation2('-');
+        const x = getValue1();
+        const y = getValue1();
+        const z = getValue1();
+
+        if (answerPosition === 1) {
+          // ? - x - y = z
+          answer = z + x + y;
+        } else {
+          // x - ? - y = z
+          // x - y - ? = z
+          // x - y - z = ?
+          answer = x - y - z;
+        }
+        setNumber(answerPosition, x, y, z);
+      } else if (oper2 === 'x') {
+        setOperation1('x');
+        const z = getValue1();
+        const y = getValue2();
+        if (answerPosition === 1) {
+          // ? - x * y = z
           const x = getValue2();
-          const y = getValue2();
-          setAnswer(x * y);
-          setNumber1(x);
-          setNumber2(y);
+          answer = z + x * y;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 2 || answerPosition === 3) {
+          // x - ? * y = z
+          // x - y * ? = z
+          answer = getValue2();
+          setNumber(answerPosition, z + answer * y, y, z);
+        } else {
+          // x - y * z = ?
+          const x = getValue1();
+          answer = x - y * z;
+          setNumber(answerPosition, x, y, z);
         }
       } else {
-        setOperation1('÷');
+        setOperation2('÷');
+        const x = getValue1();
+        const y = getValue2();
         if (answerPosition === 1) {
-          // ? / x = y
-          const x = getValue2();
-          const y = getValue2();
-          setAnswer(x * y);
-          setNumber2(x);
-          setNumber3(y);
+          // ? - x / y = z
+          answer = getValue1();
+          const z = getValue1();
+          setNumber(answerPosition, (answer - z) * y, y, z);
         } else if (answerPosition === 2) {
-          // x / ? = y
-          const answer = getValue2();
-          const y = getValue2();
-          setAnswer(answer);
-          setNumber1(answer * y);
-          setNumber3(y);
+          // x - ? / y = z
+          const z = getValue1();
+          answer = (x - z) * y;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 3) {
+          // x - y / ? = z
+          answer = getValue2();
+          const z = getValue1();
+          setNumber(answerPosition, x, (x - z) * answer, z);
         } else {
-          // x / y = ?
-          const answer = getValue2();
+          // x - y / z = ?
+          answer = getValue1();
+          const z = getValue2();
+          setNumber(answerPosition, x, (x - answer) * z, z);
+        }
+      }
+    } else if (oper1 === 'x') {
+      setOperation1('x');
+      if (oper2 === '+') {
+        setOperation2('+');
+        const z = getValue1();
+        const x = getValue2();
+        if (answerPosition === 1 || answerPosition === 2) {
+          // ? * x + y = z
+          answer = getValue2();
+          const y = getValue1();
+          setNumber(answerPosition, x, y, answer * x + y);
+        } else if (answerPosition === 3) {
+          // x * y + ? = z
           const y = getValue2();
-          setAnswer(answer);
-          setNumber1(answer * y);
-          setNumber2(y);
+          answer = z - x * y;
+          setNumber(answerPosition, x, y, z);
+        } else {
+          // x * y + z = ?
+          const y = getValue2();
+          answer = x * y + z;
+          setNumber(answerPosition, x, y, z);
+        }
+      } else if (oper2 === '-') {
+        setOperation1('-');
+        const z = getValue1();
+        const x = getValue2();
+        if (answerPosition === 1 || answerPosition === 2) {
+          // ? * x - y = z
+          // x * ? - y = z
+          answer = getValue2();
+          const y = getValue1();
+          setNumber(answerPosition, x, y, answer * x - y);
+        } else {
+          // x * y - ? = z
+          // x * y - z = ?
+          const y = getValue2();
+          answer = x + y - z;
+          setNumber(answerPosition, x, y, z);
         }
       }
     } else {
-      const random1 = getRandomFloat();
-      const random2 = getRandomFloat();
-      let oper1: string;
-      let oper2: string;
-      if (random1 < 0.5) {
-        oper1 = '+';
-      } else {
-        oper1 = '-';
-      }
-      if (random2 < 0.25) {
-        oper2 = '+';
-      } else if (random2 < 0.5) {
-        oper2 = '-';
-      } else if (random2 < 0.75) {
-        oper2 = 'x';
-      } else {
-        oper2 = '÷';
-      }
-      const answerPosition = Math.floor(getRandomFloat() * 3 + 1);
-
-      if (oper1 === '+') {
-        setOperation1('+');
-        if (oper2 === '+') {
-          setOperation2('+');
-          const x = getValue1();
+      setOperation1('÷');
+      if (oper2 === '+') {
+        setOperation2('+');
+        const x = getValue2();
+        const z = getValue1();
+        if (answerPosition === 1) {
+          // ? / x + y = z
           const y = getValue1();
-          const z = getValue1();
-          if (answerPosition === 1) {
-            // ? + x + y = z
-            setAnswer(z - y - x);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x + ? + y = z
-            setAnswer(z - y - x);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x + y + ? = z
-            setAnswer(z - y - x);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x + y + z = ?
-            setAnswer(x + y + z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === '-') {
-          setOperation2('-');
-          const x = getValue1();
+          answer = (z - y) * x;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 2) {
+          // x / ? + y = z
+          answer = getValue2();
           const y = getValue1();
-          const z = getValue1();
-
-          if (answerPosition === 1) {
-            // ? + x - y = z
-            setAnswer(z + y - x);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x + ? - y = z
-            setAnswer(z + y - x);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x + y - ? = z
-            setAnswer(x + y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x + y - z = ?
-            setAnswer(x + y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === 'x') {
-          setOperation1('x');
-          if (answerPosition === 1) {
-            // ? + x * y = z
-            const x = getValue2();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(z - x * y);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x + ? * y = z
-            const answer = getValue2();
-            const y = getValue2();
-            const x = getValue1();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(x + answer * y);
-          } else if (answerPosition === 3) {
-            // x + y * ? = z
-            const answer = getValue2();
-            const y = getValue2();
-            const x = getValue1();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(x + answer * y);
-          } else {
-            // x + y * z = ?
-          }
+          setNumber(answerPosition, (z - y) * answer, y, z);
+        } else if (answerPosition === 3) {
+          // x / y + ? = z
+          answer = getValue1();
+          const y = getValue2();
+          setNumber(answerPosition, (z - answer) * y, y, z);
         } else {
-          setOperation2('÷');
-          if (answerPosition === 1) {
-            // ? + x / y = z
-            const answer = getValue1();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(answer);
-            setNumber2((z - answer) * y);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x + ? / y = z
-            const z = getValue1();
-            const x = getValue1();
-            const y = getValue2();
-            setAnswer((z - x) * y);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x + y / ? = z
-            const answer = getValue2();
-            const z = getValue1();
-            const x = getValue2();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber2((z - x) * answer);
-            setNumber4(z);
-          } else {
-            // x + y / z = ?
-            const answer = getValue1();
-            const x = getValue1();
-            const z = getValue2();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber2((answer - x) * z);
-            setNumber3(z);
-          }
+          // x / y + z = ?
+          answer = getValue1();
+          const y = getValue2();
+          setNumber(answerPosition, (answer - z) * y, y, z);
         }
-      } else if (oper1 === '-') {
-        setOperation1('-');
-        if (oper2 === '+') {
-          setOperation2('+');
-          const x = getValue1();
+      } else if (oper2 === '-') {
+        setOperation2('-');
+        const x = getValue2();
+        const z = getValue1();
+        if (answerPosition === 1) {
+          // ? / x - y = z
           const y = getValue1();
-          const z = getValue1();
-
-          if (answerPosition === 1) {
-            // ? - x + y = z
-            setAnswer(z + x - y);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x - ? + y = z
-            setAnswer(x + y - z);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x - y + ? = z
-            setAnswer(z - x + y);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else {
-            // x - y + z = ?
-            setAnswer(x - y + z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === '-') {
-          setOperation2('-');
-          const x = getValue1();
+          answer = (z + y) * x;
+          setNumber(answerPosition, x, y, z);
+        } else if (answerPosition === 2) {
+          // x / ? - y = z
+          answer = getValue2();
           const y = getValue1();
-          const z = getValue1();
-
-          if (answerPosition === 1) {
-            // ? - x - y = z
-            setAnswer(z + x + y);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x - ? - y = z
-            setAnswer(x - y - z);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x - y - ? = z
-            setAnswer(x - y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x - y - z = ?
-            setAnswer(x - y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === 'x') {
-          setOperation1('x');
-          if (answerPosition === 1) {
-            // ? - x * y = z
-            const z = getValue1();
-            const x = getValue2();
-            const y = getValue2();
-            setAnswer(z + x * y);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x - ? * y = z
-            const answer = getValue2();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(answer);
-            setNumber1(z + answer * y);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x - y * ? = z
-            const answer = getValue2();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(answer);
-            setNumber1(z + answer * y);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x - y * z = ?
-            const x = getValue1();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(x - y * z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
+          setNumber(answerPosition, (z + y) * answer, y, z);
+        } else if (answerPosition === 3) {
+          // x / y - ? = z
+          answer = getValue1();
+          const y = getValue2();
+          setNumber(answerPosition, (z + answer) * y, y, z);
         } else {
-          setOperation2('÷');
-          if (answerPosition === 1) {
-            // ? - x / y = z
-            const answer = getValue1();
-            const z = getValue1();
-            const y = getValue2();
-            setAnswer(answer);
-            setNumber2((answer - z) * y);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x - ? / y = z
-            const z = getValue1();
-            const x = getValue1();
-            const y = getValue2();
-            setAnswer((x - z) * y);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x - y / ? = z
-            const answer = getValue2();
-            const x = getValue1();
-            const z = getValue1();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber2((x - z) * answer);
-            setNumber4(z);
-          } else {
-            // x - y / z = ?
-            const answer = getValue1();
-            const x = getValue1();
-            const z = getValue2();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber2((x - answer) * z);
-            setNumber3(z);
-          }
-        }
-      } else if (oper1 === 'x') {
-        setOperation1('x');
-        if (oper2 === '+') {
-          setOperation2('+');
-          if (answerPosition === 1) {
-            // ? * x + y = z
-            const answer = getValue2();
-            const x = getValue2();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(answer * x + y);
-          } else if (answerPosition === 2) {
-            // x * ? + y = z
-            const answer = getValue2();
-            const x = getValue2();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(answer * x + y);
-          } else if (answerPosition === 3) {
-            // x * y + ? = z
-            const z = getValue1();
-            const x = getValue2();
-            const y = getValue2();
-            setAnswer(z - x * y);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x * y + z = ?
-            const z = getValue1();
-            const x = getValue2();
-            const y = getValue2();
-            setAnswer(x * y + z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === '-') {
-          setOperation1('-');
-          if (answerPosition === 1) {
-            // ? * x - y = z
-            const answer = getValue2();
-            const x = getValue2();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(answer * x - y);
-          } else if (answerPosition === 2) {
-            // x * ? - y = z
-            const answer = getValue2();
-            const x = getValue2();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber1(x);
-            setNumber3(y);
-            setNumber4(answer * x - y);
-          } else if (answerPosition === 3) {
-            // x * y - ? = z
-            const z = getValue1();
-            const x = getValue2();
-            const y = getValue2();
-            setAnswer(x + y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x * y - z = ?
-            const z = getValue1();
-            const x = getValue2();
-            const y = getValue2();
-            setAnswer(x + y - z);
-            setNumber1(x);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        }
-      } else {
-        setOperation1('÷');
-        if (oper2 === '+') {
-          setOperation2('+');
-          if (answerPosition === 1) {
-            // ? / x + y = z
-            const z = getValue1();
-            const y = getValue1();
-            const x = getValue2();
-            setAnswer((z - y) * x);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x / ? + y = z
-            const answer = getValue2();
-            const z = getValue1();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber1((z - y) * answer);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x / y + ? = z
-            const answer = getValue1();
-            const z = getValue1();
-            const y = getValue2();
-            setAnswer(answer);
-            setNumber1((z - answer) * y);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x / y + z = ?
-            const answer = getValue1();
-            const y = getValue2();
-            const z = getValue1();
-            setAnswer(answer);
-            setNumber1((answer - z) * y);
-            setNumber2(y);
-            setNumber3(z);
-          }
-        } else if (oper2 === '-') {
-          setOperation2('-');
-          if (answerPosition === 1) {
-            // ? / x - y = z
-            const z = getValue1();
-            const y = getValue1();
-            const x = getValue2();
-            setAnswer((z + y) * x);
-            setNumber2(x);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 2) {
-            // x / ? - y = z
-            const answer = getValue2();
-            const z = getValue1();
-            const y = getValue1();
-            setAnswer(answer);
-            setNumber1((z + y) * answer);
-            setNumber3(y);
-            setNumber4(z);
-          } else if (answerPosition === 3) {
-            // x / y - ? = z
-            const answer = getValue1();
-            const z = getValue1();
-            const y = getValue2();
-            setAnswer(answer);
-            setNumber1((z + answer) * y);
-            setNumber2(y);
-            setNumber4(z);
-          } else {
-            // x / y - z = ?
-            const answer = getValue2();
-            const z = getValue1();
-            const y = getValue2();
-            setAnswer(answer);
-            setNumber1((answer + z) * y);
-            setNumber2(y);
-            setNumber3(z);
-          }
+          // x / y - z = ?
+          answer = getValue2();
+          const y = getValue2();
+          setNumber(answerPosition, (answer + z) * y, y, z);
         }
       }
+    }
+    setAnswer(answer);
+    setCandidates(
+      [answer, getRandomFloat() < 0.5 ? answer + 2 : answer - 2].sort(
+        () => getRandomFloat() - 0.5,
+      ),
+    );
+  };
+
+  useEffect(() => {
+    if (difficulty === 1) {
+      makeProblem1();
+    } else if (difficulty === 2) {
+      makeProblem2();
+    } else {
+      makeProblem3();
     }
   }, []);
 
@@ -691,45 +533,16 @@ function BasicCalculate({
           </>
         )}
       </Expression>
-      {answer && (
-        <ButtonContainer>
-          {getRandomFloat() < 0.5 ? (
-            <>
-              <Button
-                ref={(el) => (buttonRefs.current[0] = el)}
-                onClick={(e) =>
-                  onClickButton(answer, e.target as HTMLButtonElement)
-                }>
-                {answer}
-              </Button>
-              <Button
-                ref={(el) => (buttonRefs.current[1] = el)}
-                onClick={(e) =>
-                  onClickButton(answer + 1, e.target as HTMLButtonElement)
-                }>
-                {answer + 1}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                ref={(el) => (buttonRefs.current[0] = el)}
-                onClick={(e) =>
-                  onClickButton(answer + 1, e.target as HTMLButtonElement)
-                }>
-                {answer + 1}
-              </Button>
-              <Button
-                ref={(el) => (buttonRefs.current[1] = el)}
-                onClick={(e) =>
-                  onClickButton(answer, e.target as HTMLButtonElement)
-                }>
-                {answer}
-              </Button>
-            </>
-          )}
-        </ButtonContainer>
-      )}
+      <ButtonContainer>
+        {candidates.map((v) => (
+          <Button
+            key={v}
+            ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
+            onClick={(e) => onClickButton(v, e.target as HTMLButtonElement)}>
+            {v}
+          </Button>
+        ))}
+      </ButtonContainer>
     </Container>
   );
 }
