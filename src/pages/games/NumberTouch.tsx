@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Container, Text, Num } from '../../components/games/NumberTouch';
 import { getRandomFloat } from '../../utils/random';
 import { GameProps } from '../../routes/gameRouter';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
 export default function NumberTouch({
   gameData,
@@ -12,9 +13,6 @@ export default function NumberTouch({
   answerState,
 }: GameProps) {
   const difficulty = gameData.difficulty;
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  const duration = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const maxNum = (difficulty - 1) * 5 + 20;
@@ -28,6 +26,17 @@ export default function NumberTouch({
   const numbers = useMemo(
     () => Array.from({ length: maxNum }, (_, i) => i + 1),
     [],
+  );
+  const { handleCorrect } = useGameLogic<number>(
+    {
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    },
+    current === maxNum,
   );
 
   // 숫자가 처음 흩뿌려질 위치 배열 초기화
@@ -90,65 +99,11 @@ export default function NumberTouch({
     setRandomColors(colors);
   }, []);
 
-  const checkAnswer = async () => {
-    if (current === maxNum) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
   const clickNum = async (el: HTMLElement, num: number) => {
     if (num === current) {
       if (current === maxNum) {
         // 정답
-        saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-        setAnswerState('correct');
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
+        handleCorrect();
         return;
       }
       setCurrent((prev) => prev + 1);

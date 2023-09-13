@@ -1,38 +1,72 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameProps } from '../routes/gameRouter';
 
-export const useGameLogic = <T>({
-  gameData,
-  onGameEnd,
-  saveGameResult,
-  isNextButtonClicked,
-  setAnswerState,
-  answerState,
-}: GameProps) => {
+export const useGameLogic = <T>(
+  {
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  }: GameProps,
+  answerExpression?: boolean,
+  showCorrectAnswer?: boolean,
+) => {
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   const duration = useRef(0);
   const clickedTarget = useRef<T | null>(null);
   const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const [answer, setAnswer] = useState<number>();
+  const [showAnswer, setShowAnswer] = useState(false);
 
-  const checkAnswer = async () => {
-    if (clickedTarget.current === answer) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
+  const handleCorrect = async () => {
+    saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    setAnswerState('correct');
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    onGameEnd({
+      problemId: gameData.problemId,
+      duration: duration.current,
+      result: 'SUCCESS',
+      score: 10,
+    });
+  };
+
+  const handleIncorrect = async () => {
+    saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    if (showCorrectAnswer) {
+      setShowAnswer(true);
       await new Promise<void>((resolve) => {
         setTimeout(() => {
-          setAnswerState('');
+          setShowAnswer(false);
           resolve();
         }, 2000);
       });
-      onGameEnd({
-        problemId: gameData.problemId,
-        duration: duration.current,
-        result: 'SUCCESS',
-        score: 10,
-      });
+    }
+    onGameEnd({
+      problemId: gameData.problemId,
+      duration: duration.current,
+      result: 'FAIL',
+      score: 0,
+    });
+  };
+
+  const checkAnswer = () => {
+    if (answerExpression || clickedTarget.current === answer) {
+      // 정답
+      handleCorrect();
     } else {
       // 오답
       setAnswerState('incorrect');
@@ -41,21 +75,6 @@ export const useGameLogic = <T>({
 
   useEffect(() => {
     if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd({
-          problemId: gameData.problemId,
-          duration: duration.current,
-          result: 'FAIL',
-          score: 0,
-        });
-      };
       handleIncorrect();
     }
   }, [answerState]);
@@ -94,5 +113,5 @@ export const useGameLogic = <T>({
     }
   };
 
-  return { onClickButton, setAnswer, buttonRefs };
+  return { onClickButton, setAnswer, buttonRefs, handleCorrect, showAnswer };
 };
