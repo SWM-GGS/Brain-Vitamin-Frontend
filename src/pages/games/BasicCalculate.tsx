@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameProps } from '../../routes/gameRouter';
 import { getRandomFloat } from '../../utils/random';
 import {
@@ -7,6 +7,7 @@ import {
   Num,
 } from '../../components/games/BasicCalculate';
 import { Button, ButtonContainer } from '../../components/common/GameButton';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
 function BasicCalculate({
   gameData,
@@ -17,13 +18,15 @@ function BasicCalculate({
   answerState,
 }: GameProps) {
   const difficulty = gameData.difficulty;
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  const duration = useRef(0);
-  const clickedNum = useRef(10000);
-  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
-  const [answer, setAnswer] = useState<number>();
   const [candidates, setCandidates] = useState<number[]>([]);
+  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  });
   const [number1, setNumber1] = useState<number | null>(null);
   const [number2, setNumber2] = useState<number | null>(null);
   const [number3, setNumber3] = useState<number | null>(null);
@@ -535,74 +538,6 @@ function BasicCalculate({
       makeProblem3();
     }
   }, []);
-
-  const checkAnswer = async () => {
-    if (clickedNum.current === answer) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date(); // 게임 종료시간 계산
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000; // 소요시간 계산
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickButton = (num: number, el: HTMLElement) => {
-    if (clickedNum.current === num) {
-      el.style.background = 'var(--button-bg-color)';
-      el.style.border = '0.2rem solid var(--gray-bg-color)';
-      el.style.color = 'white';
-      clickedNum.current = 10000;
-    } else {
-      for (const buttonRef of buttonRefs.current) {
-        if (buttonRef?.style.background === 'var(--main-bg-color)') {
-          buttonRef.style.background = 'var(--button-bg-color)';
-          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
-          buttonRef.style.color = 'white';
-          break;
-        }
-      }
-      el.style.background = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
-      clickedNum.current = num;
-    }
-  };
 
   return (
     <Container>

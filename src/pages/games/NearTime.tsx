@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameProps } from '../../routes/gameRouter';
 import { getRandomFloat } from '../../utils/random';
 import {
@@ -14,6 +14,7 @@ import {
   Button,
 } from '../../components/games/NearTime';
 import GameQuestion from '../../components/common/GameQuestion';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
 function NearTime({
   gameData,
@@ -23,17 +24,19 @@ function NearTime({
   setAnswerState,
   answerState,
 }: GameProps) {
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  const duration = useRef(0);
   const deg = 6;
   const [hh, setHh] = useState(0);
   const [mm, setMm] = useState(0);
   const [ss, setSs] = useState(0);
   const [hour, setHour] = useState(0);
-  const [answer, setAnswer] = useState(0);
-  const clickedHour = useRef(-1);
-  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
+  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  });
 
   useEffect(() => {
     const hour = Math.floor(getRandomFloat() * 23);
@@ -57,74 +60,6 @@ function NearTime({
     setMm(min * deg);
     setSs(sec * deg);
   }, []);
-
-  const checkAnswer = async () => {
-    if (clickedHour.current === answer) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickButton = (hour: number, el: HTMLElement) => {
-    if (clickedHour.current === hour) {
-      el.style.background = 'var(--button-bg-color)';
-      el.style.border = '0.2rem solid var(--gray-bg-color)';
-      el.style.color = 'white';
-      clickedHour.current = -1;
-    } else {
-      for (const buttonRef of buttonRefs.current) {
-        if (buttonRef?.style.background === 'var(--main-bg-color)') {
-          buttonRef.style.background = 'var(--button-bg-color)';
-          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
-          buttonRef.style.color = 'white';
-          break;
-        }
-      }
-      el.style.background = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
-      clickedHour.current = hour;
-    }
-  };
 
   return (
     <Container>
