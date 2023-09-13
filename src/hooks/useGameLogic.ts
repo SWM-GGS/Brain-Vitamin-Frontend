@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameProps } from '../routes/gameRouter';
+import { getRandomFloat } from '../utils/random';
 
 export const useGameLogic = <T>(
   {
@@ -10,8 +11,9 @@ export const useGameLogic = <T>(
     setAnswerState,
     answerState,
   }: GameProps,
-  answerExpression?: boolean,
+  isCorrect?: boolean,
   showCorrectAnswer?: boolean,
+  randomPositionCount?: number,
 ) => {
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
@@ -20,6 +22,12 @@ export const useGameLogic = <T>(
   const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const [answer, setAnswer] = useState<number>();
   const [showAnswer, setShowAnswer] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  type RandomPositionsProps = { top: number; left: number };
+  const [randomPositions, setRandomPositions] = useState<
+    RandomPositionsProps[]
+  >([]);
 
   const handleCorrect = async () => {
     saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
@@ -64,7 +72,7 @@ export const useGameLogic = <T>(
   };
 
   const checkAnswer = () => {
-    if (answerExpression || clickedTarget.current === answer) {
+    if (isCorrect || clickedTarget.current === answer) {
       // 정답
       handleCorrect();
     } else {
@@ -113,5 +121,63 @@ export const useGameLogic = <T>(
     }
   };
 
-  return { onClickButton, setAnswer, buttonRefs, handleCorrect, showAnswer };
+  // 숫자가 처음 흩뿌려질 위치 배열 초기화
+  useEffect(() => {
+    if (randomPositionCount) {
+      const positions: RandomPositionsProps[] = [];
+
+      while (positions.length < randomPositionCount) {
+        const newPosition = calculateRandomPosition();
+
+        if (!newPosition) return;
+        if (positions.some((position) => isOverlap(position, newPosition))) {
+          continue;
+        }
+        positions.push(newPosition);
+      }
+      setRandomPositions(positions);
+    }
+  }, []);
+
+  // 위치가 겹치는지 확인하는 함수
+  const isOverlap = (
+    positionA: RandomPositionsProps,
+    positionB: RandomPositionsProps,
+  ) => {
+    const dx = Math.abs(positionA.left - positionB.left);
+    const dy = Math.abs(positionA.top - positionB.top);
+
+    return dx < 60 && dy < 60;
+  };
+
+  // 숫자가 처음 흩뿌려질 위치 조정
+  const calculateRandomPosition = () => {
+    if (containerRef.current && topRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const textRect = topRef.current.getBoundingClientRect();
+      const randomTop =
+        Math.floor(
+          getRandomFloat() * (containerRect.bottom - textRect.bottom) +
+            textRect.bottom,
+        ) - 10;
+      const randomLeft =
+        Math.floor(
+          getRandomFloat() * (containerRect.right - containerRect.left) +
+            containerRect.left,
+        ) - 20;
+
+      return { top: randomTop, left: randomLeft };
+    }
+  };
+
+  return {
+    onClickButton,
+    setAnswer,
+    buttonRefs,
+    handleCorrect,
+    showAnswer,
+    containerRef,
+    topRef,
+    randomPositions,
+  };
 };
