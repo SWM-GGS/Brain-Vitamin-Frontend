@@ -1,0 +1,183 @@
+import { useEffect, useRef, useState } from 'react';
+import { GameProps } from '../routes/gameRouter';
+import { getRandomFloat } from '../utils/random';
+
+export const useGameLogic = <T>(
+  {
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  }: GameProps,
+  isCorrect?: boolean,
+  showCorrectAnswer?: boolean,
+  randomPositionCount?: number,
+) => {
+  const startTimeRef = useRef<Date | null>(new Date());
+  const endTimeRef = useRef<Date | null>(null);
+  const duration = useRef(0);
+  const clickedTarget = useRef<T | null>(null);
+  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
+  const [answer, setAnswer] = useState<number>();
+  const [showAnswer, setShowAnswer] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  type RandomPositionsProps = { top: number; left: number };
+  const [randomPositions, setRandomPositions] = useState<
+    RandomPositionsProps[]
+  >([]);
+
+  const handleCorrect = async () => {
+    saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
+    setAnswerState('correct');
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    onGameEnd({
+      problemId: gameData.problemId,
+      duration: duration.current,
+      result: 'SUCCESS',
+      score: 10,
+    });
+  };
+
+  const handleIncorrect = async () => {
+    saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAnswerState('');
+        resolve();
+      }, 2000);
+    });
+    if (showCorrectAnswer) {
+      setShowAnswer(true);
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setShowAnswer(false);
+          resolve();
+        }, 2000);
+      });
+    }
+    onGameEnd({
+      problemId: gameData.problemId,
+      duration: duration.current,
+      result: 'FAIL',
+      score: 0,
+    });
+  };
+
+  const checkAnswer = () => {
+    if (isCorrect || clickedTarget.current === answer) {
+      // 정답
+      handleCorrect();
+    } else {
+      // 오답
+      setAnswerState('incorrect');
+    }
+  };
+
+  useEffect(() => {
+    if (answerState === 'incorrect') {
+      handleIncorrect();
+    }
+  }, [answerState]);
+
+  useEffect(() => {
+    if (isNextButtonClicked) {
+      endTimeRef.current = new Date();
+      if (startTimeRef.current && endTimeRef.current) {
+        duration.current =
+          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+          1000;
+      }
+      checkAnswer();
+    }
+  }, [isNextButtonClicked]);
+
+  const onClickButton = (target: T, el: HTMLElement) => {
+    if (clickedTarget.current === target) {
+      el.style.background = 'var(--button-bg-color)';
+      el.style.border = '0.2rem solid var(--gray-bg-color)';
+      el.style.color = 'white';
+      clickedTarget.current = null;
+    } else {
+      for (const buttonRef of buttonRefs.current) {
+        if (buttonRef?.style.background === 'var(--main-bg-color)') {
+          buttonRef.style.background = 'var(--button-bg-color)';
+          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
+          buttonRef.style.color = 'white';
+          break;
+        }
+      }
+      el.style.background = 'var(--main-bg-color)';
+      el.style.border = '0.2rem solid var(--main-color)';
+      el.style.color = 'var(--main-color)';
+      clickedTarget.current = target;
+    }
+  };
+
+  // 숫자가 처음 흩뿌려질 위치 배열 초기화
+  useEffect(() => {
+    if (randomPositionCount) {
+      const positions: RandomPositionsProps[] = [];
+
+      while (positions.length < randomPositionCount) {
+        const newPosition = calculateRandomPosition();
+
+        if (!newPosition) return;
+        if (positions.some((position) => isOverlap(position, newPosition))) {
+          continue;
+        }
+        positions.push(newPosition);
+      }
+      setRandomPositions(positions);
+    }
+  }, []);
+
+  // 위치가 겹치는지 확인하는 함수
+  const isOverlap = (
+    positionA: RandomPositionsProps,
+    positionB: RandomPositionsProps,
+  ) => {
+    const dx = Math.abs(positionA.left - positionB.left);
+    const dy = Math.abs(positionA.top - positionB.top);
+
+    return dx < 60 && dy < 60;
+  };
+
+  // 숫자가 처음 흩뿌려질 위치 조정
+  const calculateRandomPosition = () => {
+    if (containerRef.current && topRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const textRect = topRef.current.getBoundingClientRect();
+      const randomTop =
+        Math.floor(
+          getRandomFloat() * (containerRect.bottom - textRect.bottom) +
+            textRect.bottom,
+        ) - 10;
+      const randomLeft =
+        Math.floor(
+          getRandomFloat() * (containerRect.right - containerRect.left) +
+            containerRect.left,
+        ) - 20;
+
+      return { top: randomTop, left: randomLeft };
+    }
+  };
+
+  return {
+    onClickButton,
+    setAnswer,
+    buttonRefs,
+    handleCorrect,
+    showAnswer,
+    containerRef,
+    topRef,
+    randomPositions,
+  };
+};

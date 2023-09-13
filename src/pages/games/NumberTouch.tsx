@@ -1,61 +1,87 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Num } from '../../components/games/NumberTouch';
+import { useEffect, useMemo, useState } from 'react';
+import { Container, Text, Num } from '../../components/games/NumberTouch';
 import { getRandomFloat } from '../../utils/random';
+import { GameProps } from '../../routes/gameRouter';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
-export default function NumberTouch() {
-  const [boxSize, setBoxSize] = useState({ width: 100, height: 100 });
-  const boxRef = useRef<HTMLDivElement>(null);
-  const maxNum = 30;
+export default function NumberTouch({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+  isNextButtonClicked,
+  setAnswerState,
+  answerState,
+}: GameProps) {
+  const difficulty = gameData.difficulty;
+  const maxNum = (difficulty - 1) * 5 + 20;
+  const [current, setCurrent] = useState(1);
+  let positionIndex = -1;
+  const [randomColors, setRandomColors] = useState<string[]>([]);
   const numbers = useMemo(
     () => Array.from({ length: maxNum }, (_, i) => i + 1),
     [],
   );
-  let difficulty = 2;
-  let current = 1;
+  const { handleCorrect, containerRef, topRef, randomPositions } =
+    useGameLogic<number>(
+      {
+        gameData,
+        onGameEnd,
+        saveGameResult,
+        isNextButtonClicked,
+        setAnswerState,
+        answerState,
+      },
+      current === maxNum,
+      false,
+      maxNum,
+    );
 
+  // 숫자 랜덤 색상 부여
   useEffect(() => {
-    const fullSize = {
-      width: window.innerWidth || document.body.clientWidth,
-      height: window.innerHeight || document.body.clientHeight,
-    };
+    const colors: string[] = [];
 
-    if (boxRef.current?.clientWidth) {
-      setBoxSize({
-        width: (fullSize.width * (3 + difficulty)) / 8,
-        height: (fullSize.height * (3 + difficulty)) / 8,
-      });
+    while (colors.length < maxNum) {
+      const newColor =
+        '#' + Math.floor(getRandomFloat() * 0xffffff).toString(16);
+
+      colors.push(newColor);
     }
+    setRandomColors(colors);
   }, []);
 
-  const clickNum = (el: HTMLElement, num: number) => {
+  const clickNum = async (el: HTMLElement, num: number) => {
     if (num === current) {
-      if (num === maxNum) {
-        alert('축하합니다! 모두 맞추셨습니다!');
+      if (current === maxNum) {
+        // 정답
+        handleCorrect();
         return;
       }
-      current++;
+      setCurrent((prev) => prev + 1);
       el.style.display = 'none';
     }
   };
 
   return (
-    <>
-      <h1>1부터 {maxNum}까지 순서대로 숫자를 찾아 터치해주세요.</h1>
-      <Box ref={boxRef} $width={boxSize.width} $height={boxSize.height}>
-        {numbers.map((num) => (
+    <Container ref={containerRef}>
+      <Text>
+        {current - 1} / {(difficulty - 1) * 5 + 20}
+      </Text>
+      <div ref={topRef}></div>
+      {numbers.map((num) => {
+        positionIndex++;
+        return (
           <Num
             key={num}
-            onClick={(e) => clickNum(e.target as HTMLElement, num)}
-            $zIndex={100 - num}
             style={{
               position: 'absolute',
-              top: Math.ceil(getRandomFloat() * boxSize.height),
-              left: Math.ceil(getRandomFloat() * boxSize.width),
-            }}>
+              ...randomPositions[positionIndex],
+              color: randomColors[positionIndex],
+            }}
+            onClick={(e) => clickNum(e.target as HTMLElement, num)}>
             {num}
           </Num>
-        ))}
-      </Box>
-    </>
+        );
+      })}
+    </Container>
   );
 }

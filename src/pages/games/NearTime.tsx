@@ -1,119 +1,96 @@
 import { useEffect, useState } from 'react';
-import { styled } from 'styled-components';
+import { GameProps } from '../../routes/gameRouter';
+import { getRandomFloat } from '../../utils/random';
+import {
+  Container,
+  Clock,
+  Hour,
+  Min,
+  Sec,
+  Hr,
+  Mm,
+  Sc,
+  ButtonContainer,
+  Button,
+} from '../../components/games/NearTime';
+import GameQuestion from '../../components/common/GameQuestion';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
-function NearTime() {
+function NearTime({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+  isNextButtonClicked,
+  setAnswerState,
+  answerState,
+}: GameProps) {
   const deg = 6;
   const [hh, setHh] = useState(0);
   const [mm, setMm] = useState(0);
   const [ss, setSs] = useState(0);
+  const [hour, setHour] = useState(0);
+  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  });
 
   useEffect(() => {
-    const day = new Date();
-    setHh(day.getHours() * 30);
-    setMm(day.getMinutes() * deg);
-    setSs(day.getSeconds() * deg);
+    const hour = Math.floor(getRandomFloat() * 23);
+    const min = Math.floor(getRandomFloat() * 58 + 1);
+    let sec = Math.floor(getRandomFloat() * 58 + 1);
+
+    if (min === 30 && sec === 30) {
+      sec--;
+    }
+    if (min < 30) {
+      setAnswer(hour);
+    } else if (min > 30) {
+      setAnswer(hour + 1);
+    } else if (sec < 30) {
+      setAnswer(hour);
+    } else {
+      setAnswer(hour + 1);
+    }
+    setHour(hour);
+    setHh(hour * 30);
+    setMm(min * deg);
+    setSs(sec * deg);
   }, []);
 
   return (
-    <Clock>
-      <Hour>
-        <Hr style={{ transform: `rotateZ(${hh + mm / 12}deg)` }} />
-      </Hour>
-      <Min>
-        <Mm style={{ transform: `rotateZ(${mm}deg)` }} />
-      </Min>
-      <Sec>
-        <Sc style={{ transform: `rotateZ(${ss}deg)` }} />
-      </Sec>
-    </Clock>
+    <Container>
+      <GameQuestion text="아래 시계와 가장 가까운 시간을 고르세요" />
+      <Clock>
+        <Hour>
+          <Hr style={{ transform: `rotateZ(${hh + mm / 12}deg)` }} />
+        </Hour>
+        <Min>
+          <Mm style={{ transform: `rotateZ(${mm}deg)` }} />
+        </Min>
+        <Sec>
+          <Sc style={{ transform: `rotateZ(${ss}deg)` }} />
+        </Sec>
+      </Clock>
+      <ButtonContainer>
+        <Button
+          ref={(el) => (buttonRefs.current[0] = el)}
+          onClick={(e) => onClickButton(hour, e.target as HTMLButtonElement)}>
+          {hour}시
+        </Button>
+        <Button
+          ref={(el) => (buttonRefs.current[1] = el)}
+          onClick={(e) =>
+            onClickButton(hour + 1, e.target as HTMLButtonElement)
+          }>
+          {hour + 1}시
+        </Button>
+      </ButtonContainer>
+    </Container>
   );
 }
-
-const Clock = styled.div`
-  width: 350px;
-  height: 350px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('/assets/images/clock.png');
-  background-size: cover;
-  border: 4px solid #091921;
-  box-shadow:
-    0 -15px 15px rgba(255, 255, 255, 0.05),
-    inset 0 -15px 15px rgba(255, 255, 255, 0.05),
-    0 -5px 15px rgba(0, 0, 0, 0.3),
-    inset 0 15px 15px rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  &:before {
-    content: '';
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background: var(--black-color);
-    border-radius: 50%;
-    z-index: 10;
-  }
-`;
-const Hour = styled.div`
-  position: absolute;
-`;
-const Min = styled.div`
-  position: absolute;
-  width: 190px;
-  height: 190px;
-`;
-const Sec = styled.div`
-  position: absolute;
-  width: 230px;
-  height: 230px;
-`;
-const Hr = styled.div`
-  width: 160px;
-  height: 160px;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  &:before {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 80px;
-    background: var(--black-color);
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
-  }
-`;
-const Mm = styled.div`
-  width: 190px;
-  height: 190px;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  &:before {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 90px;
-    background: var(--black-color);
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
-  }
-`;
-const Sc = styled.div`
-  width: 230px;
-  height: 230px;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  &:before {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 150px;
-    background: #ff105e;
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
-  }
-`;
 
 export default NearTime;

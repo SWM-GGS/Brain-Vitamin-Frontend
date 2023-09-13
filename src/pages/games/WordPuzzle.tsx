@@ -10,7 +10,7 @@ import {
 import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
-import { getRandomFloat } from '../../utils/random.ts';
+import { useGameLogic } from '../../hooks/useGameLogic.ts';
 
 export default function WordPuzzle({
   gameData,
@@ -42,16 +42,35 @@ export default function WordPuzzle({
   };
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
   let [posX, posY] = [0, 0]; // 드래그 시 요소를 실제로 이동시키기 위해 필요
-  const containerRef = useRef<HTMLDivElement>(null);
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  type RandomPositionsProps = { top: number; left: number };
-  const [randomPositions, setRandomPositions] = useState<
-    RandomPositionsProps[]
-  >([]);
   let positionIndex = -1;
+  const maxNum = problemPool.reduce((p, v) => p + v.contents.length, 0);
+  const isCorrect = () => {
+    let isIncorrect = false;
+
+    for (let i = 0; i < letters.length; i++) {
+      let el = dropRefs.current[i];
+      let letter = el?.getAttribute('letter');
+      if (!letter || letter !== letters[i]) {
+        isIncorrect = true;
+        break;
+      }
+    }
+    return !isIncorrect;
+  };
+  const { containerRef, topRef, randomPositions, showAnswer } =
+    useGameLogic<number>(
+      {
+        gameData,
+        onGameEnd,
+        saveGameResult,
+        isNextButtonClicked,
+        setAnswerState,
+        answerState,
+      },
+      isCorrect(),
+      true,
+      maxNum,
+    );
 
   useEffect(() => {
     for (let i = 0; i < letters.length; i++) {
@@ -69,119 +88,6 @@ export default function WordPuzzle({
       }
     }
   }, []);
-
-  // 글자가 처음 흩뿌려질 위치 배열 초기화
-  useEffect(() => {
-    const positions: RandomPositionsProps[] = [];
-    const len = problemPool.reduce((p, v) => p + v.contents.length, 0);
-
-    while (positions.length < len) {
-      const newPosition = calculateRandomPosition();
-
-      if (positions.some((position) => isOverlap(position, newPosition))) {
-        continue;
-      }
-      positions.push(newPosition);
-    }
-    setRandomPositions(positions);
-  }, []);
-
-  // 위치가 겹치는지 확인하는 함수
-  const isOverlap = (
-    positionA: RandomPositionsProps,
-    positionB: RandomPositionsProps,
-  ) => {
-    const dx = Math.abs(positionA.left - positionB.left);
-    const dy = Math.abs(positionA.top - positionB.top);
-    return dx < 60 && dy < 60;
-  };
-
-  // 글자가 처음 흩뿌려질 위치 조정
-  const calculateRandomPosition = () => {
-    if (containerRef.current && dropRefs.current[dropRefs.current.length - 1]) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const lastDropRef = dropRefs.current[dropRefs.current.length - 1];
-      if (lastDropRef) {
-        const dropRefRect = lastDropRef.getBoundingClientRect();
-        const randomTop =
-          Math.floor(
-            getRandomFloat() * (containerRect.bottom - dropRefRect.bottom) +
-              dropRefRect.bottom,
-          ) - 10;
-        const randomLeft =
-          Math.floor(
-            getRandomFloat() * (containerRect.right - containerRect.left) +
-              containerRect.left,
-          ) - 40;
-        return { top: randomTop, left: randomLeft };
-      }
-    }
-    return { top: 0, left: 0 };
-  };
-
-  const checkAnswer = async () => {
-    // 방법 1: 드래그한 요소와 박스를 매칭할 수 있는 속성 부여 -> 이 방법으로 구현
-    // 방법 2: 요소를 드래그한 후 드롭했을 때 박스의 터치 감지
-    let isIncorrect = false;
-    for (let i = 0; i < letters.length; i++) {
-      let el = dropRefs.current[i];
-      let letter = el?.getAttribute('letter');
-      if (!letter || letter !== letters[i]) {
-        // 오답
-        isIncorrect = true;
-        break;
-      }
-    }
-    if (isIncorrect) {
-      setAnswerState('incorrect');
-    } else {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        setShowAnswer(true);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setShowAnswer(false);
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
 
   const getClientXY = (
     e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
@@ -286,7 +192,7 @@ export default function WordPuzzle({
   return (
     <>
       <Container ref={containerRef}>
-        <Wrapper>
+        <Wrapper ref={topRef}>
           {answers.map((item) => (
             <div key={item.contents}>
               <Img src={item.imgUrl} />

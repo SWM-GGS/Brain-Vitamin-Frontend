@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { CogTrainingProps, GameResultProps } from '../../pages/CogTraining';
 import { AnswerFeedback } from '../common/AnswerFeedback';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
 const DAY = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -31,97 +32,23 @@ const Body = ({
   setAnswerState,
   answerState,
 }: BodyProps) => {
-  let clickedDate = useRef(0);
-  const formRefs = useRef<HTMLButtonElement[] | null[]>([]);
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-
-  const checkAnswer = async () => {
-    if (clickedDate.current === today) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd({
-        problemId: gameData.problemId,
-        duration: duration.current,
-        result: 'SUCCESS',
-        score: 10,
-      });
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
+  const { onClickButton, setAnswer, buttonRefs, showAnswer } =
+    useGameLogic<number>(
+      {
+        gameData,
+        onGameEnd,
+        saveGameResult,
+        isNextButtonClicked,
+        setAnswerState,
+        answerState,
+      },
+      false,
+      true,
+    );
 
   useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        setShowAnswer(true);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setShowAnswer(false);
-            resolve();
-          }, 2000);
-        });
-        onGameEnd({
-          problemId: gameData.problemId,
-          duration: duration.current,
-          result: 'FAIL',
-          score: 0,
-        });
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickDate = (date: number, el: HTMLElement) => {
-    if (clickedDate.current === date) {
-      el.style.background = '#c6c6c6';
-      el.style.border = '0.1rem solid #e4e3e6';
-      el.style.color = 'var(--black-color)';
-      clickedDate.current = 0;
-    } else {
-      for (let formRef of formRefs.current) {
-        if (formRef?.style.background === 'var(--main-bg-color)') {
-          formRef.style.background = '#c6c6c6';
-          formRef.style.border = '0.1rem solid #e4e3e6';
-          formRef.style.color = 'var(--black-color)';
-          break;
-        }
-      }
-      el.style.background = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
-      clickedDate.current = date;
-    }
-  };
+    setAnswer(today);
+  }, []);
 
   const getWeek = (date: Date) => {
     const currentDate = date.getDate();
@@ -142,9 +69,9 @@ const Body = ({
       <Wrapper>
         {totalDate.slice((week - 1) * 7, week * 7).map((date) => (
           <Form
-            ref={(el) => (formRefs.current[formRefs.current.length] = el)}
+            ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
             key={date}
-            onClick={(e) => onClickDate(date, e.target as HTMLElement)}>
+            onClick={(e) => onClickButton(date, e.target as HTMLElement)}>
             {date}일
           </Form>
         ))}
@@ -215,7 +142,8 @@ const Form = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #c6c6c6;
+  background: var(--button-bg-color);
+  color: white;
   margin: 1rem 0 0 0;
   font-size: 4rem;
   font-family: 'Pretendard-Medium';

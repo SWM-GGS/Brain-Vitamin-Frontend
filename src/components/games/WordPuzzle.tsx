@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 
 const Container = styled.div`
-  padding: 1.6rem;
   margin: 0 auto;
   font-size: 3rem;
   height: 100%;
@@ -12,15 +11,20 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   justify-content: space-evenly;
-  flex-wrap: wrap;
   gap: 2rem;
   text-align: center;
+  @media screen and (max-width: 767px) {
+    justify-content: space-between;
+  }
 `;
 
 const DropBoxWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 1rem;
+  @media screen and (max-width: 767px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const DropBox = styled.div`
@@ -33,8 +37,8 @@ const DropBox = styled.div`
     height: 5rem;
   }
   @media screen and (max-width: 767px) {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 4rem;
+    height: 4rem;
   }
 `;
 
@@ -46,8 +50,8 @@ const Img = styled.img`
     height: 13rem;
   }
   @media screen and (max-width: 767px) {
-    width: 8rem;
-    height: 8rem;
+    width: 7rem;
+    height: 7rem;
   }
 `;
 
