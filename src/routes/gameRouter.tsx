@@ -13,6 +13,7 @@ import BasicCalculate from '../pages/games/BasicCalculate.tsx';
 import PatternNumber from '../pages/games/PatternNumber.tsx';
 import ShownColor from '../pages/games/ShownColor.tsx';
 import MeaningColor from '../pages/games/MeaningColor.tsx';
+import SameColor from '../pages/games/SameColor.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -197,6 +198,19 @@ export default function GameRouter({
         path="/meaningColor"
         element={
           <MeaningColor
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/sameColor"
+        element={
+          <SameColor
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
