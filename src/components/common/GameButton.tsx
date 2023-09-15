@@ -12,20 +12,23 @@ const ButtonContainer = styled.div`
     gap: 2rem;
   }
 `;
-const Button = styled.button`
+const Button = styled.button<{ $isLong?: boolean }>`
   padding: 3rem 4rem;
   font-size: 6rem;
   border-radius: 1rem;
   background: var(--button-bg-color);
   color: white;
   border: 0.2rem solid var(--gray-bg-color);
+  ${(props) => props.$isLong && `min-width: 365px;`}
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 3rem;
     padding: 1.5rem 2rem;
+    ${(props) => props.$isLong && `min-width: 230px;`}
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
     padding: 1.5rem 2rem;
+    ${(props) => props.$isLong && `min-width: 230px;`}
   }
 `;
 

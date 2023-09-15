@@ -14,6 +14,9 @@ import PatternNumber from '../pages/games/PatternNumber.tsx';
 import ShownColor from '../pages/games/ShownColor.tsx';
 import MeaningColor from '../pages/games/MeaningColor.tsx';
 import SameColor from '../pages/games/SameColor.tsx';
+import DayOfWeek from '../pages/games/DayOfWeek.tsx';
+import Antonym from '../pages/games/Antonym.tsx';
+import Synonym from '../pages/games/Synonym.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -211,6 +214,45 @@ export default function GameRouter({
         path="/sameColor"
         element={
           <SameColor
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/dayOfWeek"
+        element={
+          <DayOfWeek
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/antonym"
+        element={
+          <Antonym
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/synonym"
+        element={
+          <Synonym
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
