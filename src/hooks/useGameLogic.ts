@@ -101,20 +101,20 @@ export const useGameLogic = <T>(
 
   const onClickButton = (target: T, el: HTMLElement) => {
     if (clickedTarget.current === target) {
-      el.style.background = 'var(--button-bg-color)';
+      el.style.backgroundColor = 'var(--button-bg-color)';
       el.style.border = '0.2rem solid var(--gray-bg-color)';
       el.style.color = 'white';
       clickedTarget.current = null;
     } else {
       for (const buttonRef of buttonRefs.current) {
-        if (buttonRef?.style.background === 'var(--main-bg-color)') {
-          buttonRef.style.background = 'var(--button-bg-color)';
+        if (buttonRef?.style.backgroundColor === 'var(--main-bg-color)') {
+          buttonRef.style.backgroundColor = 'var(--button-bg-color)';
           buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
           buttonRef.style.color = 'white';
           break;
         }
       }
-      el.style.background = 'var(--main-bg-color)';
+      el.style.backgroundColor = 'var(--main-bg-color)';
       el.style.border = '0.2rem solid var(--main-color)';
       el.style.color = 'var(--main-color)';
       clickedTarget.current = target;
