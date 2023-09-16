@@ -1,80 +1,85 @@
-import { keyframes, styled } from 'styled-components';
-let degree = 45;
+import { GameProps } from '../../routes/gameRouter';
+import { useEffect, useState } from 'react';
+import { useGameLogic } from '../../hooks/useGameLogic';
+import { Container } from '../../components/games/PatternNumber';
+import { Button } from '../../components/common/GameButton';
+import { getRandomFloat } from '../../utils/random';
+import GameQuestion from '../../components/common/GameQuestion';
+import { Body, Compass } from '../../components/games/CompassDirection';
 
-function CompassDirection() {
+function CompassDirection({
+  gameData,
+  onGameEnd,
+  saveGameResult,
+  isNextButtonClicked,
+  setAnswerState,
+  answerState,
+}: GameProps) {
+  const difficulty = gameData.difficulty;
+  const [selectedDegree, setSelectedDegree] = useState(0);
+  const [selectedDirection, setSelectedDirection] = useState('');
+  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  });
+  const directions = ['북', '북동', '동', '남동', '남', '남서', '서', '북서'];
+  const candidateDegree =
+    difficulty === 3 ? [0, 45, 90, 135, 180, 225, 270, 315] : [0, 90, 180, 270];
+  const candidateDirection =
+    difficulty === 1 ? ['동', '서', '남', '북'] : directions;
+
+  const getRandomIndex = (num: number) => {
+    return Math.floor(getRandomFloat() * num);
+  };
+
+  useEffect(() => {
+    const randomIndex1 = getRandomIndex(candidateDegree.length - 1);
+    const selectedDegree = candidateDegree[randomIndex1];
+    const randomIndex2 = getRandomIndex(candidateDirection.length - 1);
+    const selectedDirection = candidateDirection[randomIndex2];
+    const answer =
+      (selectedDegree / 45 + directions.indexOf(selectedDirection)) %
+      directions.length;
+
+    setAnswer(answer);
+    setSelectedDegree(selectedDegree);
+    setSelectedDirection(selectedDirection);
+  }, []);
+
+  const targets = [7, 0, 1, 6, -1, 2, 5, 4, 3];
+
   return (
-    <Compass>
-      <Needle $degree={degree}>
-        <North />
-        <South />
-      </Needle>
-    </Compass>
+    <Container>
+      <GameQuestion text={`${selectedDirection}쪽은 어디일까요?`} />
+      <Body>
+        {targets.map((v) => (
+          <div key={v}>
+            {v === -1 ? (
+              <Compass $degree={selectedDegree} />
+            ) : (
+              <Button
+                style={{
+                  backgroundImage: `url('/assets/images/location.svg')`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }}
+                $isLong={false}
+                ref={(el) =>
+                  (buttonRefs.current[buttonRefs.current.length] = el)
+                }
+                onClick={(e) => onClickButton(v, e.target as HTMLButtonElement)}
+              />
+            )}
+          </div>
+        ))}
+      </Body>
+    </Container>
   );
 }
-
-const moveNeedle = keyframes`
-  0%, 100% {
-    transform: rotate(${degree}deg) translateX(-50%) translateY(-100%);
-  }
-  25% {
-    transform: rotate(${degree - 5}deg) translateX(-50%) translateY(-100%);
-  }
-  50% {
-    transform: rotate(${degree + 5}deg) translateX(-50%) translateY(-100%);
-  }
-  75% {
-    transform: rotate(${degree - 5}deg) translateX(-50%) translateY(-100%);
-  }
-`;
-
-const Compass = styled.div`
-  width: 350px;
-  height: 350px;
-  background: url('/assets/images/clock.png');
-  background-size: cover;
-  border-radius: 50%;
-  position: relative;
-  &:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
-    background: silver;
-    border: 2px solid cornsilk;
-    border-radius: 50%;
-    z-index: 10;
-  }
-`;
-const Needle = styled.div<{ $degree: number }>`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-origin: 50% 100%;
-  transform: translate(-50%, -100%) rotate(${(props) => props.$degree}deg);
-  animation: ${moveNeedle} 2s ease-in-out;
-`;
-const Base = styled.div`
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-`;
-
-const North = styled(Base)`
-  border-width: 0 25px 100px 25px;
-  border-color: transparent transparent red transparent;
-  bottom: 0;
-`;
-
-const South = styled(Base)`
-  border-width: 100px 25px 0 25px;
-  border-color: blue transparent transparent transparent;
-  top: 0;
-`;
 
 export default CompassDirection;
