@@ -18,6 +18,7 @@ import DayOfWeek from '../pages/games/DayOfWeek.tsx';
 import Antonym from '../pages/games/Antonym.tsx';
 import Synonym from '../pages/games/Synonym.tsx';
 import CompassDirection from '../pages/games/CompassDirection.tsx';
+import PictureMatch from '../pages/games/PictureMatch.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -267,6 +268,19 @@ export default function GameRouter({
         path="/compassDirection"
         element={
           <CompassDirection
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/pictureMatch"
+        element={
+          <PictureMatch
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
