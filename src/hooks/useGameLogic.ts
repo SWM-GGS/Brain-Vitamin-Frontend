@@ -14,6 +14,7 @@ export const useGameLogic = <T>(
   isCorrect?: boolean,
   showCorrectAnswer?: boolean,
   randomPositionCount?: number,
+  isButtonBorderBlack?: boolean,
 ) => {
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
@@ -99,24 +100,34 @@ export const useGameLogic = <T>(
     }
   }, [isNextButtonClicked]);
 
+  const initButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--button-bg-color)';
+    if (isButtonBorderBlack) {
+      el.style.border = '0.2rem solid var(--black-color)';
+    } else {
+      el.style.border = '0.2rem solid var(--gray-bg-color)';
+    }
+    el.style.color = 'white';
+  };
+
+  const activateButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--main-bg-color)';
+    el.style.border = '0.2rem solid var(--main-color)';
+    el.style.color = 'var(--main-color)';
+  };
+
   const onClickButton = (target: T, el: HTMLElement) => {
     if (clickedTarget.current === target) {
-      el.style.backgroundColor = 'var(--button-bg-color)';
-      el.style.border = '0.2rem solid var(--gray-bg-color)';
-      el.style.color = 'white';
+      initButtonStyle(el);
       clickedTarget.current = null;
     } else {
       for (const buttonRef of buttonRefs.current) {
         if (buttonRef?.style.backgroundColor === 'var(--main-bg-color)') {
-          buttonRef.style.backgroundColor = 'var(--button-bg-color)';
-          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
-          buttonRef.style.color = 'white';
+          initButtonStyle(buttonRef);
           break;
         }
       }
-      el.style.backgroundColor = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
+      activateButtonStyle(el);
       clickedTarget.current = target;
     }
   };
