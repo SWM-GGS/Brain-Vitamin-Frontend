@@ -115,8 +115,8 @@ const Img = styled.img`
     height: 6rem;
   }
   @media screen and (max-width: 767px) {
-    width: 7rem;
-    height: 7rem;
+    width: 6rem;
+    height: 6rem;
   }
 `;
 
