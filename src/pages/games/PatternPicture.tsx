@@ -4,13 +4,14 @@ import {
   PictureButton,
 } from '../../components/common/GameButton';
 import GameQuestion from '../../components/common/GameQuestion';
-import { getRandomFloat } from '../../utils/random';
+import { NumberContainer } from '../../components/games/PatternNumber';
 import { GameProps } from '../../routes/gameRouter';
 import { useGameLogic } from '../../hooks/useGameLogic';
+import { getRandomFloat } from '../../utils/random';
+import { PresentedImg } from '../../components/games/PatternPicture';
 import { Container } from '../../components/games/SameColor';
-import { PresentedImg } from '../../components/games/PictureMatch';
 
-function PictureMatch({
+function PatternPicture({
   gameData,
   onGameEnd,
   saveGameResult,
@@ -20,11 +21,13 @@ function PictureMatch({
 }: GameProps) {
   type Props = {
     imgUrl: string;
-    answer: boolean;
   };
   const problemPool: Props[] = gameData.problemPool;
+  const difficulty = gameData.difficulty;
+  const [quizPosition, setQuizPosition] = useState(0);
+  type PresentedProps = { idx: number; imgUrl: string };
+  const [presented, setPresented] = useState<PresentedProps[]>([]);
   const [candidates, setCandidates] = useState<string[]>([]);
-  const [presented, setPresented] = useState('');
   const { onClickButton, setAnswer, buttonRefs } = useGameLogic<string>(
     {
       gameData,
@@ -41,22 +44,37 @@ function PictureMatch({
   );
 
   useEffect(() => {
-    const answerPair = problemPool.filter((v) => v.answer);
-    const candidates = problemPool
-      .filter((v) => !v.answer)
-      .map((v) => v.imgUrl);
-    const presented = answerPair[0].imgUrl;
-    const answer = answerPair[1].imgUrl;
+    const imgUrls = problemPool.map((v) => v.imgUrl);
+    let presented: string[] = [];
 
-    setAnswer(answer);
-    setPresented(presented);
-    setCandidates([answer, ...candidates].sort(() => getRandomFloat() - 0.5));
+    if (difficulty === 2) {
+      presented = [...imgUrls, ...imgUrls, ...imgUrls];
+    } else {
+      presented = [...imgUrls, ...imgUrls];
+    }
+    const newPresented = presented.map((v, i) => {
+      return { idx: i, imgUrl: v };
+    });
+    const randomIndex = Math.floor(getRandomFloat() * (presented.length - 1));
+
+    setPresented(newPresented);
+    setQuizPosition(randomIndex);
+    setAnswer(presented[randomIndex]);
+    setCandidates(imgUrls);
   }, []);
 
   return (
     <Container>
-      <GameQuestion text="아래 그림과 이어지는 그림을 고르세요" />
-      <PresentedImg $presented={presented} />
+      <GameQuestion text="규칙에 맞는 그림을 고르세요" />
+      <NumberContainer>
+        {presented.map((v, i) => (
+          <PresentedImg
+            key={v.idx}
+            $presented={v.imgUrl}
+            $isQuizPosition={i === quizPosition}
+          />
+        ))}
+      </NumberContainer>
       <ButtonContainer>
         {candidates.map((v) => (
           <PictureButton
@@ -72,4 +90,4 @@ function PictureMatch({
   );
 }
 
-export default PictureMatch;
+export default PatternPicture;
