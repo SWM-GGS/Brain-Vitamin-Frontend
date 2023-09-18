@@ -39,6 +39,13 @@ function ChangeCalculate({
     answerState,
   });
 
+  const isExceedLimit = (num: number, limit: number, arr: number[]) => {
+    return (
+      num > Math.floor(limit / 2) ||
+      (arr.length && arr.reduce((p, c) => p + c) + num >= limit)
+    );
+  };
+
   const getRandomArr = (
     cnt: number,
     difference: number,
@@ -54,12 +61,7 @@ function ChangeCalculate({
         difference;
       const randomNum = answer ? answer + randomDifference : randomDifference;
 
-      if (
-        limit &&
-        (randomNum > Math.floor(limit / 2) ||
-          (result.length &&
-            result.reduce((p, c) => p + c) + randomNum >= limit))
-      ) {
+      if (limit && isExceedLimit(randomNum, limit, result)) {
         continue;
       }
       if (randomNum > 0 && !result.includes(randomNum)) {
