@@ -19,6 +19,7 @@ import Antonym from '../pages/games/Antonym.tsx';
 import Synonym from '../pages/games/Synonym.tsx';
 import CompassDirection from '../pages/games/CompassDirection.tsx';
 import PictureMatch from '../pages/games/PictureMatch.tsx';
+import PatternPicture from '../pages/games/PatternPicture.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -281,6 +282,19 @@ export default function GameRouter({
         path="/pictureMatch"
         element={
           <PictureMatch
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/patternPicture"
+        element={
+          <PatternPicture
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
