@@ -37,5 +37,13 @@ const Button = styled.button<{ $isLong?: boolean; $isMedium?: boolean }>`
     ${(props) => props.$isMedium && `width: 100px; height: 100px;`}
   }
 `;
+const PictureButton = styled(Button)<{ $imgUrl: string }>`
+  background-image: url(${(props) => props.$imgUrl});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 0;
+  border: 0.2rem solid var(--black-color);
+`;
 
-export { ButtonContainer, Button };
+export { ButtonContainer, Button, PictureButton };

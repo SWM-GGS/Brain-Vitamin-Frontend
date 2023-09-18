@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Button, ButtonContainer } from '../../components/common/GameButton';
+import {
+  ButtonContainer,
+  PictureButton,
+} from '../../components/common/GameButton';
 import GameQuestion from '../../components/common/GameQuestion';
 import { NumberContainer } from '../../components/games/PatternNumber';
 import { GameProps } from '../../routes/gameRouter';
@@ -74,17 +77,10 @@ function PatternPicture({
       </NumberContainer>
       <ButtonContainer>
         {candidates.map((v) => (
-          <Button
-            style={{
-              backgroundImage: `url('${v}')`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              borderRadius: '0',
-              border: '0.2rem solid var(--black-color)',
-            }}
+          <PictureButton
             key={v}
             ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
+            $imgUrl={v}
             $isMedium={true}
             onClick={(e) => onClickButton(v, e.target as HTMLButtonElement)}
           />
