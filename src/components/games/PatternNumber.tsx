@@ -22,7 +22,7 @@ const NumberContainer = styled.div`
   gap: 3rem;
   font-family: Pretendard-Bold;
   @media screen and (max-width: 767px) {
-    gap: 2rem;
+    gap: 1rem;
     flex-wrap: wrap;
   }
 `;
