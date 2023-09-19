@@ -21,6 +21,7 @@ import CompassDirection from '../pages/games/CompassDirection.tsx';
 import PictureMatch from '../pages/games/PictureMatch.tsx';
 import PatternPicture from '../pages/games/PatternPicture.tsx';
 import ChangeCalculate from '../pages/games/ChangeCalculate.tsx';
+import WordMemory from '../pages/games/WordMemory.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -309,6 +310,19 @@ export default function GameRouter({
         path="/changeCalculate"
         element={
           <ChangeCalculate
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/wordMemory"
+        element={
+          <WordMemory
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}

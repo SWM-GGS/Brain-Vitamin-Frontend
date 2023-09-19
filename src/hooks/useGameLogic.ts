@@ -15,6 +15,7 @@ export const useGameLogic = <T>(
   showCorrectAnswer?: boolean,
   randomPositionCount?: number,
   isButtonBorderBlack?: boolean,
+  isShowNext?: boolean,
 ) => {
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
@@ -90,13 +91,17 @@ export const useGameLogic = <T>(
 
   useEffect(() => {
     if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
+      if (isShowNext) {
+        onGameEnd();
+      } else {
+        endTimeRef.current = new Date();
+        if (startTimeRef.current && endTimeRef.current) {
+          duration.current =
+            (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
+            1000;
+        }
+        checkAnswer();
       }
-      checkAnswer();
     }
   }, [isNextButtonClicked]);
 
