@@ -68,7 +68,7 @@ function CompassDirection({
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                 }}
-                $isLong={false}
+                $isSmall={true}
                 ref={(el) =>
                   (buttonRefs.current[buttonRefs.current.length] = el)
                 }
