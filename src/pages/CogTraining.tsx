@@ -42,6 +42,7 @@ export type CogTrainingProps = {
   trainingName: string;
   pathUri: string;
   discountPercent?: number;
+  showNext?: number;
 };
 function CogTraining() {
   const [gameData, setGameData] = useState<CogTrainingProps[]>([]);
@@ -57,6 +58,27 @@ function CogTraining() {
   const [answerState, setAnswerState] = useState('');
   const [showDescription, setShowDescription] = useState(false);
 
+  const getNewData = (data: CogTrainingProps[]) => {
+    const newData = [...data];
+
+    for (let i = 0; i < newData.length; i++) {
+      const currentItem = newData[i];
+
+      if (currentItem.showNext !== undefined) {
+        const showNextValue = currentItem.showNext;
+        const newObject = { ...currentItem };
+
+        delete newObject.showNext;
+        if (i + showNextValue + 1 > newData.length) {
+          newData.splice(newData.length, 0, newObject);
+        } else {
+          newData.splice(i + showNextValue + 1, 0, newObject);
+        }
+      }
+    }
+    return newData;
+  };
+
   useEffect(() => {
     const getGameData = async () => {
       try {
@@ -65,7 +87,7 @@ function CogTraining() {
           { headers: { authorization: `Bearer ${accessToken}` } },
         );
         console.log(data);
-        setGameData(data.result);
+        setGameData(getNewData(data.result));
         setShowLayerPopup(true);
       } catch (error) {
         console.error(error);
