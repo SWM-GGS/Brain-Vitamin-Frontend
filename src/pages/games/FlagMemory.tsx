@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import GameQuestion from '../../components/common/GameQuestion';
 import { GameProps } from '../../routes/gameRouter';
 import { useGameLogic } from '../../hooks/useGameLogic';
-import Letter from '../../components/games/Synonym';
 import { Container } from '../../components/games/SameColor';
 import { NumberContainer } from '../../components/games/PatternNumber';
-import { Button } from '../../components/common/GameButton';
+import { PictureButton } from '../../components/common/GameButton';
 import { getRandomFloat } from '../../utils/random';
-import Board from '../../components/games/WordMemory';
+import { Board, FlagImage } from '../../components/games/FlagMemory';
 
-function WordMemory({
+function FlagMemory({
   gameData,
   onGameEnd,
   saveGameResult,
@@ -18,7 +17,7 @@ function WordMemory({
   answerState,
 }: GameProps) {
   type Props = {
-    contents: string;
+    imgUrl: string;
     answer: boolean;
   };
   const problemPool: Props[] = gameData.problemPool;
@@ -27,7 +26,7 @@ function WordMemory({
   const showNext = gameData.showNext;
   const isShowNext = showNext !== undefined;
   const [words, setWords] = useState<string[]>([]);
-  const answers = problemPool.filter((v) => v.answer).map((v) => v.contents);
+  const answers = problemPool.filter((v) => v.answer).map((v) => v.imgUrl);
   const { setAnswers, onClickButton, buttonRefs } = useGameLogic<string>(
     {
       gameData,
@@ -40,7 +39,7 @@ function WordMemory({
     undefined,
     undefined,
     undefined,
-    undefined,
+    true,
     isShowNext,
     true,
   );
@@ -51,7 +50,7 @@ function WordMemory({
     } else {
       setAnswers(answers);
       setCandidates(
-        problemPool.map((v) => v.contents).sort(() => getRandomFloat() - 0.5),
+        problemPool.map((v) => v.imgUrl).sort(() => getRandomFloat() - 0.5),
       );
     }
   }, []);
@@ -61,26 +60,26 @@ function WordMemory({
       <GameQuestion
         text={
           isShowNext
-            ? `제시하는 단어를 최대한 기억하세요`
-            : `앞에서 제시된 단어 ${answers.length}개를 찾으세요`
+            ? `제시하는 국기를 최대한 기억하세요`
+            : `앞에서 제시된 국기 ${answers.length}개를 찾으세요`
         }
       />
       {isShowNext ? (
         <NumberContainer>
           {words.map((v) => (
-            <Letter key={v}>{v}</Letter>
+            <FlagImage key={v} alt="" src={v} />
           ))}
         </NumberContainer>
       ) : (
         <Board $difficulty={difficulty}>
           {candidates.map((v) => (
-            <Button
+            <PictureButton
               key={v}
               ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
               onClick={(e) => onClickButton(v, e.target as HTMLButtonElement)}
-              $isLongMobileSmall={true}>
-              {v}
-            </Button>
+              $imgUrl={v}
+              $isMedium={true}
+            />
           ))}
         </Board>
       )}
@@ -88,4 +87,4 @@ function WordMemory({
   );
 }
 
-export default WordMemory;
+export default FlagMemory;
