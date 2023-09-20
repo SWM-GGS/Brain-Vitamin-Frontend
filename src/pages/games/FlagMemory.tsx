@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GameQuestion from '../../components/common/GameQuestion';
 import { GameProps } from '../../routes/gameRouter';
 import { useGameLogic } from '../../hooks/useGameLogic';
@@ -26,27 +26,8 @@ function FlagMemory({
   const showNext = gameData.showNext;
   const isShowNext = showNext !== undefined;
   const [words, setWords] = useState<string[]>([]);
-  const answerImgUrls = problemPool
-    .filter((v) => v.answer)
-    .map((v) => v.imgUrl);
-  const clickedTargets = useRef<string[]>([]);
-  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
-  const isCorrect = () => {
-    if (clickedTargets.current.length !== answerImgUrls.length) {
-      return false;
-    }
-    const sortedClickedTargets = [...clickedTargets.current].sort((a, b) =>
-      a > b ? 1 : -1,
-    );
-    const sortedAnswerWords = [...answerImgUrls].sort((a, b) =>
-      a > b ? 1 : -1,
-    );
-
-    return (
-      JSON.stringify(sortedClickedTargets) === JSON.stringify(sortedAnswerWords)
-    );
-  };
-  useGameLogic<string>(
+  const answers = problemPool.filter((v) => v.answer).map((v) => v.imgUrl);
+  const { setAnswers, onClickButton, buttonRefs } = useGameLogic<string>(
     {
       gameData,
       onGameEnd,
@@ -55,48 +36,24 @@ function FlagMemory({
       setAnswerState,
       answerState,
     },
-    isCorrect(),
     undefined,
     undefined,
     undefined,
+    true,
     isShowNext,
+    true,
   );
 
   useEffect(() => {
     if (isShowNext) {
-      setWords(answerImgUrls);
+      setWords(answers);
     } else {
+      setAnswers(answers);
       setCandidates(
         problemPool.map((v) => v.imgUrl).sort(() => getRandomFloat() - 0.5),
       );
     }
   }, []);
-
-  const onClickButton = (target: string, el: HTMLElement) => {
-    if (clickedTargets.current.includes(target)) {
-      el.style.backgroundColor = 'var(--button-bg-color)';
-      el.style.border = '0.2rem solid var(--black-color)';
-      el.style.color = 'white';
-      clickedTargets.current = clickedTargets.current.filter(
-        (v) => v !== target,
-      );
-      return;
-    }
-    if (clickedTargets.current.length === answerImgUrls.length) {
-      buttonRefs.current.forEach((el) => {
-        if (el) {
-          el.style.backgroundColor = 'var(--button-bg-color)';
-          el.style.border = '0.2rem solid var(--black-color)';
-          el.style.color = 'white';
-        }
-      });
-      clickedTargets.current = [];
-    }
-    el.style.backgroundColor = 'var(--main-bg-color)';
-    el.style.border = '0.2rem solid var(--main-color)';
-    el.style.color = 'var(--main-color)';
-    clickedTargets.current.push(target);
-  };
 
   return (
     <Container>
@@ -104,7 +61,7 @@ function FlagMemory({
         text={
           isShowNext
             ? `제시하는 국기를 최대한 기억하세요`
-            : `앞에서 제시된 국기 ${answerImgUrls.length}개를 찾으세요`
+            : `앞에서 제시된 국기 ${answers.length}개를 찾으세요`
         }
       />
       {isShowNext ? (

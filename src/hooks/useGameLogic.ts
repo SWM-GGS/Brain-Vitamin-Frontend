@@ -16,13 +16,16 @@ export const useGameLogic = <T>(
   randomPositionCount?: number,
   isButtonBorderBlack?: boolean,
   isShowNext?: boolean,
+  isClickedButtonArray?: boolean,
 ) => {
   const startTimeRef = useRef<Date | null>(new Date());
   const endTimeRef = useRef<Date | null>(null);
   const duration = useRef(0);
   const clickedTarget = useRef<T | null>(null);
+  const clickedTargets = useRef<T[]>([]);
   const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
   const [answer, setAnswer] = useState<T>();
+  const [answers, setAnswers] = useState<T[]>([]);
   const [showAnswer, setShowAnswer] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -73,8 +76,29 @@ export const useGameLogic = <T>(
     });
   };
 
+  const isCorrectAnswerArray = () => {
+    if (clickedTargets.current.length !== answers.length) {
+      return false;
+    }
+    const sortedClickedTargets = [...clickedTargets.current].sort((a, b) =>
+      a > b ? 1 : -1,
+    );
+    const sortedAnswers = [...answers].sort((a, b) => (a > b ? 1 : -1));
+
+    return (
+      JSON.stringify(sortedClickedTargets) === JSON.stringify(sortedAnswers)
+    );
+  };
+
+  const isCorrectAnswer = () => {
+    if (isClickedButtonArray) {
+      return isCorrectAnswerArray();
+    }
+    return clickedTarget.current === answer;
+  };
+
   const checkAnswer = () => {
-    if (isCorrect || clickedTarget.current === answer) {
+    if (isCorrect || isCorrectAnswer()) {
       // 정답
       handleCorrect();
     } else {
@@ -121,7 +145,31 @@ export const useGameLogic = <T>(
     el.style.color = 'var(--main-color)';
   };
 
+  const onClickButtonArray = (target: T, el: HTMLElement) => {
+    if (clickedTargets.current.includes(target)) {
+      initButtonStyle(el);
+      clickedTargets.current = clickedTargets.current.filter(
+        (v) => v !== target,
+      );
+      return;
+    }
+    if (clickedTargets.current.length === answers.length) {
+      buttonRefs.current.forEach((el) => {
+        if (el) {
+          initButtonStyle(el);
+        }
+      });
+      clickedTargets.current = [];
+    }
+    activateButtonStyle(el);
+    clickedTargets.current.push(target);
+  };
+
   const onClickButton = (target: T, el: HTMLElement) => {
+    if (isClickedButtonArray) {
+      onClickButtonArray(target, el);
+      return;
+    }
     if (clickedTarget.current === target) {
       initButtonStyle(el);
       clickedTarget.current = null;
@@ -189,6 +237,7 @@ export const useGameLogic = <T>(
   return {
     onClickButton,
     setAnswer,
+    setAnswers,
     buttonRefs,
     handleCorrect,
     showAnswer,
