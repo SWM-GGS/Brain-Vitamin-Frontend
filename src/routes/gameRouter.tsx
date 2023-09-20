@@ -22,6 +22,7 @@ import PictureMatch from '../pages/games/PictureMatch.tsx';
 import PatternPicture from '../pages/games/PatternPicture.tsx';
 import ChangeCalculate from '../pages/games/ChangeCalculate.tsx';
 import WordMemory from '../pages/games/WordMemory.tsx';
+import FlagMemory from '../pages/games/FlagMemory.tsx';
 
 export type GameProps = {
   gameData: CogTrainingProps;
@@ -323,6 +324,19 @@ export default function GameRouter({
         path="/wordMemory"
         element={
           <WordMemory
+            gameData={gameData}
+            onGameEnd={onGameEnd}
+            saveGameResult={saveGameResult}
+            isNextButtonClicked={isNextButtonClicked}
+            setAnswerState={setAnswerState}
+            answerState={answerState}
+          />
+        }
+      />
+      <Route
+        path="/flagMemory"
+        element={
+          <FlagMemory
             gameData={gameData}
             onGameEnd={onGameEnd}
             saveGameResult={saveGameResult}
