@@ -146,7 +146,7 @@ export const useConnectLineMatcher = (
     updatedLines[index] = {
       ...updatedLines[index],
       endCoord,
-      endItem: endItem === undefined ? null : endItem,
+      endItem: endItem ?? null,
     };
     setLines(updatedLines);
   };
@@ -214,10 +214,23 @@ export const useConnectLineMatcher = (
     updateLine(id, { x: clientX, y: clientY });
   };
 
+  const isInBox = (box: CoordInfo, x: number, y: number) => {
+    return box.left < x && x < box.right && box.top < y && y < box.bottom;
+  };
+
+  const isSameSourceAndTarget = (str1: string, str2: string) => {
+    return (
+      (str1 === 'source' && str2 === 'source') ||
+      (str1 === 'target' && str2 === 'target')
+    );
+  };
+
   const dragEndHandler = (
     e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
   ) => {
     let [clientX, clientY] = [0, 0];
+    const id = (e.target as HTMLElement).id;
+    const [str] = (e.target as HTMLElement).id.split('-');
 
     if ('touches' in e && e.changedTouches.length > 0) {
       const lastTouch = e.changedTouches[e.changedTouches.length - 1];
@@ -229,24 +242,12 @@ export const useConnectLineMatcher = (
       clientY = e.clientY;
     }
 
-    const id = (e.target as HTMLElement).id;
-    const [str] = (e.target as HTMLElement).id.split('-');
-
     for (const box of boxs) {
-      const isInBox =
-        box.left < clientX &&
-        clientX < box.right &&
-        box.top < clientY &&
-        clientY < box.bottom;
-
-      if (isInBox) {
+      if (isInBox(box, clientX, clientY)) {
         const boxId = box.id;
         const [boxStr] = boxId.split('-');
-        const isSameSourceAndTarget =
-          (str === 'source' && boxStr === 'source') ||
-          (str === 'target' && boxStr === 'target');
 
-        if (!isSameSourceAndTarget) {
+        if (!isSameSourceAndTarget(str, boxStr)) {
           const endCoord = getDotCoord(boxId);
 
           if (endCoord) {

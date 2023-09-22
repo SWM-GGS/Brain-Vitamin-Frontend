@@ -139,10 +139,10 @@ function MatchContainer({
   } = useConnectLineMatcher(items, setIsCorrectMatch);
 
   return (
-    <StyledMatchContainer $isLayoutUpAndDown={isLayoutUpAndDown || false}>
+    <StyledMatchContainer $isLayoutUpAndDown={isLayoutUpAndDown ?? false}>
       <SourceContainer
         $itemCount={itemCount}
-        $isLayoutUpAndDown={isLayoutUpAndDown || false}>
+        $isLayoutUpAndDown={isLayoutUpAndDown ?? false}>
         {sources.map((v) => (
           <ItemContainer
             key={v.id}
@@ -156,7 +156,7 @@ function MatchContainer({
             onTouchStart={dragStartHandler}
             onTouchMove={dragHandler}
             onTouchEnd={dragEndHandler}
-            $isLayoutUpAndDown={isLayoutUpAndDown || false}>
+            $isLayoutUpAndDown={isLayoutUpAndDown ?? false}>
             <FlagImage
               style={{ pointerEvents: 'none' }}
               alt=""
@@ -174,7 +174,7 @@ function MatchContainer({
       </SourceContainer>
       <TargetContainer
         $itemCount={itemCount}
-        $isLayoutUpAndDown={isLayoutUpAndDown || false}>
+        $isLayoutUpAndDown={isLayoutUpAndDown ?? false}>
         {targets.map((v) => (
           <ItemContainer
             key={v.id}
@@ -188,7 +188,7 @@ function MatchContainer({
             onTouchStart={dragStartHandler}
             onTouchMove={dragHandler}
             onTouchEnd={dragEndHandler}
-            $isLayoutUpAndDown={isLayoutUpAndDown || false}>
+            $isLayoutUpAndDown={isLayoutUpAndDown ?? false}>
             <Dot
               style={{ pointerEvents: 'none' }}
               ref={(el) =>
