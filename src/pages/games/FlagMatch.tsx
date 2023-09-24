@@ -2,12 +2,9 @@ import GameQuestion from '../../components/common/GameQuestion';
 import { GameProps } from '../../routes/gameRouter';
 import { useGameLogic } from '../../hooks/useGameLogic';
 import { NumberContainer } from '../../components/games/PatternNumber';
-import {
-  Container,
-  PresentedFlag,
-  MatchContainer,
-} from '../../components/games/FlagMatch';
-import { useState } from 'react';
+import { Container, PresentedFlag } from '../../components/games/FlagMatch';
+import { useEffect, useState } from 'react';
+import { ConnectLine, ItemsProps } from 'react-connect-line';
 
 function FlagMatch({
   gameData,
@@ -25,9 +22,7 @@ function FlagMatch({
   const showNext = gameData.showNext;
   const isShowNext = showNext !== undefined;
   const isMobile = window.innerWidth <= 767;
-  const items = problemPool.map((v) => {
-    return { source: { imageURL: v.imgUrl }, target: { text: v.contents } };
-  });
+  const [items, setItems] = useState<ItemsProps[]>([]);
   const [isCorrectMatch, setIsCorrectMatch] = useState(false);
   useGameLogic<string>(
     {
@@ -44,6 +39,14 @@ function FlagMatch({
     undefined,
     isShowNext,
   );
+
+  useEffect(() => {
+    const items = problemPool.map((v) => {
+      return { source: { imageURL: v.imgUrl }, target: { text: v.contents } };
+    });
+
+    setItems(items);
+  }, []);
 
   return (
     <Container>
@@ -65,10 +68,12 @@ function FlagMatch({
           ))}
         </NumberContainer>
       ) : (
-        <MatchContainer
+        <ConnectLine
           items={items}
           isLayoutUpAndDown={!isMobile}
           setIsCorrectMatch={setIsCorrectMatch}
+          dotColor="var(--main-color)"
+          lineColor="var(--main-color)"
         />
       )}
     </Container>
