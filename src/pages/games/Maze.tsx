@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Container, MazeBox, Target } from '../../components/games/Maze';
 import { GameProps } from '../../routes/gameRouter';
 import { getRandomFloat } from '../../utils/random';
+import { useGameLogic } from '../../hooks/useGameLogic';
 
 export default function Maze({
   gameData,
@@ -22,68 +23,25 @@ export default function Maze({
   const difficulty = gameData.difficulty;
   const clickedTarget = useRef(-1);
   const targetRefs = useRef<HTMLDivElement[] | null[]>([]);
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-
-  const checkAnswer = async () => {
-    if (
-      clickedTarget.current !== -1 &&
-      problemPool[clickedTarget.current].answer
-    ) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
+  const isCorrect = () => {
+    return (
+      clickedTarget.current !== -1 && problemPool[clickedTarget.current]?.answer
+    );
   };
+  const { showAnswer } = useGameLogic<number>(
+    {
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    },
+    isCorrect(),
+    true,
+  );
 
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        setShowAnswer(true);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setShowAnswer(false);
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickTarget = (el: HTMLElement, index: number) => {
+  const onClickTarget = (index: number, el: HTMLElement) => {
     if (clickedTarget.current === index) {
       el.style.border = 'none';
       clickedTarget.current = -1;
@@ -116,7 +74,7 @@ export default function Maze({
                 '#' + Math.floor(getRandomFloat() * 0xffffff).toString(16)
               }
               $difficulty={difficulty}
-              onClick={(e) => onClickTarget(e.target as HTMLElement, index)}
+              onClick={(e) => onClickTarget(index, e.target as HTMLElement)}
             />
           ))}
         </MazeBox>

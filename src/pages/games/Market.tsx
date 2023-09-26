@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Wrapper,
   Coupon,
@@ -16,6 +16,7 @@ import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
 import { getRandomFloat } from '../../utils/random.ts';
+import { useGameLogic } from '../../hooks/useGameLogic.ts';
 
 export default function Market({
   gameData,
@@ -33,16 +34,22 @@ export default function Market({
   };
   const problemPool: Props[] = gameData.problemPool;
   const discountPercent = gameData.discountPercent;
-  const [answer, setAnswer] = useState(0);
   const [candidate, setCandidate] = useState<number[]>([]);
   const candidateCnt = 5;
   const difference = 500;
-  const buttonRefs = useRef<HTMLButtonElement[] | null[]>([]);
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
-  let clickedPrice = useRef(0);
-  const [showAnswer, setShowAnswer] = useState(false);
+  const { onClickButton, setAnswer, buttonRefs, showAnswer, answer } =
+    useGameLogic<number>(
+      {
+        gameData,
+        onGameEnd,
+        saveGameResult,
+        isNextButtonClicked,
+        setAnswerState,
+        answerState,
+      },
+      undefined,
+      true,
+    );
 
   useEffect(() => {
     let calculatedAnswer = problemPool.reduce(
@@ -69,81 +76,6 @@ export default function Market({
     setCandidate(calculatedCandidate);
     // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
   }, []);
-
-  const checkAnswer = async () => {
-    if (clickedPrice.current === answer) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        setShowAnswer(true);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setShowAnswer(false);
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickPrice = (price: number, el: HTMLElement) => {
-    if (clickedPrice.current === price) {
-      el.style.background = '#c6c6c6';
-      el.style.border = '0.2rem solid var(--gray-bg-color)';
-      el.style.color = 'var(--black-color)';
-      clickedPrice.current = 0;
-    } else {
-      for (let buttonRef of buttonRefs.current) {
-        if (buttonRef?.style.background === 'var(--main-bg-color)') {
-          buttonRef.style.background = '#c6c6c6';
-          buttonRef.style.border = '0.2rem solid var(--gray-bg-color)';
-          buttonRef.style.color = 'var(--black-color)';
-          break;
-        }
-      }
-      el.style.background = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
-      clickedPrice.current = price;
-    }
-  };
 
   return (
     <>
@@ -180,7 +112,7 @@ export default function Market({
           <Button
             ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
             key={price}
-            onClick={(e) => onClickPrice(price, e.target as HTMLElement)}>
+            onClick={(e) => onClickButton(price, e.target as HTMLElement)}>
             {price
               ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
               : null}

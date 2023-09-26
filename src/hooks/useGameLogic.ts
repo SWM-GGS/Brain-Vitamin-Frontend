@@ -237,12 +237,15 @@ export const useGameLogic = <T>(
   return {
     onClickButton,
     setAnswer,
+    answer,
     setAnswers,
+    answers,
     buttonRefs,
     handleCorrect,
     showAnswer,
     containerRef,
     topRef,
     randomPositions,
+    checkAnswer,
   };
 };

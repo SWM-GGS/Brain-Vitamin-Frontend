@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Container,
   Text,
@@ -11,6 +11,7 @@ import { GameProps } from '../../routes/gameRouter.tsx';
 import { AnswerFeedback } from '../../components/common/AnswerFeedback.tsx';
 import { styled } from 'styled-components';
 import { getRandomFloat } from '../../utils/random.ts';
+import { useGameLogic } from '../../hooks/useGameLogic.ts';
 
 /**
  * 난도별 겹쳐진 숫자의 개수 상이
@@ -26,13 +27,24 @@ export default function Overlapping({
   setAnswerState,
   answerState,
 }: GameProps) {
-  let difficulty = gameData.difficulty;
-  const [answer, setAnswer] = useState<number[]>([]);
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
-  let clickedNums = useRef<number[]>([]);
-  const [showAnswer, setShowAnswer] = useState(false);
+  const difficulty = gameData.difficulty;
+  const { onClickButton, setAnswers, buttonRefs, showAnswer, answers } =
+    useGameLogic<number>(
+      {
+        gameData,
+        onGameEnd,
+        saveGameResult,
+        isNextButtonClicked,
+        setAnswerState,
+        answerState,
+      },
+      undefined,
+      true,
+      undefined,
+      undefined,
+      undefined,
+      true,
+    );
 
   useEffect(() => {
     let newAnswer: number[] = [];
@@ -40,94 +52,17 @@ export default function Overlapping({
       newAnswer.push(Math.floor(getRandomFloat() * 10));
       newAnswer = [...new Set(newAnswer)];
     }
-    setAnswer(newAnswer);
+    setAnswers(newAnswer);
   }, []);
-  console.log(answer);
-
-  const checkAnswer = async () => {
-    const answerSet = new Set(answer);
-    const clickedNumSet = new Set(clickedNums.current);
-    if (
-      clickedNums.current.length === answer.length &&
-      [...answerSet].every((num) => clickedNumSet.has(num))
-    ) {
-      // 정답
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      setAnswerState('correct');
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    } else {
-      // 오답
-      setAnswerState('incorrect');
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        setShowAnswer(true);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setShowAnswer(false);
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
-
-  const onClickNum = (num: number, el: HTMLButtonElement) => {
-    if (clickedNums.current.includes(num)) {
-      el.style.background = '#c6c6c6';
-      el.style.border = '0.2rem solid var(--gray-bg-color)';
-      el.style.color = 'var(--black-color)';
-      clickedNums.current = clickedNums.current.filter((v) => v !== num);
-    } else {
-      if (clickedNums.current.length === answer.length) {
-        alert(`${answer.length}개의 정답만 선택해주세요.`);
-        return;
-      }
-      el.style.background = 'var(--main-bg-color)';
-      el.style.border = '0.2rem solid var(--main-color)';
-      el.style.color = 'var(--main-color)';
-      clickedNums.current.push(num);
-    }
-  };
 
   return (
     <>
       <Container>
         <Text>
-          겹쳐진 {answer.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?
+          겹쳐진 {answers.length}개의 숫자를 보고 있습니다. 어떤 숫자인가요?
         </Text>
         <NumWrapper>
-          {answer.map((num) => (
+          {answers.map((num) => (
             <Num
               key={num}
               $top={50 + Math.floor(getRandomFloat() * 8)}
@@ -140,7 +75,8 @@ export default function Overlapping({
           {Array.from({ length: 10 }, (_, i) => i).map((v) => (
             <NumBtn
               key={v}
-              onClick={(e) => onClickNum(v, e.target as HTMLButtonElement)}>
+              ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
+              onClick={(e) => onClickButton(v, e.target as HTMLButtonElement)}>
               {v}
             </NumBtn>
           ))}
@@ -151,8 +87,8 @@ export default function Overlapping({
           <ShowAnswer>
             <p>
               정답은 [
-              {answer.map((v, i) => {
-                if (i === answer.length - 1) return v;
+              {answers.map((v, i) => {
+                if (i === answers.length - 1) return v;
                 return `${v}, `;
               })}
               ]입니다.

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   Container,
   PaperWrapper,
@@ -10,6 +10,7 @@ import {
 } from '../../components/games/Coloring';
 import { GameProps } from '../../routes/gameRouter.tsx';
 import { getRandomFloat } from '../../utils/random.ts';
+import { useGameLogic } from '../../hooks/useGameLogic.ts';
 
 /**
  * 난도별 색칠해야 할 칸의 개수 상이
@@ -27,28 +28,18 @@ export default function Coloring({
 }: GameProps) {
   const [nowColor, setNowColor] = useState('red');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
-  let difficulty = gameData.difficulty;
-  let totalCellCnt = 18;
-  let cellCnt;
-  switch (difficulty) {
-    case 1:
-      cellCnt = 8;
-      break;
-    case 2:
-      cellCnt = 13;
-      break;
-    case 3:
-      cellCnt = 18;
-  }
+  const difficulty = gameData.difficulty;
+  const totalCellCnt = 18;
+  const cellCnt = 8 + (difficulty - 1) * 5;
   const COLOR = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white'];
   type colorsProps = {
     idx: number;
     color: string;
   };
-  let colors: colorsProps[] = [];
+  const colors: colorsProps[] = [];
   if (cellCnt) {
     for (let i = 0; i < cellCnt; i++) {
-      let randomIndex = Math.floor(getRandomFloat() * (COLOR.length - 1));
+      const randomIndex = Math.floor(getRandomFloat() * (COLOR.length - 1));
       colors.push({ idx: colors.length, color: COLOR[randomIndex] });
     }
     for (let i = 0; i < totalCellCnt - cellCnt; i++) {
@@ -59,9 +50,26 @@ export default function Coloring({
     () => [...colors].sort(() => 0.5 - getRandomFloat()),
     [],
   );
-  const startTimeRef = useRef<Date | null>(new Date());
-  const endTimeRef = useRef<Date | null>(null);
-  let duration = useRef(0);
+  const isCorrect = () => {
+    for (let i = 0; i < cellRefs.current.length; i++) {
+      let el = cellRefs.current[i];
+      if (el?.getAttribute('color') !== answer[i].color) {
+        return false;
+      }
+    }
+    return true;
+  };
+  useGameLogic<number>(
+    {
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    },
+    isCorrect(),
+  );
 
   // 흰색인 것은 초기에 색칠되어 있도록 함
   answer.forEach((v, i) => {
@@ -69,60 +77,6 @@ export default function Coloring({
       cellRefs.current[i]?.setAttribute('color', 'white');
     }
   });
-
-  const checkAnswer = async () => {
-    let isIncorrect = false;
-    for (let i = 0; i < cellRefs.current.length; i++) {
-      let el = cellRefs.current[i];
-      if (el?.getAttribute('color') !== answer[i].color) {
-        // 오답
-        isIncorrect = true;
-        break;
-      }
-    }
-    if (isIncorrect) {
-      setAnswerState('incorrect');
-    } else {
-      // 정답
-      setAnswerState('correct');
-      saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          setAnswerState('');
-          resolve();
-        }, 2000);
-      });
-      onGameEnd();
-    }
-  };
-
-  useEffect(() => {
-    if (answerState === 'incorrect') {
-      const handleIncorrect = async () => {
-        saveGameResult(gameData.problemId, duration.current, 'FAIL', 0);
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setAnswerState('');
-            resolve();
-          }, 2000);
-        });
-        onGameEnd();
-      };
-      handleIncorrect();
-    }
-  }, [answerState]);
-
-  useEffect(() => {
-    if (isNextButtonClicked) {
-      endTimeRef.current = new Date();
-      if (startTimeRef.current && endTimeRef.current) {
-        duration.current =
-          (endTimeRef.current.getTime() - startTimeRef.current.getTime()) /
-          1000;
-      }
-      checkAnswer();
-    }
-  }, [isNextButtonClicked]);
 
   const changeCellColor = (el: HTMLElement) => {
     el.setAttribute('color', nowColor);
