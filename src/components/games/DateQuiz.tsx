@@ -1,91 +1,4 @@
-import { useEffect } from 'react';
 import styled from 'styled-components';
-import { CogTrainingProps, GameResultProps } from '../../pages/CogTraining';
-import { AnswerFeedback } from '../common/AnswerFeedback';
-import { useGameLogic } from '../../hooks/useGameLogic';
-
-const DAY = ['일', '월', '화', '수', '목', '금', '토'];
-
-type BodyProps = {
-  totalDate: number[];
-  today: number;
-  gameData: CogTrainingProps;
-  onGameEnd: (lastGameResult?: GameResultProps) => void;
-  saveGameResult: (
-    problemId: number,
-    duration: number,
-    result: string,
-    score: number,
-  ) => void;
-  isNextButtonClicked: boolean;
-  setAnswerState: React.Dispatch<React.SetStateAction<string>>;
-  answerState: string;
-};
-
-const Body = ({
-  totalDate,
-  today,
-  gameData,
-  onGameEnd,
-  saveGameResult,
-  isNextButtonClicked,
-  setAnswerState,
-  answerState,
-}: BodyProps) => {
-  const { onClickButton, setAnswer, buttonRefs, showAnswer } =
-    useGameLogic<number>(
-      {
-        gameData,
-        onGameEnd,
-        saveGameResult,
-        isNextButtonClicked,
-        setAnswerState,
-        answerState,
-      },
-      false,
-      true,
-    );
-
-  useEffect(() => {
-    setAnswer(today);
-  }, []);
-
-  const getWeek = (date: Date) => {
-    const currentDate = date.getDate();
-    const firstDay = new Date(date.setDate(1)).getDay();
-
-    return Math.ceil((currentDate + firstDay) / 7);
-  };
-
-  const week = getWeek(new Date());
-
-  return (
-    <>
-      <Days>
-        {DAY.map((item) => (
-          <Day key={item}>{item}</Day>
-        ))}
-      </Days>
-      <Wrapper>
-        {totalDate.slice((week - 1) * 7, week * 7).map((date) => (
-          <Form
-            ref={(el) => (buttonRefs.current[buttonRefs.current.length] = el)}
-            key={date}
-            onClick={(e) => onClickButton(date, e.target as HTMLElement)}>
-            {date}일
-          </Form>
-        ))}
-      </Wrapper>
-      {showAnswer && (
-        <AnswerFeedback>
-          <ShowAnswer>
-            <p>오늘의 날짜는 [{today}일]입니다.</p>
-          </ShowAnswer>
-        </AnswerFeedback>
-      )}
-    </>
-  );
-};
 
 const Container = styled.div`
   display: flex;
@@ -180,4 +93,4 @@ const ShowAnswer = styled.div`
   }
 `;
 
-export { Container, Desc, Body };
+export { Container, Desc, Days, Day, Wrapper, Form, ShowAnswer };
