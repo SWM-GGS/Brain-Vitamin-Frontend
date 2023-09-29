@@ -44,8 +44,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.VITE_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp \
-            --recursive \
+          aws s3 sync \
             --region ap-northeast-2 \
             dist s3://brain-vitamin-web-front-deploy \
             --delete
