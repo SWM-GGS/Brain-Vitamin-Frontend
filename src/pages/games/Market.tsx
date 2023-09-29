@@ -35,8 +35,6 @@ export default function Market({
   const problemPool: Props[] = gameData.problemPool;
   const discountPercent = gameData.discountPercent;
   const [candidate, setCandidate] = useState<number[]>([]);
-  const candidateCnt = 5;
-  const difference = 500;
   const { onClickButton, setAnswer, buttonRefs, showAnswer, answer } =
     useGameLogic<number>(
       {
@@ -52,27 +50,37 @@ export default function Market({
     );
 
   useEffect(() => {
-    let calculatedAnswer = problemPool.reduce(
-      (p, c) => p + c.price * c.count,
-      0,
-    );
-    if (discountPercent) {
-      calculatedAnswer = calculatedAnswer * (1 - discountPercent / 100);
-      calculatedAnswer = Math.round(calculatedAnswer);
-    }
+    const getAnswer = () => {
+      let answer = problemPool.reduce((p, c) => p + c.price * c.count, 0);
+      if (discountPercent) {
+        answer = answer * (1 - discountPercent / 100);
+        answer = Math.round(answer);
+      }
+      return answer;
+    };
+
+    const calculatedAnswer = getAnswer();
     setAnswer(calculatedAnswer);
 
-    let calculatedCandidate: number[] = [calculatedAnswer];
-    while (calculatedCandidate.length < candidateCnt) {
-      const price =
-        calculatedAnswer +
-        (getRandomFloat() > 0.5 ? 1 : -1) *
-          Math.floor(getRandomFloat() * 5) *
-          difference;
-      if (price > 0 && !calculatedCandidate.includes(price))
-        calculatedCandidate.push(price);
-    }
-    calculatedCandidate.sort(() => getRandomFloat() - 0.5);
+    const getCandidate = (
+      answer: number,
+      candidateCnt: number,
+      difference: number,
+    ) => {
+      let candidate: number[] = [answer];
+      while (candidate.length < candidateCnt) {
+        const price =
+          answer +
+          (getRandomFloat() > 0.5 ? 1 : -1) *
+            Math.floor(getRandomFloat() * 5) *
+            difference;
+        if (price > 0 && !candidate.includes(price)) candidate.push(price);
+      }
+      candidate.sort(() => getRandomFloat() - 0.5);
+      return candidate;
+    };
+
+    const calculatedCandidate = getCandidate(calculatedAnswer, 5, 500);
     setCandidate(calculatedCandidate);
     // FIX: deps에 gameData 넣으면 다음 게임으로 넘어갔을 때에도 계속 렌더링되는 문제
   }, []);
