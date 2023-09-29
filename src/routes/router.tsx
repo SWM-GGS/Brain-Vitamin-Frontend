@@ -21,8 +21,6 @@ import FontSizeEdit from '../pages/FontSizeEdit.tsx';
 import PhoneNumberEdit from '../pages/PhoneNumberEdit.tsx';
 import Profile from '../pages/Profile.tsx';
 import FamilyPostRead from '../pages/FamilyPostRead.tsx';
-import NearTime from '../pages/games/NearTime.tsx';
-import CompassDirection from '../pages/games/CompassDirection.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -63,8 +61,6 @@ export default function Router() {
       <Route path="/phoneNumberEdit" element={<PhoneNumberEdit />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/familyPostRead/:postId" element={<FamilyPostRead />} />
-      <Route path="/nearTime" element={<NearTime />} />
-      <Route path="/compassDirection" element={<CompassDirection />} />
     </Routes>
   );
 }
