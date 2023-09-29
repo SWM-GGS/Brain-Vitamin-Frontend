@@ -7,10 +7,22 @@ on:
  
 jobs:
   deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@master
+
+      - name: Generate Environment Variables File
+        run: |
+          echo "VITE_API_URL=$VITE_API_URL" >> .env
+          echo "VITE_AWS_ACCESS_KEY_ID=$VITE_AWS_ACCESS_KEY_ID" >> .env
+          echo "VITE_AWS_SECRET_ACCESS_KEY=$VITE_AWS_SECRET_ACCESS_KEY" >> .env
+          echo "VITE_GOOGLE_ANALYTICS=$VITE_GOOGLE_ANALYTICS" >> .env
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_AWS_ACCESS_KEY_ID: ${{ secrets.VITE_AWS_ACCESS_KEY_ID }}
+          VITE_AWS_SECRET_ACCESS_KEY: ${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}
+          VITE_GOOGLE_ANALYTICS: ${{ secrets.VITE_GOOGLE_ANALYTICS }}
  
       - name: Cache node modules
         uses: actions/cache@v1
@@ -29,8 +41,8 @@ jobs:
  
       - name: Deploy
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.VITE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 cp \
             --recursive \
