@@ -46,320 +46,53 @@ export default function GameRouter({
   setAnswerState,
   answerState,
 }: GameProps) {
+  const gameProps = {
+    gameData,
+    onGameEnd,
+    saveGameResult,
+    isNextButtonClicked,
+    setAnswerState,
+    answerState,
+  };
+
   return (
     <Routes>
-      <Route
-        path="/cardMatch"
-        element={
-          <CardMatch
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/wordPuzzle"
-        element={
-          <WordPuzzle
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/dateQuiz"
-        element={
-          <DateQuiz
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/coloring"
-        element={
-          <Coloring
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/overlapping"
-        element={
-          <Overlapping
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/maze"
-        element={
-          <Maze
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/market"
-        element={
-          <Market
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/numberTouch"
-        element={
-          <NumberTouch
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/nearTime"
-        element={
-          <NearTime
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
+      <Route path="/cardMatch" element={<CardMatch {...gameProps} />} />
+      <Route path="/wordPuzzle" element={<WordPuzzle {...gameProps} />} />
+      <Route path="/dateQuiz" element={<DateQuiz {...gameProps} />} />
+      <Route path="/coloring" element={<Coloring {...gameProps} />} />
+      <Route path="/overlapping" element={<Overlapping {...gameProps} />} />
+      <Route path="/maze" element={<Maze {...gameProps} />} />
+      <Route path="/market" element={<Market {...gameProps} />} />
+      <Route path="/numberTouch" element={<NumberTouch {...gameProps} />} />
+      <Route path="/nearTime" element={<NearTime {...gameProps} />} />
       <Route
         path="/basicCalculate"
-        element={
-          <BasicCalculate
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
+        element={<BasicCalculate {...gameProps} />}
       />
-      <Route
-        path="/patternNumber"
-        element={
-          <PatternNumber
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/shownColor"
-        element={
-          <ShownColor
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/meaningColor"
-        element={
-          <MeaningColor
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/sameColor"
-        element={
-          <SameColor
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/dayOfWeek"
-        element={
-          <DayOfWeek
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/antonym"
-        element={
-          <Antonym
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/synonym"
-        element={
-          <Synonym
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
+      <Route path="/patternNumber" element={<PatternNumber {...gameProps} />} />
+      <Route path="/shownColor" element={<ShownColor {...gameProps} />} />
+      <Route path="/meaningColor" element={<MeaningColor {...gameProps} />} />
+      <Route path="/sameColor" element={<SameColor {...gameProps} />} />
+      <Route path="/dayOfWeek" element={<DayOfWeek {...gameProps} />} />
+      <Route path="/antonym" element={<Antonym {...gameProps} />} />
+      <Route path="/synonym" element={<Synonym {...gameProps} />} />
       <Route
         path="/compassDirection"
-        element={
-          <CompassDirection
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
+        element={<CompassDirection {...gameProps} />}
       />
-      <Route
-        path="/pictureMatch"
-        element={
-          <PictureMatch
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
+      <Route path="/pictureMatch" element={<PictureMatch {...gameProps} />} />
       <Route
         path="/patternPicture"
-        element={
-          <PatternPicture
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
+        element={<PatternPicture {...gameProps} />}
       />
       <Route
         path="/changeCalculate"
-        element={
-          <ChangeCalculate
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
+        element={<ChangeCalculate {...gameProps} />}
       />
-      <Route
-        path="/wordMemory"
-        element={
-          <WordMemory
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/flagMemory"
-        element={
-          <FlagMemory
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
-      <Route
-        path="/flagMatch"
-        element={
-          <FlagMatch
-            gameData={gameData}
-            onGameEnd={onGameEnd}
-            saveGameResult={saveGameResult}
-            isNextButtonClicked={isNextButtonClicked}
-            setAnswerState={setAnswerState}
-            answerState={answerState}
-          />
-        }
-      />
+      <Route path="/wordMemory" element={<WordMemory {...gameProps} />} />
+      <Route path="/flagMemory" element={<FlagMemory {...gameProps} />} />
+      <Route path="/flagMatch" element={<FlagMatch {...gameProps} />} />
     </Routes>
   );
 }
