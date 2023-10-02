@@ -9,10 +9,10 @@ import Header from '../components/common/Header';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { usePhoneNumber } from '../hooks/usePhoneNumber';
+import { privacyText, termsText } from '../modules/privacyContents';
 
 function PhoneNumberSet() {
   const navigate = useNavigate();
-  const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
   const {
     phoneNumber,
@@ -22,6 +22,26 @@ function PhoneNumberSet() {
     sendCode,
     checkCodeCorrect,
   } = usePhoneNumber(openModal);
+  const [allChecked, setAllChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [privacyChecked, setPrivacyChecked] = useState(false);
+  const [descText, setDescText] = useState('');
+
+  const handleAllCheck = () => {
+    setAllChecked(!allChecked);
+    setTermsChecked(!allChecked);
+    setPrivacyChecked(!allChecked);
+  };
+
+  const handleTermsButtonClick = () => {
+    openModal('이용약관');
+    setDescText(termsText);
+  };
+
+  const handlePrivacyButtonClick = () => {
+    openModal('개인정보처리방침');
+    setDescText(privacyText);
+  };
 
   const goNext = () => {
     if (!checkCodeCorrect()) return;
@@ -53,30 +73,45 @@ function PhoneNumberSet() {
             callbackFn={onChangeCode}
           />
           <CheckContainer>
-            <CheckboxLabel htmlFor="privacy">
+            <CheckboxLabel>
               <CheckboxInput
-                id="privacy"
                 type="checkbox"
-                checked={isCheckedPrivacy}
-                onChange={() => setIsCheckedPrivacy((prev) => !prev)}
+                checked={allChecked}
+                onChange={handleAllCheck}
               />
-              개인정보처리방침 및 이용약관에 동의합니다.
+              전체 동의하기
             </CheckboxLabel>
-            <PrivacyButton
-              onClick={() =>
-                window.open(
-                  'http://brain-vitamin-web-front-deploy.s3-website.ap-northeast-2.amazonaws.com/privacy',
-                  '개인정보처리방침',
-                  'noopener',
-                )
-              }>
-              <span>* 개인정보처리방침 보기</span>
-              <span style={{ color: 'gray', fontWeight: 'bold' }}>{'>'}</span>
-            </PrivacyButton>
+            <Hr />
+            <CheckButtonContainer>
+              <CheckboxLabel>
+                <CheckboxInput
+                  type="checkbox"
+                  checked={termsChecked}
+                  onChange={() => setTermsChecked((prev) => !prev)}
+                />
+                (필수)이용약관 동의
+              </CheckboxLabel>
+              <PrivacyButton onClick={handleTermsButtonClick}>
+                내용보기
+              </PrivacyButton>
+            </CheckButtonContainer>
+            <CheckButtonContainer>
+              <CheckboxLabel>
+                <CheckboxInput
+                  type="checkbox"
+                  checked={privacyChecked}
+                  onChange={() => setPrivacyChecked((prev) => !prev)}
+                />
+                (필수)개인정보처리방침 동의
+              </CheckboxLabel>
+              <PrivacyButton onClick={handlePrivacyButtonClick}>
+                내용보기
+              </PrivacyButton>
+            </CheckButtonContainer>
           </CheckContainer>
         </Wrapper>
         <Button
-          disabled={!phoneNumber || !code || !isCheckedPrivacy}
+          disabled={!phoneNumber || !code || !termsChecked || !privacyChecked}
           onClick={goNext}>
           다음
         </Button>
@@ -84,8 +119,10 @@ function PhoneNumberSet() {
       {isModalOpen && (
         <LayerPopup
           label={modalText}
+          desc={descText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </Container>
@@ -146,28 +183,36 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 41.2rem;
-  margin: 0 auto;
+  margin: 3rem auto;
+  gap: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.6rem;
+    margin: 1rem auto;
+    gap: 0.5rem;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 `;
 const CheckboxLabel = styled.label`
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    margin: 1rem 0;
+    margin: 0.3rem 0;
   }
   @media screen and (max-width: 767px) {
     gap: 0.5rem;
+    margin: 0.5rem 0;
   }
 `;
 const CheckboxInput = styled.input`
   width: 2rem;
   height: 2rem;
   border: 0.1rem solid #1f1411;
+  border-radius: 0.2rem;
   position: relative;
   &:checked {
     &::before {
@@ -182,16 +227,29 @@ const CheckboxInput = styled.input`
   }
 `;
 const PrivacyButton = styled.button`
-  display: flex;
-  justify-content: space-between;
-  background: var(--main-bg-color);
-  padding: 1rem;
-  border-radius: 1rem;
+  background: white;
+  color: var(--main-color);
+  border: 0.2rem solid var(--main-color);
+  border-radius: 5rem;
   font-size: 2rem;
-  align-items: center;
+  padding: 0.5rem 1.5rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.4rem;
   }
+  @media screen and (max-width: 767px) {
+    font-size: 1.2rem;
+    padding: 0 0.8rem;
+  }
+`;
+const Hr = styled.hr`
+  background: lightgray;
+  height: 1px;
+  width: 100%;
+  border: 0;
+`;
+const CheckButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export default PhoneNumberSet;
