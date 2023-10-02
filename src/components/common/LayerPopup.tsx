@@ -11,6 +11,7 @@ type Props = {
   centerButtonText?: string;
   onClickCenterButton?: () => void;
   sound?: string;
+  closeModal?: () => void;
 };
 function LayerPopup({
   label,
@@ -22,6 +23,7 @@ function LayerPopup({
   centerButtonText,
   onClickCenterButton,
   sound,
+  closeModal,
 }: Props) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +40,8 @@ function LayerPopup({
   }, []);
 
   return (
-    <Container ref={layerPopupRef}>
-      <Popup role="dialog">
+    <Container ref={layerPopupRef} onClick={closeModal}>
+      <Popup role="dialog" onClick={(e) => e.stopPropagation()}>
         <Label>{label}</Label>
         <Desc>{desc}</Desc>
         <ButtonWrapper>
@@ -89,15 +91,20 @@ const Popup = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
+  overflow: auto;
+  max-height: 80rem;
+  white-space: pre-line;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 50rem;
     min-height: 25rem;
     padding: 3rem;
+    max-height: 55rem;
   }
   @media screen and (max-width: 767px) {
     width: 25rem;
     min-height: 20rem;
     padding: 3rem;
+    max-height: 45rem;
   }
 `;
 
