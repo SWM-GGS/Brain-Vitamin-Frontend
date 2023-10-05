@@ -42,12 +42,11 @@ function Home() {
 
   const onClickVitamin = () => {
     if (loading) return;
-    // if (data?.first) {
-    //   navigate('/birthDateSet', { state: { nextToDo: data.nextToDo } });
-    // } else {
-    //   navigate(`/${data?.nextToDo}`);
-    // }
-    navigate(`/cistDemo`);
+    if (data?.first) {
+      navigate('/birthDateSet', { state: { nextToDo: data.nextToDo } });
+    } else {
+      navigate(`/${data?.nextToDo}`);
+    }
   };
 
   const toFamily = () => {
@@ -112,7 +111,7 @@ const Wrapper = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 58rem;
+  width: 71rem;
   height: 80rem;
   border-radius: 3rem;
   background: #fff;
