@@ -110,7 +110,7 @@ const Popup = styled.div`
 
 const Label = styled.div`
   font-family: 'Pretendard-Bold';
-  font-size: 5rem;
+  font-size: 3.2rem;
   text-align: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.4rem;
