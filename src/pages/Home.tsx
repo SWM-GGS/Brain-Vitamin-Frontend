@@ -112,7 +112,7 @@ const Wrapper = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 65rem;
+  width: 58rem;
   height: 80rem;
   border-radius: 3rem;
   background: #fff;
