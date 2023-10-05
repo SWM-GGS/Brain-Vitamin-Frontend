@@ -80,24 +80,226 @@ function CogTraining() {
   };
 
   useEffect(() => {
-    const getGameData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/patient/vitamins/cog-training`,
-          { headers: { authorization: `Bearer ${accessToken}` } },
-        );
-        console.log(data);
-        setGameData(getNewData(data.result));
-        setShowLayerPopup(true);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getGameData();
-    const audio = new Audio(startSound);
-    audio.play();
+    // const getGameData = async () => {
+    //   try {
+    //     const { data } = await axios.get(
+    //       `${import.meta.env.VITE_API_URL}/patient/vitamins/cog-training`,
+    //       { headers: { authorization: `Bearer ${accessToken}` } },
+    //     );
+    //     console.log(data);
+    //     setGameData(getNewData(data.result));
+    //     setShowLayerPopup(true);
+    //   } catch (error) {
+    //     console.error(error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+    // getGameData();
+    // const audio = new Audio(startSound);
+    // audio.play();
+
+    const data = [
+      {
+        cogArea: '',
+        difficulty: 1,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 7,
+        problemPool: [
+          { imgUrl: '/assets/images/6.png', contents: '독일' },
+          { imgUrl: '/assets/images/7.png', contents: '스웨덴' },
+          { imgUrl: '/assets/images/8.png', contents: '브라질' },
+          // { imgUrl: '/assets/images/9.png', contents: '모로코' },
+          // { imgUrl: '/assets/images/10.png', contents: '대한민국' },
+        ],
+        timeLimit: 30000,
+        trainingName: '국기-나라 매칭 기억하기',
+        pathUri: 'flagMatch',
+        showNext: 1,
+      },
+      {
+        cogArea: '',
+        difficulty: 1,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 5,
+        problemPool: [
+          { imgUrl: '/assets/images/6.png', answer: true },
+          { imgUrl: '/assets/images/7.png', answer: true },
+          { imgUrl: '/assets/images/8.png', answer: true },
+          // { imgUrl: '/assets/images/4.png', answer: true },
+          // { imgUrl: '/assets/images/5.png', answer: true },
+          { imgUrl: '/assets/images/9.png', answer: false },
+          { imgUrl: '/assets/images/10.png', answer: false },
+          { imgUrl: '/assets/images/1.png', answer: false },
+          // { imgUrl: '4', answer: false },
+          // { imgUrl: '5', answer: false },
+        ],
+        timeLimit: 30000,
+        trainingName: '국기 기억하기',
+        pathUri: 'flagMemory',
+        showNext: 1,
+      },
+      {
+        cogArea: '',
+        difficulty: 1,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 3,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '규칙에 맞는 숫자 찾기',
+        pathUri: 'patternNumber',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 5,
+        problemPool: [
+          { contents: '양파', answer: true },
+          { contents: '청포도', answer: true },
+          { contents: '피망', answer: true },
+          { contents: '토끼', answer: true },
+          { contents: '용가리', answer: true },
+          { contents: '고라니', answer: false },
+          { contents: '검은깨', answer: false },
+          { contents: '연필', answer: false },
+          { contents: '책상', answer: false },
+          { contents: '마우스', answer: false },
+        ],
+        timeLimit: 30000,
+        trainingName: '단어 기억하기',
+        pathUri: 'wordMemory',
+        showNext: 1,
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 4,
+        problemPool: [
+          { imgUrl: '/assets/images/1.png', contents: '양파' },
+          { imgUrl: '/assets/images/2.png', contents: '청포도' },
+          { imgUrl: '/assets/images/3.png', contents: '피망' },
+        ],
+        timeLimit: 30000,
+        trainingName: '거스름돈 계산하기',
+        pathUri: 'changeCalculate',
+      },
+      {
+        cogArea: '',
+        difficulty: 1,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 3,
+        problemPool: [
+          { imgUrl: '/assets/images/1.png' },
+          { imgUrl: '/assets/images/2.png' },
+          // { imgUrl: '/assets/images/3.png' },
+        ],
+        timeLimit: 30000,
+        trainingName: '규칙에 맞는 그림 찾기',
+        pathUri: 'patternPicture',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 2,
+        problemPool: [
+          { imgUrl: '/assets/images/1.png', answer: true },
+          { imgUrl: '/assets/images/2.png', answer: true },
+          { imgUrl: '/assets/images/3.png', answer: false },
+          { imgUrl: '/assets/images/4.png', answer: false },
+          { imgUrl: '/assets/images/5.png', answer: false },
+        ],
+        timeLimit: 30000,
+        trainingName: '이어지는 그림 찾기',
+        pathUri: 'pictureMatch',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '나침반 방향 맞추기',
+        pathUri: 'compassDirection',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '글자 자체의 색 선택하기',
+        pathUri: 'shownColor',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '글자 자체의 색 선택하기',
+        pathUri: 'shownColor',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '글자가 뜻하는 색 선택하기',
+        pathUri: 'meaningColor',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '글자가 뜻하는 색 선택하기',
+        pathUri: 'sameColor',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '가까운 시간 찾기',
+        pathUri: 'nearTime',
+      },
+      {
+        cogArea: '',
+        difficulty: 3,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '사칙연산 계산하기',
+        pathUri: 'basicCalculate',
+      },
+      {
+        cogArea: '',
+        difficulty: 1,
+        explanation: '게임을 맞춰봅시다!',
+        problemId: 1,
+        problemPool: [],
+        timeLimit: 30000,
+        trainingName: '올바른 요일 찾기',
+        pathUri: 'dayOfWeek',
+      },
+    ];
+
+    setGameData(getNewData(data));
+    setShowLayerPopup(true);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
