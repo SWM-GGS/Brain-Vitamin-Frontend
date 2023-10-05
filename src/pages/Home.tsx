@@ -47,7 +47,7 @@ function Home() {
     // } else {
     //   navigate(`/${data?.nextToDo}`);
     // }
-    navigate(`/privacy`);
+    navigate(`/cistDemo`);
   };
 
   const toFamily = () => {
