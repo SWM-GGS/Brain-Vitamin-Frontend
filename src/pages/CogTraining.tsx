@@ -16,7 +16,7 @@ import {
 } from '../components/common/AnswerFeedback';
 import correctSound from '/assets/sounds/correct.mp3';
 import incorrectSound from '/assets/sounds/incorrect.mp3';
-import startSound from '/assets/sounds/start.mp3';
+// import startSound from '/assets/sounds/start.mp3';
 
 import cardMatchSound from '/assets/sounds/questions/cardMatch.mp3';
 import coloringSound from '/assets/sounds/questions/coloring.mp3';
