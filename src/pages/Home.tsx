@@ -42,11 +42,12 @@ function Home() {
 
   const onClickVitamin = () => {
     if (loading) return;
-    if (data?.first) {
-      navigate('/birthDateSet', { state: { nextToDo: data.nextToDo } });
-    } else {
-      navigate(`/${data?.nextToDo}`);
-    }
+    // if (data?.first) {
+    //   navigate('/birthDateSet', { state: { nextToDo: data.nextToDo } });
+    // } else {
+    //   navigate(`/${data?.nextToDo}`);
+    // }
+    navigate(`/privacy`);
   };
 
   const toFamily = () => {
