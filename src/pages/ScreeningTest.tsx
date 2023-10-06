@@ -7,6 +7,7 @@ import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { Container } from '../components/common/Container';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -182,14 +183,6 @@ function ScreeningTest() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  padding: 1.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
 
 const Wrapper = styled.div``;
 

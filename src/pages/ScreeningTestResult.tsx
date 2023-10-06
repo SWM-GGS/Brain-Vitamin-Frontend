@@ -4,6 +4,7 @@ import Button from '../components/common/Button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Header from '../components/common/Header';
+import { Container } from '../components/common/Container';
 
 function screeningTestResult() {
   const { state } = useLocation();
@@ -42,14 +43,6 @@ function screeningTestResult() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  padding: 1.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
 
 const Wrapper = styled.div``;
 

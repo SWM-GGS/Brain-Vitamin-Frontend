@@ -10,6 +10,7 @@ import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { WidthContainer } from '../components/common/Container';
 
 function LogIn() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -114,7 +115,7 @@ function LogIn() {
   };
 
   return (
-    <Container>
+    <WidthContainer>
       <Box>
         <Wrapper>
           <Label style={{ textAlign: 'center' }}>로그인</Label>
@@ -148,18 +149,9 @@ function LogIn() {
           onClickCenterButton={closeModal}
         />
       )}
-    </Container>
+    </WidthContainer>
   );
 }
-
-const Container = styled.div`
-  max-width: 192rem;
-  display: flex;
-  justify-content: center;
-  padding: 1.6rem;
-  height: 100vh;
-  align-items: center;
-`;
 
 const Box = styled.div`
   width: 86.8rem;
