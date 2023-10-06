@@ -24,6 +24,7 @@ import marketSound from '/assets/sounds/questions/market.mp3';
 import mazeSound from '/assets/sounds/questions/maze.mp3';
 import overlappingSound from '/assets/sounds/questions/overlapping.mp3';
 import wordPuzzleSound from '/assets/sounds/questions/wordPuzzle.mp3';
+import { Container } from '../components/common/Container';
 
 export type GameResultProps = {
   problemId: number;
@@ -284,14 +285,6 @@ function CogTraining() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  padding: 1.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
 
 const Wrapper = styled.div``;
 

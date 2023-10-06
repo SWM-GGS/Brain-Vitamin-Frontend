@@ -6,6 +6,7 @@ import { RootState } from '../store/reducer';
 import Header from '../components/common/Header';
 import endSound from '/assets/sounds/end.mp3';
 import { useEffect } from 'react';
+import { Container } from '../components/common/Container';
 
 function CogTrainingResult() {
   const { state } = useLocation();
@@ -47,14 +48,6 @@ function CogTrainingResult() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  padding: 1.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
 
 const Wrapper = styled.div``;
 

@@ -7,6 +7,7 @@ import Button from '../components/common/Button';
 import Header from '../components/common/Header';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { WidthContainer } from '../components/common/Container';
 
 function BirthDateSet() {
   const { state } = useLocation();
@@ -31,7 +32,7 @@ function BirthDateSet() {
   };
 
   return (
-    <Container>
+    <WidthContainer>
       <Header label="회원정보" />
       <Box>
         <Wrapper>
@@ -83,18 +84,9 @@ function BirthDateSet() {
           onClickCenterButton={closeModal}
         />
       )}
-    </Container>
+    </WidthContainer>
   );
 }
-
-const Container = styled.div`
-  max-width: 192rem;
-  display: flex;
-  justify-content: center;
-  padding: 1.6rem;
-  height: 100vh;
-  align-items: center;
-`;
 
 const Box = styled.div`
   width: 86.8rem;

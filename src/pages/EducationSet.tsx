@@ -7,6 +7,7 @@ import axios from 'axios';
 import Header from '../components/common/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
+import { WidthContainer } from '../components/common/Container';
 
 function EducationSet() {
   const { state } = useLocation();
@@ -39,7 +40,7 @@ function EducationSet() {
   };
 
   return (
-    <Container>
+    <WidthContainer>
       <Header label="회원정보" />
       <Box>
         <Wrapper>
@@ -116,18 +117,9 @@ function EducationSet() {
           다음
         </Button>
       </Box>
-    </Container>
+    </WidthContainer>
   );
 }
-
-const Container = styled.div`
-  max-width: 192rem;
-  display: flex;
-  justify-content: center;
-  padding: 1.6rem;
-  height: 100vh;
-  align-items: center;
-`;
 
 const Box = styled.div`
   width: 86.8rem;

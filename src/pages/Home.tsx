@@ -94,7 +94,7 @@ const Wrapper = styled.div`
   display: flex;
   gap: 2.8rem;
   justify-content: center;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   @media screen and (min-width: 768px) {
     align-items: center;
   }
