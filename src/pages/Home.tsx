@@ -122,7 +122,7 @@ const BigBox = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 43rem;
+    width: 40rem;
     height: 40rem;
   }
   @media screen and (max-width: 767px) {
@@ -139,6 +139,7 @@ const BoxWrapper = styled.div`
   height: 80rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     height: 40rem;
+    gap: 2rem;
   }
   @media screen and (max-width: 767px) {
     flex-direction: row;
@@ -161,7 +162,7 @@ const Box = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 27rem;
+    width: 25rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
