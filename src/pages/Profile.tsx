@@ -13,6 +13,7 @@ import userSlice from '../slices/user';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { SideContainer } from '../components/common/Container';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -145,7 +146,7 @@ function Profile() {
   return (
     <Container>
       <LeftTapBar />
-      <Container2>
+      <SideContainer>
         <Container3>
           <Box>
             <Label style={{ textAlign: 'center' }}>회원정보 변경하기</Label>
@@ -202,7 +203,7 @@ function Profile() {
             </Button>
           </Box>
         </Container3>
-      </Container2>
+      </SideContainer>
       <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
@@ -219,27 +220,6 @@ const Container = styled.div`
   @media screen and (min-width: 768px) {
     display: flex;
     justify-content: space-between;
-  }
-`;
-const Container2 = styled.div`
-  padding: 3rem 5rem;
-  display: flex;
-  gap: 2.8rem;
-  justify-content: center;
-  height: calc(var(--vh, 1vh) * 100);
-  @media screen and (min-width: 768px) {
-    align-items: center;
-    flex-direction: column;
-    width: 140rem;
-  }
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 80rem;
-  }
-  @media screen and (max-width: 767px) {
-    flex-wrap: wrap;
-    padding: 3rem 1.6rem;
-    gap: 1rem;
-    align-content: flex-start;
   }
 `;
 const Container3 = styled.div`

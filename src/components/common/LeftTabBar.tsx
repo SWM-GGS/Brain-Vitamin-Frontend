@@ -51,7 +51,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 22rem;
+    width: 20rem;
   }
   @media screen and (max-width: 767px) {
     display: none;
@@ -82,7 +82,7 @@ const Tap = styled.div`
   padding: 2.6rem 2rem;
   margin: 0 0 3rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 2rem;
+    font-size: 1.7rem;
     padding: 2rem;
     margin: 0 0 2rem 0;
   }
