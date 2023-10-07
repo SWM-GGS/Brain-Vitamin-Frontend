@@ -99,7 +99,7 @@ const Wrapper = styled.div`
     align-items: center;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    padding: 4rem;
+    padding: 1rem 3rem;
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -122,8 +122,8 @@ const BigBox = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 40rem;
-    height: 40rem;
+    width: 38rem;
+    height: 38rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -138,7 +138,7 @@ const BoxWrapper = styled.div`
   gap: 2.5rem;
   height: 80rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    height: 40rem;
+    height: 38rem;
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -162,7 +162,7 @@ const Box = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 25rem;
+    width: 22rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -194,7 +194,7 @@ const Sub = styled.p`
   border-radius: 5.9rem;
   margin: 3.4rem 0 0 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
