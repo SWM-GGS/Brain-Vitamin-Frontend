@@ -198,7 +198,9 @@ function MyPage() {
             </ResultBox>
           </RightContainer>
         </Container3>
-        <Button style={{ alignSelf: 'flex-end' }} onClick={toSetting}>
+        <Button
+          style={{ alignSelf: 'flex-end', width: '22rem' }}
+          onClick={toSetting}>
           회원정보 수정하기
         </Button>
       </Container2>
@@ -224,6 +226,7 @@ const Container2 = styled.div`
     flex-direction: column;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding: 1rem 3rem;
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -237,6 +240,9 @@ const Container2 = styled.div`
 const Container3 = styled.div`
   display: flex;
   gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
   @media screen and (max-width: 768px) {
     align-items: center;
     flex-direction: column;
@@ -253,7 +259,7 @@ const LeftContainer = styled.div`
     height: 80rem;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 42rem;
+    width: 38rem;
     height: 36rem;
     gap: 2rem;
   }
@@ -274,7 +280,7 @@ const RightContainer = styled.div`
   justify-content: space-between;
   gap: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 25rem;
+    width: 22rem;
     height: 36rem;
     padding: 2rem;
     gap: 1rem;
@@ -305,6 +311,9 @@ const StatusContainer = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     gap: 1rem;
   }
@@ -347,7 +356,7 @@ const ResultDate = styled.p`
   color: #433d3a;
   margin: 0 0 1.3rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     margin: 0 0 0.5rem 0;
   }
   @media screen and (max-width: 767px) {
@@ -396,6 +405,7 @@ const DayBox = styled.div`
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     height: 6rem;
+    border-width: 0.2rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -408,7 +418,7 @@ const DayText = styled.span`
   font-size: 2.8rem;
   color: #433d3a;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
@@ -495,6 +505,9 @@ const Align = styled.div`
 const PercentUp = styled.span`
   color: forestgreen;
   font-size: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.6rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
   }
@@ -503,7 +516,7 @@ const PercentDown = styled.span`
   color: #ff3f3f;
   font-size: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 2.2rem;
+    font-size: 2.6rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;

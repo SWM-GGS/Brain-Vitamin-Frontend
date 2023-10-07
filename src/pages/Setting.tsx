@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { SideContainer } from '../components/common/Container';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
@@ -103,7 +104,7 @@ function Setting() {
   return (
     <Container>
       <LeftTapBar />
-      <Container2>
+      <SideContainer>
         <Container3>
           <Box>
             <Version>
@@ -154,7 +155,7 @@ function Setting() {
             </LogoutButton>
           </SubButtonContainer>
         </Container3>
-      </Container2>
+      </SideContainer>
       <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
@@ -191,27 +192,6 @@ const Container = styled.div`
     justify-content: space-between;
   }
 `;
-const Container2 = styled.div`
-  padding: 3rem 5rem;
-  display: flex;
-  gap: 2.8rem;
-  justify-content: center;
-  height: calc(var(--vh, 1vh) * 100);
-  @media screen and (min-width: 768px) {
-    align-items: center;
-    flex-direction: column;
-    width: 140rem;
-  }
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 80rem;
-  }
-  @media screen and (max-width: 767px) {
-    flex-wrap: wrap;
-    padding: 3rem 1.6rem;
-    gap: 1rem;
-    align-content: flex-start;
-  }
-`;
 const Container3 = styled.div`
   width: 100%;
   display: flex;
@@ -230,6 +210,7 @@ const Box = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  gap: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 60rem;
     height: 36rem;
@@ -237,6 +218,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
+    height: 46rem;
     padding: 6rem 2rem;
     flex-direction: column;
   }
@@ -256,6 +238,7 @@ const ButtonContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
+    gap: 1rem;
   }
 `;
 const ProfileImage = styled.img`
@@ -330,6 +313,7 @@ const SubButtonContainer = styled.div`
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 2rem 0 0 0;
+    justify-content: center;
   }
 `;
 const SignoutButton = styled.button`

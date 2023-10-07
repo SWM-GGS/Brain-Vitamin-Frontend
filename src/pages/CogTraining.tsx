@@ -305,7 +305,7 @@ const GameWrapper = styled.div`
     width: 30rem;
     height: 50rem;
     padding: 1.6rem;
-    margin: 0.5rem 0;
+    margin: 2rem 0;
   }
 `;
 

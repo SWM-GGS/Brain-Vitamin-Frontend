@@ -11,6 +11,7 @@ import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { SideContainer } from '../components/common/Container';
 
 function FontSizeEdit() {
   const [fontSize, setFontSize] = useState(0);
@@ -41,7 +42,7 @@ function FontSizeEdit() {
   return (
     <Container>
       <LeftTapBar />
-      <Container2>
+      <SideContainer>
         <Container3>
           <Label>글자 크기를 설정해주세요</Label>
           <BoxWrapper>
@@ -83,7 +84,7 @@ function FontSizeEdit() {
             저장
           </Button>
         </Container3>
-      </Container2>
+      </SideContainer>
       <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
@@ -100,27 +101,6 @@ const Container = styled.div`
   @media screen and (min-width: 768px) {
     display: flex;
     justify-content: space-between;
-  }
-`;
-const Container2 = styled.div`
-  padding: 5rem;
-  display: flex;
-  gap: 2.8rem;
-  justify-content: center;
-  height: calc(var(--vh, 1vh) * 100);
-  @media screen and (min-width: 768px) {
-    align-items: center;
-    flex-direction: column;
-    width: 140rem;
-  }
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 80rem;
-  }
-  @media screen and (max-width: 767px) {
-    flex-wrap: wrap;
-    padding: 3rem 1.6rem;
-    gap: 1rem;
-    align-content: flex-start;
   }
 `;
 const Container3 = styled.div`
@@ -141,7 +121,7 @@ const BoxWrapper = styled.div`
   margin: 6.6rem 0 11.2rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     margin: 5rem 0 7rem 0;
-    gap: 3rem;
+    gap: 2rem;
   }
   @media screen and (max-width: 767px) {
     gap: 2rem;
@@ -157,7 +137,7 @@ const Box = styled.button`
   padding: 3.7rem 2.2rem;
   word-break: keep-all;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 19rem;
+    width: 18rem;
     height: 22rem;
     padding: 1.5rem;
   }
@@ -173,6 +153,9 @@ const LabelLarge = styled.p`
   color: var(--main-color);
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.5rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
   }
@@ -183,6 +166,9 @@ const LabelMedium = styled.p`
   color: var(--main-color);
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
   }
@@ -193,6 +179,9 @@ const LabelSmall = styled.p`
   color: var(--main-color);
   font-family: 'Pretendard-Bold';
   margin: 0 0 1.8rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
@@ -201,6 +190,9 @@ const LabelSmall = styled.p`
 const Large = styled.p`
   font-size: 3.2rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.5rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
   }
@@ -209,6 +201,9 @@ const Large = styled.p`
 const Medium = styled.p`
   font-size: 2.6rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.2rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
   }
@@ -217,6 +212,9 @@ const Medium = styled.p`
 const Small = styled.p`
   font-size: 2.2rem;
   font-family: 'Pretendard-Bold';
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
   }
