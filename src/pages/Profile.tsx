@@ -14,6 +14,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
+import { generateUniqueNumber } from '../modules/generateUniqueNumber';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -111,25 +112,6 @@ function Profile() {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const generateUniqueNumber = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // 월은 0부터 시작하므로 +1
-    const day = now.getDate();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const milliseconds = now.getMilliseconds();
-    const formattedMonth = String(month).padStart(2, '0');
-    const formattedDay = String(day).padStart(2, '0');
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds).padStart(2, '0');
-    const formattedMilliseconds = String(milliseconds).padStart(3, '0');
-    const uniqueNumber = `${year}${formattedMonth}${formattedDay}-${formattedHours}${formattedMinutes}${formattedSeconds}${formattedMilliseconds}`;
-    return uniqueNumber;
   };
 
   const renderProfileImage = () => {
