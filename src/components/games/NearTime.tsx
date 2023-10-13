@@ -36,8 +36,8 @@ const Clock = styled.div`
     z-index: 10;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
   }
   @media screen and (max-width: 767px) {
     width: 200px;
