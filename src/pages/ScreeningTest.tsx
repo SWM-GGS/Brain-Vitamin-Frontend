@@ -5,53 +5,294 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
-import LayerPopup from '../components/common/LayerPopup';
-import { useModal } from '../hooks/useModal';
 import { Container } from '../components/common/Container';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   type Props = {
-    idx: number;
+    step: number;
+    audioUrl: string;
     description: string;
+    screeningTestId: number;
+    trial?: number;
+    imgUrl?: string;
+    timeLimit?: number;
   };
   const [questions, setQuestions] = useState<Props[][]>([]);
+  const [totalScore, setTotalScore] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
-  const [choices, setChoices] = useState<number[]>([]);
-  const stepCnt = 5;
-  const chunkSize = 3;
+  const stepCnt = 13;
   const navigate = useNavigate();
-  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-        let questionArr: Props[] = [];
-        for (let i = 0; i < data.result.length; i++) {
-          questionArr.push({
-            idx: i + 1,
-            description: data.result[i].description,
-          });
-        }
-        let chunkedQuestions = [];
-        for (let i = 0; i < questionArr.length; i += chunkSize) {
-          chunkedQuestions.push(questionArr.slice(i, i + chunkSize));
-        }
-        setQuestions(chunkedQuestions);
-        setChoices(Array(questionArr.length + 1).fill(-1));
-      } catch (error) {
-        console.error(error);
+    // const getData = async () => {
+    //   try {
+    //     const { data } = await axios.get(
+    //       `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
+    //       {
+    //         headers: {
+    //           authorization: `Bearer ${accessToken}`,
+    //         },
+    //       },
+    //     );
+    //     const questionArr = data.result;
+    //     const chunkedQuestions: Props[][] = [];
+    //     let stepQuestions: Props[] = [];
+    //     let currentStep = 1;
+
+    //     for (let i = 1; i < questionArr.length; i++) {
+    //       if (currentStep !== questionArr[i].step) {
+    //         currentStep++;
+    //         chunkedQuestions.push(stepQuestions);
+    //         stepQuestions = [questionArr[i]];
+    //       } else {
+    //         stepQuestions.push(questionArr[i]);
+    //       }
+    //     }
+    //     chunkedQuestions.push(stepQuestions);
+    //     setQuestions(chunkedQuestions);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+    // getData();
+    const questionArr = [
+      {
+        step: 0,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step0.mp3',
+        description:
+          '안녕하세요. 지금부터 귀하의 기억력과 사고능력을 살펴보기 위한 질문들을 드리겠습니다.\n생각나는 대로 최선을 다해 답변해 주시면 됩니다.',
+        screeningTestId: 29,
+      },
+      {
+        step: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-1.mp3',
+        description: '올해는 몇 년도입니까?',
+        screeningTestId: 31,
+      },
+      {
+        step: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-2.mp3',
+        description: '지금은 몇 월입니까?',
+        screeningTestId: 32,
+      },
+      {
+        step: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-3.mp3',
+        description: '오늘은 며칠입니까?',
+        screeningTestId: 33,
+      },
+      {
+        step: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-4.mp3',
+        description: '오늘은 무슨 요일입니까?',
+        screeningTestId: 34,
+      },
+      {
+        step: 2,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step2.mp3',
+        description: '현재 귀하께서 살고 계시는 나라는 어디인가요?',
+        screeningTestId: 35,
+      },
+      {
+        step: 3,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
+        description:
+          '지금부터 외우셔야 하는 문장 하나를 불러드리겠습니다.\n끝까지 잘 듣고 따라 해 보세요.',
+        screeningTestId: 36,
+      },
+      {
+        step: 3,
+        trial: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
+        description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
+        screeningTestId: 36,
+      },
+      {
+        step: 3,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
+        description:
+          '잘 하셨습니다. 제가 다시 한번 불러드리겠습니다.\n이번에도 다시 여쭈어 볼테니 잘 듣고 따라 해 보세요.',
+        screeningTestId: 36,
+      },
+      {
+        step: 3,
+        trial: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
+        description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
+        screeningTestId: 36,
+      },
+      {
+        step: 3,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
+        description: '제가 이 문장을 나중에 여쭤보겠습니다. 잘 기억하세요.',
+        screeningTestId: 36,
+      },
+      {
+        step: 4,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4.mp3',
+        description:
+          '제가 불러드리는 숫자를 그대로 따라 해 주세요.\n예를 들어 제가 1 2 3 하고 부르면, 똑같이 1 2 3 이렇게 말씀해 주세요.\n한 번만 불러드릴 수 있으니 잘 들어 주세요.',
+        screeningTestId: 37,
+      },
+      {
+        step: 4,
+        trial: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-1.mp3',
+        description: '6 9 7 3',
+        screeningTestId: 38,
+      },
+      {
+        step: 4,
+        trial: 1,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-2.mp3',
+        description: '5 7 2 8 4',
+        screeningTestId: 39,
+      },
+      {
+        step: 5,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step5.mp3',
+        description: '제가 불러드리는 말을 끝에서부터 거꾸로 따라 해 주세요.',
+        screeningTestId: 40,
+      },
+      {
+        step: 5,
+        trial: 2,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step5-1.mp3',
+        description: '금수강산',
+        screeningTestId: 41,
+      },
+      {
+        step: 6,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image6.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step6.mp3',
+        description:
+          '여기 점을 연결하여 그린 그림이 있습니다. 이 그림과 똑같이 되도록 같은 위치에 그려보세요. 점을 연결해서 그리시면 됩니다.',
+        screeningTestId: 42,
+      },
+      {
+        step: 7,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image7.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step7.mp3',
+        description:
+          '그림을 보시면 세 가지의 모양들이 정해진 순서로 나옵니다. 모양들을 보면서 어떤 순서로 나오는지 생각해 보세요. 왼쪽부터 차례대로 네모, 동그라미, 세모, 네모, 빈칸 세모입니다. 그렇다면 빈칸에는 무엇이 들어가야 할까요?',
+        screeningTestId: 43,
+      },
+      {
+        step: 8,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image8.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step8.mp3',
+        description:
+          '여기 네 칸 중의 한 칸에 별이 하나 있습니다. 첫 번째 그림과 두 번째 그림을 비교하였을 때, 별이 위쪽으로 이동합니다. 별이 어떤 식으로 이동하는지 잘 생각해 보십시오. 마지막 그림에서 네 칸 중에 별이 어디에 위치하게 될까요?',
+        screeningTestId: 49,
+      },
+      {
+        step: 9,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image9.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step9.mp3',
+        description:
+          "카드에 숫자와 계절이 하나씩 적혀 있습니다. '1-봄-2-여름~' 이렇게 연결 되어 나갑니다. 화살표가 가리키는 빈칸에 무엇이 들어갈까요?",
+        screeningTestId: 50,
+      },
+      {
+        step: 10,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step10.mp3',
+        description:
+          '제가 조금 전에 외우라고 불러드렸던 문장을 다시 한번 말씀해 주세요.',
+        screeningTestId: 51,
+      },
+      {
+        step: 11,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11.mp3',
+        description: '제시되는 그림의 이름을 말씀해 주세요.',
+        screeningTestId: 52,
+      },
+      {
+        step: 11,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-1.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
+        description: '이것은 무엇입니까?',
+        screeningTestId: 53,
+      },
+      {
+        step: 11,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-2.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
+        description: '이것은 무엇입니까?',
+        screeningTestId: 54,
+      },
+      {
+        step: 11,
+        imgUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-3.png',
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
+        description: '이것은 무엇입니까?',
+        screeningTestId: 55,
+      },
+      {
+        step: 12,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step12.mp3',
+        description:
+          '제가 말씀드리는 대로 행동으로 따라해주세요.\n박수를 두 번 치고, 잠시 쉬었다가 다시 박수 한 번 쳐주세요.',
+        screeningTestId: 56,
+      },
+      {
+        step: 13,
+        timeLimit: 60,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step13.mp3',
+        description:
+          '지금부터 1분 동안 과일이나 채소를 최대한 많이 이야기 해 주세요. 준비되셨지요? 자, 과일이나 채소 이름을 말씀해 주세요. 시작!',
+        screeningTestId: 57,
+      },
+    ];
+    const chunkedQuestions: Props[][] = [];
+    let stepQuestions: Props[] = [];
+    let currentStep = 1;
+
+    for (let i = 1; i < questionArr.length; i++) {
+      if (currentStep !== questionArr[i].step) {
+        currentStep++;
+        chunkedQuestions.push(stepQuestions);
+        stepQuestions = [questionArr[i]];
+      } else {
+        stepQuestions.push(questionArr[i]);
       }
-    };
-    getData();
+    }
+    chunkedQuestions.push(stepQuestions);
+    setQuestions(chunkedQuestions);
   }, []);
 
   const handleNextStep = () => {
@@ -66,19 +307,7 @@ function ScreeningTest() {
     }
   };
 
-  const onClickChoice = (questionIndex: number, choice: number) => {
-    const newChoices = [...choices];
-    newChoices[questionIndex] = choice;
-    setChoices(newChoices);
-  };
-
   const onSubmit = async () => {
-    const submittedChoices = choices.slice(1);
-    if (submittedChoices.includes(-1)) {
-      openModal('체크하지 않은 문항이 있습니다. 다시 확인해주세요.');
-      return;
-    }
-    const totalScore = submittedChoices.reduce((p, c) => p + c, 0);
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
@@ -127,37 +356,12 @@ function ScreeningTest() {
           ))}
         </ProgressBarWrapper>
         <Box>
-          <Desc>
-            <ChoiceLabel>아니다(0)</ChoiceLabel>
-            <ChoiceLabel>가끔 그렇다(1)</ChoiceLabel>
-            <ChoiceLabel>자주 그렇다(2)</ChoiceLabel>
-          </Desc>
           {questions.length
             ? questions[currentStep - 1].map((question) => (
-                <QuestionWrapper key={question.idx}>
+                <QuestionWrapper key={question.screeningTestId}>
                   <Question>
-                    {question.idx}. {convertNewlineToJSX(question.description)}
+                    {convertNewlineToJSX(question.description)}
                   </Question>
-                  <ChoiceWrapper>
-                    <ChoiceButton
-                      $choice={choices[question.idx]}
-                      $idx={0}
-                      onClick={() => onClickChoice(question.idx, 0)}>
-                      0
-                    </ChoiceButton>
-                    <ChoiceButton
-                      $choice={choices[question.idx]}
-                      $idx={1}
-                      onClick={() => onClickChoice(question.idx, 1)}>
-                      1
-                    </ChoiceButton>
-                    <ChoiceButton
-                      $choice={choices[question.idx]}
-                      $idx={2}
-                      onClick={() => onClickChoice(question.idx, 2)}>
-                      2
-                    </ChoiceButton>
-                  </ChoiceWrapper>
                 </QuestionWrapper>
               ))
             : null}
@@ -173,13 +377,6 @@ function ScreeningTest() {
           )}
         </ButtonWrapper>
       </Wrapper>
-      {isModalOpen && (
-        <LayerPopup
-          label={modalText}
-          centerButtonText="확인"
-          onClickCenterButton={closeModal}
-        />
-      )}
     </Container>
   );
 }
@@ -294,39 +491,6 @@ const QuestionWrapper = styled.div`
   }
 `;
 
-const ChoiceWrapper = styled.div`
-  display: flex;
-  gap: 11rem;
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    gap: 2rem;
-  }
-  @media screen and (max-width: 767px) {
-    gap: 2rem;
-  }
-`;
-
-const ChoiceButton = styled.button<{ $choice: number; $idx: number }>`
-  border-radius: 0.8rem;
-  font-size: 4rem;
-  padding: 2rem 2.5rem;
-  background: ${(props) =>
-    props.$choice === props.$idx ? 'var(--main-bg-color)' : '#C6C6C6'};
-  border: ${(props) =>
-    props.$choice === props.$idx
-      ? '0.2rem solid var(--main-color)'
-      : '0.2rem solid var(--gray-bg-color)'};
-  color: ${(props) =>
-    props.$choice === props.$idx ? 'var(--main-color)' : 'var(--black-color)'};
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
-    padding: 1rem 1.5rem;
-  }
-  @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
-    padding: 1rem 1.5rem;
-  }
-`;
-
 const Question = styled.p`
   font-size: 4rem;
   word-break: keep-all;
@@ -338,30 +502,6 @@ const Question = styled.p`
     font-size: 1.6rem;
     margin: 0 0 1rem 0;
     text-align: center;
-  }
-`;
-
-const Desc = styled.div`
-  width: 135rem;
-  margin: 0 auto;
-  text-align: end;
-  font-size: 2.8rem;
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 72rem;
-    font-size: 1.6rem;
-  }
-  @media screen and (max-width: 767px) {
-    width: 27rem;
-    font-size: 1.4rem;
-    display: flex;
-    justify-content: space-between;
-  }
-`;
-
-const ChoiceLabel = styled.span`
-  margin: 0 0 0 2rem;
-  @media screen and (max-width: 767px) {
-    margin: 0;
   }
 `;
 
