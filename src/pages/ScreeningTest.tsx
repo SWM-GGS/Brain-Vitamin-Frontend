@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
 import axios from 'axios';
@@ -17,10 +17,14 @@ function ScreeningTest() {
     trial?: number;
     imgUrl?: string;
     timeLimit?: number;
+    mikeOn?: boolean;
+    hide?: boolean;
   };
-  const [questions, setQuestions] = useState<Props[][]>([]);
+  const [questions, setQuestions] = useState<Props[]>([]);
   const [totalScore, setTotalScore] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const audioFileUrlRef = useRef('');
   const stepCnt = 13;
   const navigate = useNavigate();
 
@@ -35,22 +39,7 @@ function ScreeningTest() {
     //         },
     //       },
     //     );
-    //     const questionArr = data.result;
-    //     const chunkedQuestions: Props[][] = [];
-    //     let stepQuestions: Props[] = [];
-    //     let currentStep = 1;
-
-    //     for (let i = 1; i < questionArr.length; i++) {
-    //       if (currentStep !== questionArr[i].step) {
-    //         currentStep++;
-    //         chunkedQuestions.push(stepQuestions);
-    //         stepQuestions = [questionArr[i]];
-    //       } else {
-    //         stepQuestions.push(questionArr[i]);
-    //       }
-    //     }
-    //     chunkedQuestions.push(stepQuestions);
-    //     setQuestions(chunkedQuestions);
+    //     setQuestions(data.result);
     //   } catch (error) {
     //     console.error(error);
     //   }
@@ -67,6 +56,7 @@ function ScreeningTest() {
       },
       {
         step: 1,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-1.mp3',
         description: '올해는 몇 년도입니까?',
@@ -74,6 +64,7 @@ function ScreeningTest() {
       },
       {
         step: 1,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-2.mp3',
         description: '지금은 몇 월입니까?',
@@ -81,6 +72,7 @@ function ScreeningTest() {
       },
       {
         step: 1,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-3.mp3',
         description: '오늘은 며칠입니까?',
@@ -88,6 +80,7 @@ function ScreeningTest() {
       },
       {
         step: 1,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-4.mp3',
         description: '오늘은 무슨 요일입니까?',
@@ -95,6 +88,7 @@ function ScreeningTest() {
       },
       {
         step: 2,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step2.mp3',
         description: '현재 귀하께서 살고 계시는 나라는 어디인가요?',
@@ -111,6 +105,8 @@ function ScreeningTest() {
       {
         step: 3,
         trial: 1,
+        mikeOn: true,
+        hide: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
         description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
@@ -127,6 +123,8 @@ function ScreeningTest() {
       {
         step: 3,
         trial: 1,
+        mikeOn: true,
+        hide: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
         description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
@@ -150,6 +148,8 @@ function ScreeningTest() {
       {
         step: 4,
         trial: 1,
+        mikeOn: true,
+        hide: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-1.mp3',
         description: '6 9 7 3',
@@ -158,6 +158,8 @@ function ScreeningTest() {
       {
         step: 4,
         trial: 1,
+        mikeOn: true,
+        hide: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-2.mp3',
         description: '5 7 2 8 4',
@@ -173,6 +175,8 @@ function ScreeningTest() {
       {
         step: 5,
         trial: 2,
+        mikeOn: true,
+        hide: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step5-1.mp3',
         description: '금수강산',
@@ -220,6 +224,7 @@ function ScreeningTest() {
       },
       {
         step: 10,
+        mikeOn: true,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step10.mp3',
         description:
@@ -235,6 +240,7 @@ function ScreeningTest() {
       },
       {
         step: 11,
+        mikeOn: true,
         imgUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-1.png',
         audioUrl:
@@ -244,6 +250,7 @@ function ScreeningTest() {
       },
       {
         step: 11,
+        mikeOn: true,
         imgUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-2.png',
         audioUrl:
@@ -253,6 +260,7 @@ function ScreeningTest() {
       },
       {
         step: 11,
+        mikeOn: true,
         imgUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-3.png',
         audioUrl:
@@ -264,12 +272,22 @@ function ScreeningTest() {
         step: 12,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step12.mp3',
+        description: '제가 말씀드리는 대로 행동으로 따라해주세요.',
+        screeningTestId: 56,
+      },
+      {
+        step: 12,
+        trial: 2,
+        mikeOn: true,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step12.mp3',
         description:
-          '제가 말씀드리는 대로 행동으로 따라해주세요.\n박수를 두 번 치고, 잠시 쉬었다가 다시 박수 한 번 쳐주세요.',
+          '박수를 두 번 치고, 잠시 쉬었다가 다시 박수 한 번 쳐주세요.',
         screeningTestId: 56,
       },
       {
         step: 13,
+        mikeOn: true,
         timeLimit: 60,
         audioUrl:
           'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step13.mp3',
@@ -277,33 +295,68 @@ function ScreeningTest() {
           '지금부터 1분 동안 과일이나 채소를 최대한 많이 이야기 해 주세요. 준비되셨지요? 자, 과일이나 채소 이름을 말씀해 주세요. 시작!',
         screeningTestId: 57,
       },
+      {
+        step: 14,
+        audioUrl:
+          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step13.mp3',
+        description: '모든 검사가 종료되었습니다. 수고 많으셨습니다.',
+        screeningTestId: 57,
+      },
     ];
-    const chunkedQuestions: Props[][] = [];
-    let stepQuestions: Props[] = [];
-    let currentStep = 1;
-
-    for (let i = 1; i < questionArr.length; i++) {
-      if (currentStep !== questionArr[i].step) {
-        currentStep++;
-        chunkedQuestions.push(stepQuestions);
-        stepQuestions = [questionArr[i]];
-      } else {
-        stepQuestions.push(questionArr[i]);
-      }
-    }
-    chunkedQuestions.push(stepQuestions);
-    setQuestions(chunkedQuestions);
+    setQuestions(questionArr);
   }, []);
 
-  const handleNextStep = () => {
-    if (currentStep < 5) {
-      setCurrentStep(currentStep + 1);
-    }
+  const saveAudioFile = () => {
+    // 1. 녹음 중지
+    // 2. 파일 저장
+    // 3. 현재 파일 갱신
+    audioFileUrlRef.current = '';
   };
 
-  const handlePrevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+  const handleNextStep = () => {
+    // 1. 녹음 중이었을 경우
+    // 1-1. 오디오 파일 저장
+    saveAudioFile();
+    // 1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+    handleEachProblemAnswerSubmit(audioFileUrlRef.current);
+
+    // 2. 다음 문제가 mike on일 경우 녹음 시작
+    if (questions[currentIndex + 1].mikeOn) {
+      // 질문이 끝난 후 녹음 시작
+    }
+
+    // 3. 현재 스텝 갱신
+    if (currentStep !== questions[currentIndex + 1].step) {
+      setCurrentStep((prev) => prev + 1);
+    }
+
+    // 4. 현재 문제 인덱스 갱신
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handleEachProblemAnswerSubmit = async (audioFileUrl: string) => {
+    try {
+      const { data } = await axios.post(
+        `${
+          import.meta.env.VITE_API_URL
+        }/patient/vitamins/screening-test/detail`,
+        {
+          audioFileUrl,
+          screeningTestId: questions[currentIndex].screeningTestId,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      if (data.stop) {
+        setTotalScore((prev) => prev + data.result);
+      } else {
+        // 추가 질문
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -356,22 +409,19 @@ function ScreeningTest() {
           ))}
         </ProgressBarWrapper>
         <Box>
-          {questions.length
-            ? questions[currentStep - 1].map((question) => (
-                <QuestionWrapper key={question.screeningTestId}>
-                  <Question>
-                    {convertNewlineToJSX(question.description)}
-                  </Question>
-                </QuestionWrapper>
-              ))
-            : null}
+          {questions.length && (
+            <QuestionWrapper>
+              <Question>
+                {questions[currentIndex].hide
+                  ? null
+                  : convertNewlineToJSX(questions[currentIndex].description)}
+              </Question>
+            </QuestionWrapper>
+          )}
         </Box>
         <ButtonWrapper>
-          <Button onClick={handlePrevStep} disabled={currentStep === 1}>
-            이전
-          </Button>
-          {currentStep === stepCnt ? (
-            <Button onClick={onSubmit}>제출</Button>
+          {currentStep > stepCnt ? (
+            <Button onClick={onSubmit}>검사 종료</Button>
           ) : (
             <Button onClick={handleNextStep}>다음</Button>
           )}
