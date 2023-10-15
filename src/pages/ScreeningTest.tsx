@@ -27,6 +27,7 @@ function ScreeningTest() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const audioFileUrlRef = useRef('');
+  const trialCountRef = useRef(10);
   const stepCnt = 13;
   const navigate = useNavigate();
 
@@ -306,6 +307,9 @@ function ScreeningTest() {
       },
     ];
     setQuestions(questionArr);
+
+    const audio = new Audio(questionArr[currentIndex].audioUrl);
+    audio.play();
   }, []);
 
   const [stream, setStream] = useState<MediaStream>();
@@ -426,11 +430,26 @@ function ScreeningTest() {
     // 3. 현재 문제 인덱스 갱신
     setCurrentIndex((prev) => prev + 1);
 
-    // 4. 다음 문제가 mike on일 경우 녹음 시작
+    // 4. 다음 질문 음성 파일 재생
+    const nextAudioUrl = questions[currentIndex + 1].audioUrl;
+    const audio = new Audio(nextAudioUrl);
+    if (nextAudioUrl) {
+      audio.play();
+    }
+
+    // 5. 다음 문제가 mike on일 경우 녹음 시작
     if (questions[currentIndex + 1].mikeOn) {
       // 질문이 끝난 후 녹음 시작
-      onRecAudio();
+      audio.addEventListener('loadedmetadata', (e) => {
+        if (e.target) {
+          const duration = (e.target as HTMLAudioElement).duration;
+          setTimeout(() => onRecAudio(), duration * 1000);
+        }
+      });
     }
+
+    // 6. 다시 듣기 횟수 갱신
+    trialCountRef.current = questions[currentIndex + 1].trial ?? 10;
   };
 
   const handleEachProblemAnswerSubmit = async (audioFileUrl: string) => {
@@ -442,6 +461,9 @@ function ScreeningTest() {
         {
           audioFileUrl,
           screeningTestId: questions[currentIndex].screeningTestId,
+          count: 1,
+          firstVertex: [],
+          secondVertex: [],
         },
         {
           headers: {
@@ -449,13 +471,20 @@ function ScreeningTest() {
           },
         },
       );
-      if (data.stop) {
+      if (data.result.stop) {
         setTotalScore((prev) => prev + data.result);
       } else {
         // 추가 질문 추가
         const newQuestions = questions;
-        newQuestions.splice(currentIndex, 0, data.result);
+        const additionalQuestion = {
+          ...newQuestions[currentIndex],
+          audioUrl: '',
+          description: data.result.description,
+        };
+
+        newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
         setQuestions(newQuestions);
+        console.log(newQuestions, currentIndex);
       }
     } catch (error) {
       console.error(error);
@@ -493,6 +522,16 @@ function ScreeningTest() {
     return jsxLines;
   };
 
+  const handleListenAgain = () => {
+    const nextAudioUrl = questions[currentIndex].audioUrl;
+    const audio = new Audio(nextAudioUrl);
+    if (nextAudioUrl) {
+      audio.play();
+    }
+
+    trialCountRef.current--;
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -511,15 +550,20 @@ function ScreeningTest() {
           ))}
         </ProgressBarWrapper>
         <Box>
-          {questions.length && (
+          {questions.length ? (
             <QuestionWrapper>
               <Question>
                 {questions[currentIndex].hide
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
+              <ListenAgainButton
+                disabled={!trialCountRef.current}
+                onClick={handleListenAgain}>
+                다시 듣기
+              </ListenAgainButton>
             </QuestionWrapper>
-          )}
+          ) : null}
         </Box>
         <ButtonWrapper>
           {currentStep > stepCnt ? (
@@ -583,9 +627,9 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
   align-items: center;
   position: relative;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 5rem;
-    height: 5rem;
-    font-size: 2.4rem;
+    width: 4rem;
+    height: 4rem;
+    font-size: 2rem;
     border: 0.2rem solid white;
   }
   @media screen and (max-width: 767px) {
@@ -622,12 +666,14 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
 
 const QuestionWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   width: 130rem;
   margin: 0 auto;
   align-items: center;
   border-bottom: 0.2rem solid #c6c6c6;
   padding: 4rem 0;
+  gap: 3rem;
   &:last-child {
     border: none;
   }
@@ -661,6 +707,14 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 2rem;
   justify-content: center;
+`;
+const ListenAgainButton = styled.button`
+  background: var(--main-color);
+  color: white;
+  border-radius: 1.1rem;
+  font-family: 'Pretendard-Bold';
+  font-size: 1.6rem;
+  padding: 1.4rem;
 `;
 
 export default ScreeningTest;
