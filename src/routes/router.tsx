@@ -23,6 +23,7 @@ import Profile from '../pages/Profile.tsx';
 import FamilyPostRead from '../pages/FamilyPostRead.tsx';
 import CistDemo from '../pages/CistDemo.tsx';
 import AudioRecord from '../pages/AudioRecord.tsx';
+import Step6 from '../pages/Step6.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -65,6 +66,7 @@ export default function Router() {
       <Route path="/familyPostRead/:postId" element={<FamilyPostRead />} />
       <Route path="/cistDemo" element={<CistDemo />} />
       <Route path="/audioRecord" element={<AudioRecord />} />
+      <Route path="/step6" element={<Step6 />} />
     </Routes>
   );
 }
