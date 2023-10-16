@@ -337,7 +337,11 @@ function ScreeningTest() {
   );
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @media screen and (max-width: 767px) {
+    padding: 1.6rem;
+  }
+`;
 
 const Box = styled.div`
   width: 146.3rem;
@@ -356,8 +360,8 @@ const Box = styled.div`
     margin: 2rem 0;
   }
   @media screen and (max-width: 767px) {
-    width: 30rem;
-    height: 30rem;
+    width: 100%;
+    height: 35rem;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -376,12 +380,12 @@ const ProgressBarWrapper = styled.div`
 `;
 
 const Circle = styled.div<{ $step: number; $currentStep: number }>`
-  width: 12.5rem;
-  height: 12.5rem;
+  width: 8rem;
+  height: 8rem;
   color: white;
   border: 0.5rem solid white;
   border-radius: 50%;
-  font-size: 7rem;
+  font-size: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -393,10 +397,10 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
     border: 0.2rem solid white;
   }
   @media screen and (max-width: 767px) {
-    width: 4rem;
-    height: 4rem;
-    font-size: 2rem;
-    border: 0.2rem solid white;
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 0.7rem;
+    border: 0.1rem solid white;
   }
   &::before {
     content: '';
@@ -412,11 +416,14 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
     transform: translateY(-50%);
     z-index: -1;
     @media screen and (min-width: 768px) and (max-height: 1079px) {
+      left: -70%;
+      width: 3rem;
       height: 0.7rem;
     }
     @media screen and (max-width: 767px) {
-      width: 3rem;
-      height: 0.5rem;
+      left: -110%;
+      width: 1rem;
+      height: 0.3rem;
     }
   }
   &:first-child::before {
@@ -442,7 +449,7 @@ const QuestionWrapper = styled.div`
     padding: 2rem 0;
   }
   @media screen and (max-width: 767px) {
-    width: 26rem;
+    width: 100%;
     flex-wrap: wrap;
     justify-content: center;
     padding: 1rem 0;
@@ -473,8 +480,16 @@ const ListenAgainButton = styled.button`
   color: white;
   border-radius: 1.1rem;
   font-family: 'Pretendard-Bold';
-  font-size: 1.6rem;
-  padding: 1.4rem;
+  font-size: 3rem;
+  padding: 2rem 4rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.6rem;
+    padding: 1.4rem 2rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+    padding: 1.4rem 2rem;
+  }
 `;
 
 export default ScreeningTest;
