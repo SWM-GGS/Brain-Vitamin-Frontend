@@ -26,297 +26,36 @@ function ScreeningTest() {
   const [totalScore, setTotalScore] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const audioFileUrlRef = useRef('');
   const trialCountRef = useRef(10);
   const stepCnt = 13;
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const getData = async () => {
-    //   try {
-    //     const { data } = await axios.get(
-    //       `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
-    //       {
-    //         headers: {
-    //           authorization: `Bearer ${accessToken}`,
-    //         },
-    //       },
-    //     );
-    //     setQuestions(data.result);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-    // getData();
-    const questionArr = [
-      {
-        step: 0,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step0.mp3',
-        description:
-          '안녕하세요. 지금부터 귀하의 기억력과 사고능력을 살펴보기 위한 질문들을 드리겠습니다.\n생각나는 대로 최선을 다해 답변해 주시면 됩니다.',
-        screeningTestId: 29,
-      },
-      {
-        step: 1,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-1.mp3',
-        description: '올해는 몇 년도입니까?',
-        screeningTestId: 31,
-      },
-      {
-        step: 1,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-2.mp3',
-        description: '지금은 몇 월입니까?',
-        screeningTestId: 32,
-      },
-      {
-        step: 1,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-3.mp3',
-        description: '오늘은 며칠입니까?',
-        screeningTestId: 33,
-      },
-      {
-        step: 1,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step1-4.mp3',
-        description: '오늘은 무슨 요일입니까?',
-        screeningTestId: 34,
-      },
-      {
-        step: 2,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step2.mp3',
-        description: '현재 귀하께서 살고 계시는 나라는 어디인가요?',
-        screeningTestId: 35,
-      },
-      {
-        step: 3,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
-        description:
-          '지금부터 외우셔야 하는 문장 하나를 불러드리겠습니다.\n끝까지 잘 듣고 따라 해 보세요.',
-        screeningTestId: 36,
-      },
-      {
-        step: 3,
-        trial: 1,
-        mikeOn: true,
-        hide: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
-        description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
-        screeningTestId: 36,
-      },
-      {
-        step: 3,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
-        description:
-          '잘 하셨습니다. 제가 다시 한번 불러드리겠습니다.\n이번에도 다시 여쭈어 볼테니 잘 듣고 따라 해 보세요.',
-        screeningTestId: 36,
-      },
-      {
-        step: 3,
-        trial: 1,
-        mikeOn: true,
-        hide: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
-        description: '민수는 자전거를 타고 공원에 가서 11시부터 야구를 했다.',
-        screeningTestId: 36,
-      },
-      {
-        step: 3,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step3.mp3',
-        description: '제가 이 문장을 나중에 여쭤보겠습니다. 잘 기억하세요.',
-        screeningTestId: 36,
-      },
-      {
-        step: 4,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4.mp3',
-        description:
-          '제가 불러드리는 숫자를 그대로 따라 해 주세요.\n예를 들어 제가 1 2 3 하고 부르면, 똑같이 1 2 3 이렇게 말씀해 주세요.\n한 번만 불러드릴 수 있으니 잘 들어 주세요.',
-        screeningTestId: 37,
-      },
-      {
-        step: 4,
-        trial: 1,
-        mikeOn: true,
-        hide: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-1.mp3',
-        description: '6 9 7 3',
-        screeningTestId: 38,
-      },
-      {
-        step: 4,
-        trial: 1,
-        mikeOn: true,
-        hide: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step4-2.mp3',
-        description: '5 7 2 8 4',
-        screeningTestId: 39,
-      },
-      {
-        step: 5,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step5.mp3',
-        description: '제가 불러드리는 말을 끝에서부터 거꾸로 따라 해 주세요.',
-        screeningTestId: 40,
-      },
-      {
-        step: 5,
-        trial: 2,
-        mikeOn: true,
-        hide: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step5-1.mp3',
-        description: '금수강산',
-        screeningTestId: 41,
-      },
-      {
-        step: 6,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image6.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step6.mp3',
-        description:
-          '여기 점을 연결하여 그린 그림이 있습니다. 이 그림과 똑같이 되도록 같은 위치에 그려보세요. 점을 연결해서 그리시면 됩니다.',
-        screeningTestId: 42,
-      },
-      {
-        step: 7,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image7.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step7.mp3',
-        description:
-          '그림을 보시면 세 가지의 모양들이 정해진 순서로 나옵니다. 모양들을 보면서 어떤 순서로 나오는지 생각해 보세요. 왼쪽부터 차례대로 네모, 동그라미, 세모, 네모, 빈칸 세모입니다. 그렇다면 빈칸에는 무엇이 들어가야 할까요?',
-        screeningTestId: 43,
-      },
-      {
-        step: 8,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image8.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step8.mp3',
-        description:
-          '여기 네 칸 중의 한 칸에 별이 하나 있습니다. 첫 번째 그림과 두 번째 그림을 비교하였을 때, 별이 위쪽으로 이동합니다. 별이 어떤 식으로 이동하는지 잘 생각해 보십시오. 마지막 그림에서 네 칸 중에 별이 어디에 위치하게 될까요?',
-        screeningTestId: 49,
-      },
-      {
-        step: 9,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image9.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step9.mp3',
-        description:
-          "카드에 숫자와 계절이 하나씩 적혀 있습니다. '1-봄-2-여름~' 이렇게 연결 되어 나갑니다. 화살표가 가리키는 빈칸에 무엇이 들어갈까요?",
-        screeningTestId: 50,
-      },
-      {
-        step: 10,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step10.mp3',
-        description:
-          '제가 조금 전에 외우라고 불러드렸던 문장을 다시 한번 말씀해 주세요.',
-        screeningTestId: 51,
-      },
-      {
-        step: 11,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11.mp3',
-        description: '제시되는 그림의 이름을 말씀해 주세요.',
-        screeningTestId: 52,
-      },
-      {
-        step: 11,
-        mikeOn: true,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-1.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
-        description: '이것은 무엇입니까?',
-        screeningTestId: 53,
-      },
-      {
-        step: 11,
-        mikeOn: true,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-2.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
-        description: '이것은 무엇입니까?',
-        screeningTestId: 54,
-      },
-      {
-        step: 11,
-        mikeOn: true,
-        imgUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/image/image11-3.png',
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step11-1.mp3',
-        description: '이것은 무엇입니까?',
-        screeningTestId: 55,
-      },
-      {
-        step: 12,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step12.mp3',
-        description: '제가 말씀드리는 대로 행동으로 따라해주세요.',
-        screeningTestId: 56,
-      },
-      {
-        step: 12,
-        trial: 2,
-        mikeOn: true,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step12.mp3',
-        description:
-          '박수를 두 번 치고, 잠시 쉬었다가 다시 박수 한 번 쳐주세요.',
-        screeningTestId: 56,
-      },
-      {
-        step: 13,
-        mikeOn: true,
-        timeLimit: 60,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step13.mp3',
-        description:
-          '지금부터 1분 동안 과일이나 채소를 최대한 많이 이야기 해 주세요. 준비되셨지요? 자, 과일이나 채소 이름을 말씀해 주세요. 시작!',
-        screeningTestId: 57,
-      },
-      {
-        step: 14,
-        audioUrl:
-          'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/screening-test/audio/step13.mp3',
-        description: '모든 검사가 종료되었습니다. 수고 많으셨습니다.',
-        screeningTestId: 57,
-      },
-    ];
-    setQuestions(questionArr);
+    const getData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
+          {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          },
+        );
+        setQuestions(data.result);
 
-    const audio = new Audio(questionArr[currentIndex].audioUrl);
-    audio.play();
+        const audio = new Audio(data.result[currentIndex].audioUrl);
+        audio.play();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
   }, []);
 
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
   const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
-  const [audioUrl, setAudioUrl] = useState<Blob>();
 
   const onRecAudio = () => {
     // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
@@ -344,151 +83,172 @@ function ScreeningTest() {
 
   // 사용자가 음성 녹음을 중지했을 때
   const offRecAudio = () => {
-    if (!media || !stream || !analyser || !source) return;
+    return new Promise((resolve, reject) => {
+      if (!media || !stream || !analyser || !source) {
+        reject(new Error('offRecAudio failed'));
+        return;
+      }
 
-    // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
-    media.ondataavailable = function (e) {
-      setAudioUrl(e.data);
-    };
+      // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
+      stream.getAudioTracks().forEach(function (track) {
+        track.stop();
+      });
 
-    // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
-    stream.getAudioTracks().forEach(function (track) {
-      track.stop();
+      // 미디어 캡처 중지
+      media.stop();
+      // 메서드가 호출 된 노드 연결 해제
+      analyser.disconnect();
+      source.disconnect();
+
+      // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
+      media.ondataavailable = function (e) {
+        resolve(e.data);
+      };
     });
-
-    // 미디어 캡처 중지
-    media.stop();
-    // 메서드가 호출 된 노드 연결 해제
-    analyser.disconnect();
-    source.disconnect();
   };
 
-  const onSubmitAudioFile = useCallback(async () => {
-    if (!audioUrl) return;
-    console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
+  const onSubmitAudioFile = useCallback((audioUrl: Blob) => {
+    return new Promise((resolve, reject) => {
+      if (!audioUrl) {
+        reject(new Error('audioUrl not found'));
+        return;
+      }
+      console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
 
-    // File 생성자를 사용해 파일로 변환
-    const sound = new File([audioUrl], 'soundBlob', {
-      lastModified: new Date().getTime(),
-      type: 'audio',
+      // File 생성자를 사용해 파일로 변환
+      const sound = new File([audioUrl], 'soundBlob', {
+        lastModified: new Date().getTime(),
+        type: 'audio',
+      });
+      console.log(sound); // File 정보 출력
+
+      // 음성 파일을 s3에 업로드
+      let uploadUrl = '';
+      const region = 'ap-northeast-2';
+      const bucket = 'brain-vitamin-user-files';
+      const s3Client = new S3Client({
+        region, // AWS 리전을 설정하세요
+        credentials: {
+          accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+          secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+        },
+      });
+      const path = `screeningTestAudios/${generateUniqueNumber()}-${
+        sound.lastModified
+      }`;
+      const uploadParams = {
+        Bucket: bucket,
+        Key: path,
+        Body: sound,
+        ContentType: 'audio/mpeg',
+      };
+      const uploadAudioFileToS3 = async () => {
+        try {
+          const command = new PutObjectCommand(uploadParams);
+          await s3Client.send(command);
+          uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
+          console.log('uploadUrl', uploadUrl);
+          resolve(uploadUrl);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      uploadAudioFileToS3();
     });
-    console.log(sound); // File 정보 출력
+  }, []);
 
-    // 음성 파일을 s3에 업로드
-    let uploadUrl = '';
-    const region = 'ap-northeast-2';
-    const bucket = 'brain-vitamin-user-files';
-    const s3Client = new S3Client({
-      region, // AWS 리전을 설정하세요
-      credentials: {
-        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-      },
+  const handleEachProblemAnswerSubmit = (uploadUrl: string) => {
+    return new Promise((resolve) => {
+      const submitAnswer = async () => {
+        try {
+          const { data } = await axios.post(
+            `${
+              import.meta.env.VITE_API_URL
+            }/patient/vitamins/screening-test/detail`,
+            {
+              audioFileUrl: uploadUrl,
+              screeningTestId: questions[currentIndex].screeningTestId,
+              count: 1,
+              firstVertex: [],
+              secondVertex: [],
+            },
+            {
+              headers: {
+                authorization: `Bearer ${accessToken}`,
+              },
+            },
+          );
+          if (data.result.stop) {
+            setTotalScore((prev) => prev + data.result);
+          } else {
+            // 추가 질문 추가
+            const newQuestions = questions;
+            const additionalQuestion = {
+              ...newQuestions[currentIndex],
+              audioUrl: '',
+              description: data.result.description,
+            };
+
+            newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
+            setQuestions(newQuestions);
+            console.log(newQuestions, currentIndex);
+            resolve(true);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      submitAnswer();
     });
-    const path = `screeningTestAudios/${generateUniqueNumber()}-${
-      sound.lastModified
-    }`;
-    const uploadParams = {
-      Bucket: bucket,
-      Key: path,
-      Body: sound,
-      ContentType: 'audio/mpeg',
-    };
-    try {
-      const command = new PutObjectCommand(uploadParams);
-      await s3Client.send(command);
-      uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
-    } catch (error) {
-      console.error(error);
-    }
-    console.log('uploadUrl', uploadUrl);
-    // 3. 현재 파일 갱신
-    audioFileUrlRef.current = uploadUrl;
-  }, [audioUrl]);
-
-  const saveAudioFile = () => {
-    // 1. 녹음 중지
-    offRecAudio();
-    // 2. 파일 저장
-    onSubmitAudioFile();
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     // 1. 녹음 중이었을 경우
     if (questions[currentIndex].mikeOn) {
-      // 1-1. 오디오 파일 저장
-      saveAudioFile();
-      // 1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
-      handleEachProblemAnswerSubmit(audioFileUrlRef.current);
+      try {
+        // 1-1. 녹음 중지
+        const audioFileUrl = await offRecAudio();
+        // 1-2. 파일 저장
+        const uploadUrl = await onSubmitAudioFile(audioFileUrl as Blob);
+        // 1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+        await handleEachProblemAnswerSubmit(uploadUrl as string);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    // 2. 현재 스텝 갱신
-    if (currentStep !== questions[currentIndex + 1].step) {
-      setCurrentStep((prev) => prev + 1);
-    }
-
-    // 3. 현재 문제 인덱스 갱신
-    setCurrentIndex((prev) => prev + 1);
-
-    // 4. 다음 질문 음성 파일 재생
+    // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
     const audio = new Audio(nextAudioUrl);
     if (nextAudioUrl) {
       audio.play();
     }
 
-    // 5. 다음 문제가 mike on일 경우 녹음 시작
+    // 3. 다음 문제가 mike on일 경우 녹음 시작
     if (questions[currentIndex + 1].mikeOn) {
       // 질문이 끝난 후 녹음 시작
-      audio.addEventListener('loadedmetadata', (e) => {
-        if (e.target) {
-          const duration = (e.target as HTMLAudioElement).duration;
-          setTimeout(() => onRecAudio(), duration * 1000);
-        }
-      });
-    }
-
-    // 6. 다시 듣기 횟수 갱신
-    trialCountRef.current = questions[currentIndex + 1].trial ?? 10;
-  };
-
-  const handleEachProblemAnswerSubmit = async (audioFileUrl: string) => {
-    try {
-      const { data } = await axios.post(
-        `${
-          import.meta.env.VITE_API_URL
-        }/patient/vitamins/screening-test/detail`,
-        {
-          audioFileUrl,
-          screeningTestId: questions[currentIndex].screeningTestId,
-          count: 1,
-          firstVertex: [],
-          secondVertex: [],
-        },
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      if (data.result.stop) {
-        setTotalScore((prev) => prev + data.result);
+      if (nextAudioUrl) {
+        audio.addEventListener('loadedmetadata', (e) => {
+          if (e.target) {
+            const duration = (e.target as HTMLAudioElement).duration;
+            setTimeout(() => onRecAudio(), duration * 1000);
+          }
+        });
       } else {
-        // 추가 질문 추가
-        const newQuestions = questions;
-        const additionalQuestion = {
-          ...newQuestions[currentIndex],
-          audioUrl: '',
-          description: data.result.description,
-        };
-
-        newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
-        setQuestions(newQuestions);
-        console.log(newQuestions, currentIndex);
+        onRecAudio();
       }
-    } catch (error) {
-      console.error(error);
     }
+
+    // 4. 다시 듣기 횟수 갱신
+    trialCountRef.current = questions[currentIndex + 1].trial ?? 10;
+
+    // 5. 현재 스텝 갱신
+    if (currentStep !== questions[currentIndex + 1].step) {
+      setCurrentStep((prev) => prev + 1);
+    }
+
+    // 6. 현재 문제 인덱스 갱신
+    setCurrentIndex((prev) => prev + 1);
   };
 
   const onSubmit = async () => {
