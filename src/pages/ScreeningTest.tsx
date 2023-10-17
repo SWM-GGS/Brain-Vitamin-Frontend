@@ -61,11 +61,12 @@ function ScreeningTest() {
           },
         );
         setQuestions(data.result);
-        setCandidates7([
+        const step7data = [
           '/assets/images/step7-1.png',
           '/assets/images/step7-2.png',
           '/assets/images/step7-3.png',
-        ]);
+        ];
+        setCandidates7([...step7data].sort(() => getRandomFloat() - 0.5));
         const step8data = [
           '/assets/images/step8-1.png',
           '/assets/images/step8-2.png',
