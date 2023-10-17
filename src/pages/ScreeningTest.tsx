@@ -28,6 +28,9 @@ function ScreeningTest() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [trialCount, setTrialCount] = useState(10);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+    null,
+  );
   const stepCnt = 13;
   const navigate = useNavigate();
 
@@ -204,6 +207,11 @@ function ScreeningTest() {
   };
 
   const handleNextStep = async () => {
+    // 0. 이전 오디오 멈춤
+    if (currentAudio) {
+      currentAudio.pause();
+    }
+
     // 1. 녹음 중이었을 경우
     if (questions[currentIndex].mikeOn) {
       try {
@@ -221,8 +229,10 @@ function ScreeningTest() {
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
     const audio = new Audio(nextAudioUrl);
+    setCurrentAudio(null);
     if (nextAudioUrl) {
       audio.play();
+      setCurrentAudio(audio);
     }
 
     // 3. 다음 문제가 mike on일 경우 녹음 시작
