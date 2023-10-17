@@ -10,6 +10,10 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
 import { FetchHttpHandler } from '@smithy/fetch-http-handler';
 import Step6 from './Step6';
+import {
+  ButtonContainer,
+  PictureButton,
+} from '../components/common/GameButton';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -36,6 +40,9 @@ function ScreeningTest() {
   const navigate = useNavigate();
   const [firstVertex, setFirstVertex] = useState<number[]>([]);
   const [secondVertex, setSecondVertex] = useState<number[]>([]);
+  const [candidates7, setCandidates7] = useState<string[]>([]);
+  const buttonRefs7 = useRef<HTMLButtonElement[] | null[]>([]);
+  const clickedTarget7 = useRef<string | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -49,6 +56,11 @@ function ScreeningTest() {
           },
         );
         setQuestions(data.result);
+        setCandidates7([
+          '/assets/images/step7-1.png',
+          '/assets/images/step7-2.png',
+          '/assets/images/step7-3.png',
+        ]);
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.play();
@@ -165,7 +177,7 @@ function ScreeningTest() {
     });
   }, []);
 
-  const handleEachProblemAnswerSubmit = (uploadUrl: string) => {
+  const handleEachProblemAnswerSubmit = (uploadUrl: string | null) => {
     return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
@@ -209,25 +221,40 @@ function ScreeningTest() {
     });
   };
 
+  const handleStep6789Submit = async () => {
+    if (questions[currentIndex].step === 6) {
+      await handleEachProblemAnswerSubmit(null);
+    }
+    if (
+      questions[currentIndex].step === 7 &&
+      clickedTarget7.current === '/assets/images/step7-2.png'
+    ) {
+      setTotalScore((prev) => prev + 1);
+    }
+  };
+
   const handleNextStep = async () => {
     // 0. 이전 오디오 멈춤
     if (currentAudio) {
       currentAudio.pause();
     }
 
-    // 1. 녹음 중이었을 경우
+    // 1. 답안 제출
     if (questions[currentIndex].mikeOn) {
+      // 1-1. 음성 제출인 경우
       try {
-        // 1-1. 녹음 중지
+        // 1-1-1. 녹음 중지
         const audioFileUrl = await offRecAudio();
-        // 1-2. 파일 저장
+        // 1-1-2. 파일 저장
         const uploadUrl = await onSubmitAudioFile(audioFileUrl as Blob);
-        // 1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+        // 1-1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
         await handleEachProblemAnswerSubmit(uploadUrl as string);
       } catch (error) {
         console.error(error);
       }
     }
+    // 1-2. 음성 제출이 아닌 경우
+    handleStep6789Submit();
 
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
@@ -306,6 +333,39 @@ function ScreeningTest() {
     setTrialCount((prev) => prev - 1);
   };
 
+  const initButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--button-bg-color)';
+    el.style.border = '0.2rem solid var(--black-color)';
+    el.style.color = 'white';
+  };
+
+  const activateButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--main-bg-color)';
+    el.style.border = '0.2rem solid var(--main-color)';
+    el.style.color = 'var(--main-color)';
+  };
+
+  const onClickButton = (
+    target: string,
+    el: HTMLElement,
+    clickedTarget: React.MutableRefObject<string | null>,
+    buttonRefs: React.MutableRefObject<HTMLButtonElement[] | null[]>,
+  ) => {
+    if (clickedTarget.current === target) {
+      initButtonStyle(el);
+      clickedTarget.current = null;
+    } else {
+      for (const buttonRef of buttonRefs.current) {
+        if (buttonRef?.style.backgroundColor === 'var(--main-bg-color)') {
+          initButtonStyle(buttonRef);
+          break;
+        }
+      }
+      activateButtonStyle(el);
+      clickedTarget.current = target;
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -325,13 +385,11 @@ function ScreeningTest() {
         </ProgressBarWrapper>
         <Box>
           {questions.length ? (
-            <QuestionWrapper
-              style={{
-                gap: questions[currentIndex].step === 6 ? '1rem' : '3rem',
-              }}>
+            <QuestionWrapper>
               <Question>
                 {questions[currentIndex].hide ||
-                questions[currentIndex].step === 6
+                (questions[currentIndex].step >= 6 &&
+                  questions[currentIndex].step <= 9)
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
@@ -348,6 +406,31 @@ function ScreeningTest() {
                     setSecondVertex={setSecondVertex}
                   />
                 </Step6Container>
+              )}
+              {questions[currentIndex].step === 7 && (
+                <Step7Container>
+                  <Step7Image alt="" src={questions[currentIndex].imgUrl} />
+                  <ButtonContainer>
+                    {candidates7.map((v) => (
+                      <PictureButton
+                        key={v}
+                        ref={(el) =>
+                          (buttonRefs7.current[buttonRefs7.current.length] = el)
+                        }
+                        $imgUrl={v}
+                        $isMedium={true}
+                        onClick={(e) =>
+                          onClickButton(
+                            v,
+                            e.target as HTMLButtonElement,
+                            clickedTarget7,
+                            buttonRefs7,
+                          )
+                        }
+                      />
+                    ))}
+                  </ButtonContainer>
+                </Step7Container>
               )}
             </QuestionWrapper>
           ) : null}
@@ -474,6 +557,7 @@ const QuestionWrapper = styled.div`
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 60rem;
     padding: 2rem 0;
+    gap: 2rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -538,6 +622,22 @@ const Step6Image = styled.img`
   @media screen and (max-width: 767px) {
     width: 250px;
     height: 250px;
+  }
+`;
+const Step7Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+`;
+const Step7Image = styled.img`
+  width: 1700px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 900px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 300px;
   }
 `;
 
