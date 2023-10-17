@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import { Container } from '../components/common/Container';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
+import { FetchHttpHandler } from '@smithy/fetch-http-handler';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -132,6 +133,7 @@ function ScreeningTest() {
           accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
           secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
         },
+        requestHandler: new FetchHttpHandler({ keepAlive: false }),
       });
       const path = `screeningTestAudios/${generateUniqueNumber()}-${
         sound.lastModified
@@ -182,18 +184,17 @@ function ScreeningTest() {
             setTotalScore((prev) => prev + data.result);
           } else {
             // 추가 질문 추가
-            const newQuestions = questions;
-            const additionalQuestion = {
-              ...newQuestions[currentIndex],
-              audioUrl: '',
-              description: data.result.description,
-            };
-
-            newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
-            setQuestions(newQuestions);
-            console.log(newQuestions, currentIndex);
-            resolve(true);
+            // const newQuestions = questions;
+            // const additionalQuestion = {
+            //   ...newQuestions[currentIndex],
+            //   audioUrl: '',
+            //   description: data.result.description,
+            // };
+            // newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
+            // setQuestions(newQuestions);
+            // console.log(newQuestions, currentIndex);
           }
+          resolve(true);
         } catch (error) {
           console.error(error);
         }
