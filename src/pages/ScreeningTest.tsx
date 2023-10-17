@@ -14,6 +14,7 @@ import {
   ButtonContainer,
   PictureButton,
 } from '../components/common/GameButton';
+import { getRandomFloat } from '../utils/random';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -44,6 +45,9 @@ function ScreeningTest() {
   const [candidates7, setCandidates7] = useState<string[]>([]);
   const buttonRefs7 = useRef<HTMLButtonElement[] | null[]>([]);
   const clickedTarget7 = useRef<string | null>(null);
+  const [candidates8, setCandidates8] = useState<string[]>([]);
+  const buttonRefs8 = useRef<HTMLButtonElement[] | null[]>([]);
+  const clickedTarget8 = useRef<string | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -62,6 +66,13 @@ function ScreeningTest() {
           '/assets/images/step7-2.png',
           '/assets/images/step7-3.png',
         ]);
+        const step8data = [
+          '/assets/images/step8-1.png',
+          '/assets/images/step8-2.png',
+          '/assets/images/step8-3.png',
+          '/assets/images/step8-4.png',
+        ];
+        setCandidates8([...step8data].sort(() => getRandomFloat() - 0.5));
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.play();
@@ -229,6 +240,12 @@ function ScreeningTest() {
     if (
       questions[currentIndex].step === 7 &&
       clickedTarget7.current === '/assets/images/step7-2.png'
+    ) {
+      setTotalScore((prev) => prev + 1);
+    }
+    if (
+      questions[currentIndex].step === 8 &&
+      clickedTarget8.current === '/assets/images/step8-4.png'
     ) {
       setTotalScore((prev) => prev + 1);
     }
@@ -437,6 +454,31 @@ function ScreeningTest() {
                             e.target as HTMLButtonElement,
                             clickedTarget7,
                             buttonRefs7,
+                          )
+                        }
+                      />
+                    ))}
+                  </ButtonContainer>
+                </Step7Container>
+              )}
+              {questions[currentIndex].step === 8 && (
+                <Step7Container>
+                  <Step7Image alt="" src={questions[currentIndex].imgUrl} />
+                  <ButtonContainer>
+                    {candidates8.map((v) => (
+                      <PictureButton
+                        key={v}
+                        ref={(el) =>
+                          (buttonRefs8.current[buttonRefs8.current.length] = el)
+                        }
+                        $imgUrl={v}
+                        $isMedium={true}
+                        onClick={(e) =>
+                          onClickButton(
+                            v,
+                            e.target as HTMLButtonElement,
+                            clickedTarget8,
+                            buttonRefs8,
                           )
                         }
                       />
