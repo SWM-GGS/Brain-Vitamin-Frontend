@@ -36,6 +36,7 @@ function ScreeningTest() {
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
     null,
   );
+  const [currentTimer, setCurrentTimer] = useState<number | null>(null);
   const stepCnt = 13;
   const navigate = useNavigate();
   const [firstVertex, setFirstVertex] = useState<number[]>([]);
@@ -233,14 +234,21 @@ function ScreeningTest() {
     }
   };
 
-  const handleNextStep = async () => {
-    // 0. 이전 오디오 멈춤
+  const stopPreviousAudio = () => {
     if (currentAudio) {
       currentAudio.pause();
     }
+    if (currentTimer) {
+      clearTimeout(currentTimer);
+    }
+  };
+
+  const handleNextStep = async () => {
+    // 0. 이전 오디오 멈춤
+    stopPreviousAudio();
 
     // 1. 답안 제출
-    if (questions[currentIndex].mikeOn) {
+    if (questions[currentIndex].mikeOn && !currentTimer) {
       // 1-1. 음성 제출인 경우
       try {
         // 1-1-1. 녹음 중지
@@ -272,7 +280,11 @@ function ScreeningTest() {
         audio.addEventListener('loadedmetadata', (e) => {
           if (e.target) {
             const duration = (e.target as HTMLAudioElement).duration;
-            setTimeout(() => onRecAudio(), duration * 1000);
+            const timer = setTimeout(() => {
+              onRecAudio();
+              setCurrentTimer(null);
+            }, duration * 1000);
+            setCurrentTimer(timer);
           }
         });
       } else {
