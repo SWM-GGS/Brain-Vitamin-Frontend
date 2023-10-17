@@ -27,7 +27,7 @@ function ScreeningTest() {
   const [totalScore, setTotalScore] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const trialCountRef = useRef(10);
+  const [trialCount, setTrialCount] = useState(10);
   const stepCnt = 13;
   const navigate = useNavigate();
 
@@ -241,7 +241,7 @@ function ScreeningTest() {
     }
 
     // 4. 다시 듣기 횟수 갱신
-    trialCountRef.current = questions[currentIndex + 1].trial ?? 10;
+    setTrialCount(questions[currentIndex + 1].trial ?? 10);
 
     // 5. 현재 스텝 갱신
     if (currentStep !== questions[currentIndex + 1].step) {
@@ -290,7 +290,7 @@ function ScreeningTest() {
       audio.play();
     }
 
-    trialCountRef.current--;
+    setTrialCount((prev) => prev - 1);
   };
 
   return (
@@ -319,7 +319,7 @@ function ScreeningTest() {
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               <ListenAgainButton
-                disabled={!trialCountRef.current}
+                disabled={!trialCount}
                 onClick={handleListenAgain}>
                 다시 듣기
               </ListenAgainButton>
@@ -483,6 +483,9 @@ const ListenAgainButton = styled.button`
   font-family: 'Pretendard-Bold';
   font-size: 3rem;
   padding: 2rem 4rem;
+  &:disabled {
+    background: #c6c6c6;
+  }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
