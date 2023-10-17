@@ -8,6 +8,13 @@ import { useNavigate } from 'react-router';
 import { Container } from '../components/common/Container';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
+import { FetchHttpHandler } from '@smithy/fetch-http-handler';
+import Step6 from './Step6';
+import {
+  ButtonContainer,
+  PictureButton,
+} from '../components/common/GameButton';
+import { getRandomFloat } from '../utils/random';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -26,9 +33,21 @@ function ScreeningTest() {
   const [totalScore, setTotalScore] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const trialCountRef = useRef(10);
+  const [trialCount, setTrialCount] = useState(10);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+    null,
+  );
+  const [currentTimer, setCurrentTimer] = useState<number | null>(null);
   const stepCnt = 13;
   const navigate = useNavigate();
+  const [firstVertex, setFirstVertex] = useState<number[]>([]);
+  const [secondVertex, setSecondVertex] = useState<number[]>([]);
+  const [candidates7, setCandidates7] = useState<string[]>([]);
+  const buttonRefs7 = useRef<HTMLButtonElement[] | null[]>([]);
+  const clickedTarget7 = useRef<string | null>(null);
+  const [candidates8, setCandidates8] = useState<string[]>([]);
+  const buttonRefs8 = useRef<HTMLButtonElement[] | null[]>([]);
+  const clickedTarget8 = useRef<string | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -42,6 +61,19 @@ function ScreeningTest() {
           },
         );
         setQuestions(data.result);
+        const step7data = [
+          '/assets/images/step7-1.png',
+          '/assets/images/step7-2.png',
+          '/assets/images/step7-3.png',
+        ];
+        setCandidates7([...step7data].sort(() => getRandomFloat() - 0.5));
+        const step8data = [
+          '/assets/images/step8-1.png',
+          '/assets/images/step8-2.png',
+          '/assets/images/step8-3.png',
+          '/assets/images/step8-4.png',
+        ];
+        setCandidates8([...step8data].sort(() => getRandomFloat() - 0.5));
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.play();
@@ -132,6 +164,7 @@ function ScreeningTest() {
           accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
           secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
         },
+        requestHandler: new FetchHttpHandler({ keepAlive: false }),
       });
       const path = `screeningTestAudios/${generateUniqueNumber()}-${
         sound.lastModified
@@ -157,7 +190,7 @@ function ScreeningTest() {
     });
   }, []);
 
-  const handleEachProblemAnswerSubmit = (uploadUrl: string) => {
+  const handleEachProblemAnswerSubmit = (uploadUrl: string | null) => {
     return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
@@ -166,11 +199,11 @@ function ScreeningTest() {
               import.meta.env.VITE_API_URL
             }/patient/vitamins/screening-test/detail`,
             {
+              count: 1,
+              firstVertex,
+              secondVertex,
               audioFileUrl: uploadUrl,
               screeningTestId: questions[currentIndex].screeningTestId,
-              count: 1,
-              firstVertex: [],
-              secondVertex: [],
             },
             {
               headers: {
@@ -182,18 +215,17 @@ function ScreeningTest() {
             setTotalScore((prev) => prev + data.result);
           } else {
             // 추가 질문 추가
-            const newQuestions = questions;
-            const additionalQuestion = {
-              ...newQuestions[currentIndex],
-              audioUrl: '',
-              description: data.result.description,
-            };
-
-            newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
-            setQuestions(newQuestions);
-            console.log(newQuestions, currentIndex);
-            resolve(true);
+            // const newQuestions = questions;
+            // const additionalQuestion = {
+            //   ...newQuestions[currentIndex],
+            //   audioUrl: '',
+            //   description: data.result.description,
+            // };
+            // newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
+            // setQuestions(newQuestions);
+            // console.log(newQuestions, currentIndex);
           }
+          resolve(true);
         } catch (error) {
           console.error(error);
         }
@@ -202,26 +234,61 @@ function ScreeningTest() {
     });
   };
 
+  const handleStep6789Submit = async () => {
+    if (questions[currentIndex].step === 6) {
+      await handleEachProblemAnswerSubmit(null);
+    }
+    if (
+      questions[currentIndex].step === 7 &&
+      clickedTarget7.current === '/assets/images/step7-2.png'
+    ) {
+      setTotalScore((prev) => prev + 1);
+    }
+    if (
+      questions[currentIndex].step === 8 &&
+      clickedTarget8.current === '/assets/images/step8-4.png'
+    ) {
+      setTotalScore((prev) => prev + 1);
+    }
+  };
+
+  const stopPreviousAudio = () => {
+    if (currentAudio) {
+      currentAudio.pause();
+    }
+    if (currentTimer) {
+      clearTimeout(currentTimer);
+    }
+  };
+
   const handleNextStep = async () => {
-    // 1. 녹음 중이었을 경우
-    if (questions[currentIndex].mikeOn) {
+    // 0. 이전 오디오 멈춤
+    stopPreviousAudio();
+
+    // 1. 답안 제출
+    if (questions[currentIndex].mikeOn && !currentTimer) {
+      // 1-1. 음성 제출인 경우
       try {
-        // 1-1. 녹음 중지
+        // 1-1-1. 녹음 중지
         const audioFileUrl = await offRecAudio();
-        // 1-2. 파일 저장
+        // 1-1-2. 파일 저장
         const uploadUrl = await onSubmitAudioFile(audioFileUrl as Blob);
-        // 1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+        // 1-1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
         await handleEachProblemAnswerSubmit(uploadUrl as string);
       } catch (error) {
         console.error(error);
       }
     }
+    // 1-2. 음성 제출이 아닌 경우
+    handleStep6789Submit();
 
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
     const audio = new Audio(nextAudioUrl);
+    setCurrentAudio(null);
     if (nextAudioUrl) {
       audio.play();
+      setCurrentAudio(audio);
     }
 
     // 3. 다음 문제가 mike on일 경우 녹음 시작
@@ -231,7 +298,11 @@ function ScreeningTest() {
         audio.addEventListener('loadedmetadata', (e) => {
           if (e.target) {
             const duration = (e.target as HTMLAudioElement).duration;
-            setTimeout(() => onRecAudio(), duration * 1000);
+            const timer = setTimeout(() => {
+              onRecAudio();
+              setCurrentTimer(null);
+            }, duration * 1000);
+            setCurrentTimer(timer);
           }
         });
       } else {
@@ -240,7 +311,7 @@ function ScreeningTest() {
     }
 
     // 4. 다시 듣기 횟수 갱신
-    trialCountRef.current = questions[currentIndex + 1].trial ?? 10;
+    setTrialCount(questions[currentIndex + 1].trial ?? 10);
 
     // 5. 현재 스텝 갱신
     if (currentStep !== questions[currentIndex + 1].step) {
@@ -289,7 +360,40 @@ function ScreeningTest() {
       audio.play();
     }
 
-    trialCountRef.current--;
+    setTrialCount((prev) => prev - 1);
+  };
+
+  const initButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--button-bg-color)';
+    el.style.border = '0.2rem solid var(--black-color)';
+    el.style.color = 'white';
+  };
+
+  const activateButtonStyle = (el: HTMLElement) => {
+    el.style.backgroundColor = 'var(--main-bg-color)';
+    el.style.border = '0.2rem solid var(--main-color)';
+    el.style.color = 'var(--main-color)';
+  };
+
+  const onClickButton = (
+    target: string,
+    el: HTMLElement,
+    clickedTarget: React.MutableRefObject<string | null>,
+    buttonRefs: React.MutableRefObject<HTMLButtonElement[] | null[]>,
+  ) => {
+    if (clickedTarget.current === target) {
+      initButtonStyle(el);
+      clickedTarget.current = null;
+    } else {
+      for (const buttonRef of buttonRefs.current) {
+        if (buttonRef?.style.backgroundColor === 'var(--main-bg-color)') {
+          initButtonStyle(buttonRef);
+          break;
+        }
+      }
+      activateButtonStyle(el);
+      clickedTarget.current = target;
+    }
   };
 
   return (
@@ -313,15 +417,76 @@ function ScreeningTest() {
           {questions.length ? (
             <QuestionWrapper>
               <Question>
-                {questions[currentIndex].hide
+                {questions[currentIndex].hide ||
+                (questions[currentIndex].step >= 6 &&
+                  questions[currentIndex].step <= 9)
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               <ListenAgainButton
-                disabled={!trialCountRef.current}
+                disabled={!trialCount}
                 onClick={handleListenAgain}>
                 다시 듣기
               </ListenAgainButton>
+              {questions[currentIndex].step === 6 && (
+                <Step6Container>
+                  <Step6Image alt="" src={questions[currentIndex].imgUrl} />
+                  <Step6
+                    setFirstVertex={setFirstVertex}
+                    setSecondVertex={setSecondVertex}
+                  />
+                </Step6Container>
+              )}
+              {questions[currentIndex].step === 7 && (
+                <Step7Container>
+                  <Step7Image alt="" src={questions[currentIndex].imgUrl} />
+                  <ButtonContainer>
+                    {candidates7.map((v) => (
+                      <PictureButton
+                        key={v}
+                        ref={(el) =>
+                          (buttonRefs7.current[buttonRefs7.current.length] = el)
+                        }
+                        $imgUrl={v}
+                        $isMedium={true}
+                        onClick={(e) =>
+                          onClickButton(
+                            v,
+                            e.target as HTMLButtonElement,
+                            clickedTarget7,
+                            buttonRefs7,
+                          )
+                        }
+                      />
+                    ))}
+                  </ButtonContainer>
+                </Step7Container>
+              )}
+              {questions[currentIndex].step === 8 && (
+                <Step7Container>
+                  <Step7Image alt="" src={questions[currentIndex].imgUrl} />
+                  <ButtonContainer>
+                    {candidates8.map((v) => (
+                      <PictureButton
+                        key={v}
+                        ref={(el) =>
+                          (buttonRefs8.current[buttonRefs8.current.length] = el)
+                        }
+                        $imgUrl={v}
+                        $isMedium={true}
+                        onClick={(e) =>
+                          onClickButton(
+                            v,
+                            e.target as HTMLButtonElement,
+                            clickedTarget8,
+                            buttonRefs8,
+                          )
+                        }
+                      />
+                    ))}
+                  </ButtonContainer>
+                </Step7Container>
+              )}
             </QuestionWrapper>
           ) : null}
         </Box>
@@ -361,7 +526,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 35rem;
+    height: 52rem;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -447,6 +612,7 @@ const QuestionWrapper = styled.div`
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 60rem;
     padding: 2rem 0;
+    gap: 2rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -482,6 +648,9 @@ const ListenAgainButton = styled.button`
   font-family: 'Pretendard-Bold';
   font-size: 3rem;
   padding: 2rem 4rem;
+  &:disabled {
+    background: #c6c6c6;
+  }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
@@ -489,6 +658,41 @@ const ListenAgainButton = styled.button`
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
+  }
+`;
+const Step6Container = styled.div`
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`;
+const Step6Image = styled.img`
+  width: 600px;
+  height: 600px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 300px;
+    height: 300px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 250px;
+    height: 250px;
+  }
+`;
+const Step7Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+`;
+const Step7Image = styled.img`
+  width: 1700px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 900px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 300px;
   }
 `;
 
