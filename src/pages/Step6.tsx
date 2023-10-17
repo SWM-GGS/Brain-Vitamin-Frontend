@@ -15,12 +15,21 @@ type LineInfo = {
   endItem: string | null;
   isConnected: boolean;
 };
+type Step6Props = {
+  setFirstVertex: React.Dispatch<React.SetStateAction<number[]>>;
+  setSecondVertex: React.Dispatch<React.SetStateAction<number[]>>;
+};
 
-function Step6() {
+function Step6({ setFirstVertex, setSecondVertex }: Step6Props) {
   const refs = useRef<HTMLDivElement[] | null[]>([]);
   const [boxs, setBoxs] = useState<CoordInfo[]>([]);
   const [lines, setLines] = useState<LineInfo[]>([]);
   const itemCount = 25;
+
+  useEffect(() => {
+    setFirstVertex(lines.map((v) => +v.startItem));
+    setSecondVertex(lines.map((v) => (v.endItem ? +v.endItem : 0)));
+  }, [lines]);
 
   const setPosition = useCallback(
     (
@@ -186,9 +195,6 @@ function Step6() {
     e.preventDefault();
   };
 
-  console.log(lines.map((v) => +v.startItem));
-  console.log(lines.map((v) => (v.endItem ? +v.endItem : null)));
-
   return (
     <Container>
       <Board>
@@ -243,22 +249,37 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(var(--vh, 1vh) * 100);
 `;
 const Board = styled.div`
-  width: 500px;
-  height: 500px;
-  border: 3px solid black;
+  width: 600px;
+  height: 600px;
+  border: 5px solid black;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
   justify-items: center;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 300px;
+    height: 300px;
+    border: 2px solid black;
+  }
+  @media screen and (max-width: 767px) {
+    width: 250px;
+    height: 250px;
+    border: 2px solid black;
+  }
 `;
 const Dot = styled.div`
-  padding: 7px;
+  padding: 12px;
   background: black;
   border-radius: 50%;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding: 7px;
+  }
+  @media screen and (max-width: 767px) {
+    padding: 6px;
+  }
 `;
 
 export default Step6;

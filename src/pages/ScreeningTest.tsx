@@ -9,6 +9,7 @@ import { Container } from '../components/common/Container';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
 import { FetchHttpHandler } from '@smithy/fetch-http-handler';
+import Step6 from './Step6';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -33,6 +34,8 @@ function ScreeningTest() {
   );
   const stepCnt = 13;
   const navigate = useNavigate();
+  const [firstVertex, setFirstVertex] = useState<number[]>([]);
+  const [secondVertex, setSecondVertex] = useState<number[]>([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -171,11 +174,11 @@ function ScreeningTest() {
               import.meta.env.VITE_API_URL
             }/patient/vitamins/screening-test/detail`,
             {
+              count: 1,
+              firstVertex,
+              secondVertex,
               audioFileUrl: uploadUrl,
               screeningTestId: questions[currentIndex].screeningTestId,
-              count: 1,
-              firstVertex: [],
-              secondVertex: [],
             },
             {
               headers: {
@@ -322,9 +325,13 @@ function ScreeningTest() {
         </ProgressBarWrapper>
         <Box>
           {questions.length ? (
-            <QuestionWrapper>
+            <QuestionWrapper
+              style={{
+                gap: questions[currentIndex].step === 6 ? '1rem' : '3rem',
+              }}>
               <Question>
-                {questions[currentIndex].hide
+                {questions[currentIndex].hide ||
+                questions[currentIndex].step === 6
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
@@ -333,6 +340,15 @@ function ScreeningTest() {
                 onClick={handleListenAgain}>
                 다시 듣기
               </ListenAgainButton>
+              {questions[currentIndex].step === 6 && (
+                <Step6Container>
+                  <Step6Image alt="" src={questions[currentIndex].imgUrl} />
+                  <Step6
+                    setFirstVertex={setFirstVertex}
+                    setSecondVertex={setSecondVertex}
+                  />
+                </Step6Container>
+              )}
             </QuestionWrapper>
           ) : null}
         </Box>
@@ -372,7 +388,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 35rem;
+    height: 52rem;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -503,6 +519,25 @@ const ListenAgainButton = styled.button`
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
+  }
+`;
+const Step6Container = styled.div`
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`;
+const Step6Image = styled.img`
+  width: 600px;
+  height: 600px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 300px;
+    height: 300px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 250px;
+    height: 250px;
   }
 `;
 
