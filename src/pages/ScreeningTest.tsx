@@ -13,6 +13,7 @@ import Step6 from './Step6';
 import {
   ButtonContainer,
   PictureButton,
+  Button as NumButton,
 } from '../components/common/GameButton';
 import { getRandomFloat } from '../utils/random';
 
@@ -48,6 +49,10 @@ function ScreeningTest() {
   const [candidates8, setCandidates8] = useState<string[]>([]);
   const buttonRefs8 = useRef<HTMLButtonElement[] | null[]>([]);
   const clickedTarget8 = useRef<string | null>(null);
+  const [candidates9, setCandidates9] = useState<string[]>([]);
+  const buttonRefs9 = useRef<HTMLButtonElement[] | null[]>([]);
+  const [clickedTargets9, setClickedTargets9] = useState(['', '']);
+  const [answers9, setAnswers9] = useState<string[]>([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -74,6 +79,24 @@ function ScreeningTest() {
           '/assets/images/step8-4.png',
         ];
         setCandidates8([...step8data].sort(() => getRandomFloat() - 0.5));
+
+        const candidates9 = ['1', '2', '3', '5', '6', '7', '8', '9'];
+        const randomSelection = [];
+        while (randomSelection.length < 2) {
+          const randomIndex = Math.floor(getRandomFloat() * candidates9.length);
+          const selectedElement = candidates9.splice(randomIndex, 1)[0];
+          randomSelection.push(selectedElement);
+        }
+        const step9data = [
+          '4',
+          '봄',
+          '여름',
+          '가을',
+          '겨울',
+          ...randomSelection,
+        ];
+        setCandidates9([...step9data].sort(() => getRandomFloat() - 0.5));
+        setAnswers9(['4', '여름']);
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.play();
@@ -250,6 +273,14 @@ function ScreeningTest() {
     ) {
       setTotalScore((prev) => prev + 1);
     }
+    if (questions[currentIndex].step === 9) {
+      if (clickedTargets9[0] === '4') {
+        setTotalScore((prev) => prev + 1);
+      }
+      if (clickedTargets9[1] === '여름') {
+        setTotalScore((prev) => prev + 1);
+      }
+    }
   };
 
   const stopPreviousAudio = () => {
@@ -365,7 +396,11 @@ function ScreeningTest() {
 
   const initButtonStyle = (el: HTMLElement) => {
     el.style.backgroundColor = 'var(--button-bg-color)';
-    el.style.border = '0.2rem solid var(--black-color)';
+    if (questions[currentIndex].step === 9) {
+      el.style.border = '0.2rem solid var(--gray-bg-color)';
+    } else {
+      el.style.border = '0.2rem solid var(--black-color)';
+    }
     el.style.color = 'white';
   };
 
@@ -394,6 +429,36 @@ function ScreeningTest() {
       activateButtonStyle(el);
       clickedTarget.current = target;
     }
+  };
+
+  const onClickButtonArray = (
+    target: string,
+    el: HTMLElement,
+    clickedTargets: string[],
+    buttonRefs: React.MutableRefObject<HTMLButtonElement[] | null[]>,
+  ) => {
+    if (clickedTargets.includes(target)) {
+      initButtonStyle(el);
+      const index = clickedTargets.findIndex((v) => v === target);
+      const newClickedTargets = [...clickedTargets];
+      newClickedTargets[index] = '';
+      setClickedTargets9(newClickedTargets);
+      return;
+    }
+    if (clickedTargets.every((v) => v)) {
+      buttonRefs.current.forEach((el) => {
+        if (el) {
+          initButtonStyle(el);
+        }
+      });
+      setClickedTargets9([target, '']);
+      return;
+    }
+    activateButtonStyle(el);
+    const index = clickedTargets.findIndex((v) => !v);
+    const newClickedTargets = [...clickedTargets];
+    newClickedTargets[index] = target;
+    setClickedTargets9(newClickedTargets);
   };
 
   return (
@@ -483,6 +548,38 @@ function ScreeningTest() {
                           )
                         }
                       />
+                    ))}
+                  </ButtonContainer>
+                </Step7Container>
+              )}
+              {questions[currentIndex].step === 9 && (
+                <Step7Container>
+                  <Step7Image alt="" src={questions[currentIndex].imgUrl} />
+                  <Step6Container>
+                    {answers9.map((v, i) => (
+                      <LetterBox key={v}>
+                        <span>{clickedTargets9[i]}</span>
+                      </LetterBox>
+                    ))}
+                  </Step6Container>
+                  <ButtonContainer>
+                    {candidates9.map((v) => (
+                      <NumButton
+                        key={v}
+                        ref={(el) =>
+                          (buttonRefs9.current[buttonRefs9.current.length] = el)
+                        }
+                        $isML={true}
+                        onClick={(e) =>
+                          onClickButtonArray(
+                            v,
+                            e.target as HTMLButtonElement,
+                            clickedTargets9,
+                            buttonRefs9,
+                          )
+                        }>
+                        {v}
+                      </NumButton>
                     ))}
                   </ButtonContainer>
                 </Step7Container>
@@ -612,7 +709,7 @@ const QuestionWrapper = styled.div`
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 60rem;
     padding: 2rem 0;
-    gap: 2rem;
+    gap: 1rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -693,6 +790,25 @@ const Step7Image = styled.img`
   }
   @media screen and (max-width: 767px) {
     width: 300px;
+  }
+`;
+const LetterBox = styled.div`
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid green;
+  font-size: 5rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 90px;
+    height: 90px;
+    font-size: 3rem;
+  }
+  @media screen and (max-width: 767px) {
+    width: 80px;
+    height: 80px;
+    font-size: 2.4rem;
   }
 `;
 

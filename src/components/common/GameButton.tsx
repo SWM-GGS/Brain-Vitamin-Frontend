@@ -17,6 +17,7 @@ const Button = styled.button<{
   $isMedium?: boolean;
   $isSmall?: boolean;
   $isLongMobileSmall?: boolean;
+  $isML?: boolean;
 }>`
   padding: 3rem 4rem;
   font-size: 6rem;
@@ -25,6 +26,7 @@ const Button = styled.button<{
   color: white;
   border: 0.2rem solid var(--gray-bg-color);
   ${(props) => props.$isLong && `min-width: 365px;`}
+  ${(props) => props.$isML && `min-width: 200px; padding: 2rem 1rem;`}
   ${(props) => props.$isMedium && `width: 220px; height: 220px;`}
   ${(props) => props.$isSmall && `width: 130px; height: 130px;`}
   ${(props) => props.$isLongMobileSmall && `min-width: 365px;`}
@@ -32,6 +34,7 @@ const Button = styled.button<{
     font-size: 3rem;
     padding: 1.5rem 2rem;
     ${(props) => props.$isLong && `min-width: 230px;`}
+    ${(props) => props.$isML && `min-width: 105px; padding: 1rem 1rem;`}
     ${(props) => props.$isMedium && `width: 130px; height: 130px;`}
     ${(props) => props.$isSmall && `width: 70px; height: 70px;`}
     ${(props) => props.$isLongMobileSmall && `min-width: 200px;`}
@@ -40,6 +43,7 @@ const Button = styled.button<{
     font-size: 2rem;
     padding: 1.5rem 2rem;
     ${(props) => props.$isLong && `min-width: 230px;`}
+    ${(props) => props.$isML && `min-width: 100px; padding: 1rem 1rem;`}
     ${(props) => props.$isMedium && `width: 100px; height: 100px;`}
     ${(props) => props.$isSmall && `width: 60px; height: 60px;`}
     ${(props) => props.$isLongMobileSmall && `min-width: 130px;`}
