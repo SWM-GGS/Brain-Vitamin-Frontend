@@ -33,39 +33,37 @@ const Dates = ({
   };
 
   return (
-    <>
-      <Form
-        onDoubleClick={() => {
-          setOpenModal(true);
-        }}>
-        <DateNum $idx={idx} $lastdate={lastdate} $firstdate={firstdate}>
-          <TodayCSS $findToday={$findToday}>{elm}</TodayCSS>일
-        </DateNum>
-        {openModal && (
-          <Modal
-            elm={elm}
-            month={month}
-            year={year}
-            registEvent={registEvent}
-            setOpenModal={setOpenModal}
-            userInput={userInput}
-            setUserInput={setUserInput}
-          />
-        )}
-        {Boolean(evtList[0]) && (
-          <Lists>
-            {evtList.map(
-              (list) =>
-                list.slice(0, list.indexOf('_')).startsWith(dateKey) && (
-                  <List key={list}>
-                    {list.slice(list.indexOf('_') + 1, list.length)}
-                  </List>
-                ),
-            )}
-          </Lists>
-        )}
-      </Form>
-    </>
+    <Form
+      onDoubleClick={() => {
+        setOpenModal(true);
+      }}>
+      <DateNum $idx={idx} $lastdate={lastdate} $firstdate={firstdate}>
+        <TodayCSS $findToday={$findToday}>{elm}</TodayCSS>일
+      </DateNum>
+      {openModal && (
+        <Modal
+          elm={elm}
+          month={month}
+          year={year}
+          registEvent={registEvent}
+          setOpenModal={setOpenModal}
+          userInput={userInput}
+          setUserInput={setUserInput}
+        />
+      )}
+      {Boolean(evtList[0]) && (
+        <Lists>
+          {evtList.map(
+            (list) =>
+              list.slice(0, list.indexOf('_')).startsWith(dateKey) && (
+                <List key={list}>
+                  {list.slice(list.indexOf('_') + 1, list.length)}
+                </List>
+              ),
+          )}
+        </Lists>
+      )}
+    </Form>
   );
 };
 

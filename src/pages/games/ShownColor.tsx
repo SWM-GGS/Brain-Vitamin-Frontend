@@ -11,7 +11,7 @@ function ShownColor({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const { onClickButton, buttonRefs, candidates, letter, color } =
     useColorGameLogic(
       {

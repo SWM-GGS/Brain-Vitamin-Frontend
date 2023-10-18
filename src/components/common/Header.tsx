@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 
-function Header({ label }: { label: string }) {
+interface Props {
+  label: string;
+}
+
+function Header({ label }: Readonly<Props>) {
   const navigate = useNavigate();
 
   const goBack = () => {

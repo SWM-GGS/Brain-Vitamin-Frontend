@@ -24,7 +24,12 @@ const Image = styled.img`
     width: 150px;
   }
 `;
-function Presented({ $imgUrl }: { $imgUrl: string }) {
+
+interface Props {
+  $imgUrl: string;
+}
+
+function Presented({ $imgUrl }: Readonly<Props>) {
   return (
     <Container>
       <Text>지불한 금액 : </Text>

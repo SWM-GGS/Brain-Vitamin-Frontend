@@ -17,7 +17,7 @@ function ShortInput({
   buttonText,
   onClickButton,
   ...props
-}: Props) {
+}: Readonly<Props>) {
   return (
     <ShortInputWrapper {...props} style={props.style}>
       <ShortInputBox

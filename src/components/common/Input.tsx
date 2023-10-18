@@ -7,7 +7,7 @@ type Props = {
   callbackFn: (e: React.ChangeEvent<HTMLInputElement>) => void;
   style?: React.CSSProperties;
 };
-function Input({ label, desc, value, callbackFn, ...props }: Props) {
+function Input({ label, desc, value, callbackFn, ...props }: Readonly<Props>) {
   return (
     <InputBox
       {...props}

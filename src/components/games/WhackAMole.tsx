@@ -22,7 +22,7 @@ type EmptySlotProps = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function EmptySlot({ setIsVisible }: EmptySlotProps) {
+function EmptySlot({ setIsVisible }: Readonly<EmptySlotProps>) {
   useEffect(() => {
     let numSeconds = Math.ceil(getRandomFloat() * 4000);
     let timer = setTimeout(() => {
@@ -43,7 +43,7 @@ type MoleProps = {
   handleWhack: () => void;
 };
 
-function Mole({ setIsVisible, handleWhack }: MoleProps) {
+function Mole({ setIsVisible, handleWhack }: Readonly<MoleProps>) {
   useEffect(() => {
     let numSeconds = Math.ceil(getRandomFloat() * 5000);
     let timer = setTimeout(() => {
@@ -64,7 +64,7 @@ type MoleContainerProps = {
   score: number;
 };
 
-function MoleContainer({ setScore, score }: MoleContainerProps) {
+function MoleContainer({ setScore, score }: Readonly<MoleContainerProps>) {
   let [isVisible, setIsVisible] = useState(false);
 
   let handleWhack = () => {

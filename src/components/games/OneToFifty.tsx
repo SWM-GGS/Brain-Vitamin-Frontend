@@ -27,7 +27,7 @@ type CellProps = {
   $gameFlag: boolean;
 };
 
-function Cell({ num, handleClick, $gameFlag }: CellProps) {
+function Cell({ num, handleClick, $gameFlag }: Readonly<CellProps>) {
   return (
     <Container1 onClick={() => handleClick(num)} $gameFlag={$gameFlag}>
       <span>{num}</span>
@@ -50,7 +50,7 @@ type BoardProps = {
   $gameFlag: boolean;
 };
 
-function Board({ numbers, handleClick, $gameFlag }: BoardProps) {
+function Board({ numbers, handleClick, $gameFlag }: Readonly<BoardProps>) {
   return (
     <Container2>
       {numbers.map((num) => (

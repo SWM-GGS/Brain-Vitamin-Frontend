@@ -6,7 +6,7 @@ type Props = {
   setAnswerState: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Timer({ timeLimit, setAnswerState }: Props) {
+function Timer({ timeLimit, setAnswerState }: Readonly<Props>) {
   const [remainingTime, setRemainingTime] = useState(timeLimit);
   const progressBarWidth =
     100 - ((timeLimit - remainingTime) / timeLimit) * 100;

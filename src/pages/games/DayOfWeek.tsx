@@ -24,7 +24,7 @@ function DayOfWeek({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const DATE = new Date();
   const YEAR = DATE.getFullYear();

@@ -23,7 +23,7 @@ function NearTime({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const deg = 6;
   const [hh, setHh] = useState(0);
   const [mm, setMm] = useState(0);

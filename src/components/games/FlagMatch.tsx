@@ -46,13 +46,13 @@ const Letter = styled.span`
     font-size: 2rem;
   }
 `;
-function PresentedFlag({
-  $imgUrl,
-  $letter,
-}: {
+
+interface Props {
   $imgUrl: string;
   $letter: string;
-}) {
+}
+
+function PresentedFlag({ $imgUrl, $letter }: Readonly<Props>) {
   return (
     <FlagContainer>
       <FlagImage alt="" src={$imgUrl} />

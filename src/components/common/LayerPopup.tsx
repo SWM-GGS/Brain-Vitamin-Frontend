@@ -24,7 +24,7 @@ function LayerPopup({
   onClickCenterButton,
   sound,
   closeModal,
-}: Props) {
+}: Readonly<Props>) {
   const layerPopupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

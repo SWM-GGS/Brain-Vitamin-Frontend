@@ -25,7 +25,7 @@ export default function Market({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   type Props = {
     contents: string;
     count: number;

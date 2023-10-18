@@ -14,7 +14,7 @@ function CompassDirection({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const [selectedDegree, setSelectedDegree] = useState(0);
   const [selectedDirection, setSelectedDirection] = useState('');
