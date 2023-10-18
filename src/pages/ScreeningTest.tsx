@@ -53,6 +53,7 @@ function ScreeningTest() {
   const buttonRefs9 = useRef<HTMLButtonElement[] | null[]>([]);
   const [clickedTargets9, setClickedTargets9] = useState(['', '']);
   const [answers9, setAnswers9] = useState<string[]>([]);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const getData = async () => {
@@ -222,11 +223,11 @@ function ScreeningTest() {
               import.meta.env.VITE_API_URL
             }/patient/vitamins/screening-test/detail`,
             {
-              count: 1,
               firstVertex,
               secondVertex,
               audioFileUrl: uploadUrl,
               screeningTestId: questions[currentIndex].screeningTestId,
+              count: retryCount,
             },
             {
               headers: {
@@ -236,17 +237,18 @@ function ScreeningTest() {
           );
           if (data.result.stop) {
             setTotalScore((prev) => prev + data.result);
+            setRetryCount(0);
           } else {
             // 추가 질문 추가
-            // const newQuestions = questions;
-            // const additionalQuestion = {
-            //   ...newQuestions[currentIndex],
-            //   audioUrl: '',
-            //   description: data.result.description,
-            // };
-            // newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
-            // setQuestions(newQuestions);
-            // console.log(newQuestions, currentIndex);
+            const newQuestions = questions;
+            const additionalQuestion = {
+              ...newQuestions[currentIndex],
+              audioUrl: '',
+              description: data.result.description,
+            };
+            newQuestions.splice(currentIndex + 1, 0, additionalQuestion);
+            setQuestions(newQuestions);
+            setRetryCount((prev) => prev + 1);
           }
           resolve(true);
         } catch (error) {
@@ -266,12 +268,14 @@ function ScreeningTest() {
       clickedTarget7.current === '/assets/images/step7-2.png'
     ) {
       setTotalScore((prev) => prev + 1);
+      setRetryCount(0);
     }
     if (
       questions[currentIndex].step === 8 &&
       clickedTarget8.current === '/assets/images/step8-4.png'
     ) {
       setTotalScore((prev) => prev + 1);
+      setRetryCount(0);
     }
     if (questions[currentIndex].step === 9) {
       if (clickedTargets9[0] === '4') {
@@ -280,6 +284,7 @@ function ScreeningTest() {
       if (clickedTargets9[1] === '여름') {
         setTotalScore((prev) => prev + 1);
       }
+      setRetryCount(0);
     }
   };
 
