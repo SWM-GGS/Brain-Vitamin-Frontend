@@ -20,7 +20,7 @@ export default function DateQuiz({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const DATE = new Date();
   const YEAR = DATE.getFullYear();
   const MONTH = DATE.getMonth() + 1;

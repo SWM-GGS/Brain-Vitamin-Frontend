@@ -12,7 +12,7 @@ function SameColor({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const colorNames = ['빨강', '파랑', '노랑', '검정'];
   const colors = ['red', 'blue', 'yellow', 'black'];

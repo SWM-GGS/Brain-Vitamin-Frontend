@@ -45,7 +45,7 @@ export default function GameRouter({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const gameProps = {
     gameData,
     onGameEnd,

@@ -16,7 +16,7 @@ function BasicCalculate({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const [candidates, setCandidates] = useState<number[]>([]);
   const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({

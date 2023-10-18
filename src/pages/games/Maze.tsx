@@ -11,7 +11,7 @@ export default function Maze({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   type Props = {
     x: number;
     y: number;

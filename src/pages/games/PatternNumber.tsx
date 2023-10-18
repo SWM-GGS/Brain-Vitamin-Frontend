@@ -17,7 +17,7 @@ function PatternNumber({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const [quizPosition, setQuizPosition] = useState(0);
   const [x, setX] = useState(0);

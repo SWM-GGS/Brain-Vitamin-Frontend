@@ -47,7 +47,12 @@ const Box = styled.div`
 const Quiz = styled.span`
   color: var(--button-bg-color);
 `;
-function Num({ $num }: { $num: number | null }) {
+
+interface Props {
+  $num: number | null;
+}
+
+function Num({ $num }: Readonly<Props>) {
   if ($num) return <span>{$num}</span>;
   return (
     <Box>

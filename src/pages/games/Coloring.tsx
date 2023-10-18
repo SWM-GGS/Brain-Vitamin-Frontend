@@ -25,7 +25,7 @@ export default function Coloring({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const [nowColor, setNowColor] = useState('red');
   const cellRefs = useRef<null[] | HTMLDivElement[]>([]);
   const difficulty = gameData.difficulty;

@@ -24,7 +24,7 @@ export default function CardMatch({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   type Props = {
     imgUrl: string;
   };

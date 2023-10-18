@@ -13,7 +13,7 @@ function FlagMatch({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   type Props = {
     imgUrl: string;
     contents: string;

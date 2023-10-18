@@ -15,7 +15,7 @@ function ChangeCalculate({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   type Props = {
     contents: string;
     imgUrl: string;

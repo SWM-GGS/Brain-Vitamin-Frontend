@@ -26,7 +26,7 @@ export default function Overlapping({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const { onClickButton, setAnswers, buttonRefs, showAnswer, answers } =
     useGameLogic<number>(

@@ -11,7 +11,7 @@ export default function NumberTouch({
   isNextButtonClicked,
   setAnswerState,
   answerState,
-}: GameProps) {
+}: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const maxNum = (difficulty - 1) * 5 + 20;
   const [current, setCurrent] = useState(1);

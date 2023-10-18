@@ -12,6 +12,10 @@ const Text = styled.p`
   }
 `;
 
-export default function GameQuestion({ text }: { text: string }) {
+interface Props {
+  text: string;
+}
+
+export default function GameQuestion({ text }: Readonly<Props>) {
   return <Text>{text}</Text>;
 }

@@ -20,7 +20,7 @@ type Step6Props = {
   setSecondVertex: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-function Step6({ setFirstVertex, setSecondVertex }: Step6Props) {
+function Step6({ setFirstVertex, setSecondVertex }: Readonly<Step6Props>) {
   const refs = useRef<HTMLDivElement[] | null[]>([]);
   const [boxs, setBoxs] = useState<CoordInfo[]>([]);
   const [lines, setLines] = useState<LineInfo[]>([]);
