@@ -46,14 +46,11 @@ function WordMemory({
   );
 
   useEffect(() => {
-    if (isShowNext) {
-      setWords(answers);
-    } else {
-      setAnswers(answers);
-      setCandidates(
-        problemPool.map((v) => v.contents).sort(() => getRandomFloat() - 0.5),
-      );
-    }
+    setWords(answers);
+    setAnswers(answers);
+    setCandidates(
+      problemPool.map((v) => v.contents).sort(() => getRandomFloat() - 0.5),
+    );
   }, []);
 
   return (
