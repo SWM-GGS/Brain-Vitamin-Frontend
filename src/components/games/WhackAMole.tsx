@@ -53,9 +53,9 @@ function Mole({ setIsVisible, handleWhack }: Readonly<MoleProps>) {
   });
 
   return (
-    <div onClick={handleWhack}>
+    <button onClick={handleWhack}>
       <img src={moleImage} />
-    </div>
+    </button>
   );
 }
 
