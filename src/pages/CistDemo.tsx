@@ -48,6 +48,7 @@ function CistDemo() {
         alt=""
         src="/assets/images/cist1.png"
         onClick={() => goNext(1)}
+        aria-hidden="true"
       />
       <img
         ref={img2ref}
@@ -55,6 +56,7 @@ function CistDemo() {
         alt=""
         src="/assets/images/cist2.png"
         onClick={() => goNext(2)}
+        aria-hidden="true"
       />
       {isModalOpen && (
         <LayerPopup
