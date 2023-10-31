@@ -54,6 +54,7 @@ function ScreeningTest() {
   const [clickedTargets9, setClickedTargets9] = useState(['', '']);
   const [answers9, setAnswers9] = useState<string[]>([]);
   const [retryCount, setRetryCount] = useState(0);
+  const [isRetryAvailable, setIsRetryAvailable] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -390,12 +391,22 @@ function ScreeningTest() {
   };
 
   const handleListenAgain = () => {
-    const nextAudioUrl = questions[currentIndex].audioUrl;
-    const audio = new Audio(nextAudioUrl);
-    if (nextAudioUrl) {
-      audio.play();
-    }
+    const currentAudioUrl = questions[currentIndex].audioUrl;
+    const audio = new Audio(currentAudioUrl);
 
+    if (currentAudioUrl) {
+      audio.play();
+      audio.addEventListener('loadedmetadata', (e) => {
+        if (e.target) {
+          const duration = (e.target as HTMLAudioElement).duration;
+
+          setIsRetryAvailable(false);
+          setTimeout(() => {
+            setIsRetryAvailable(true);
+          }, duration * 1000);
+        }
+      });
+    }
     setTrialCount((prev) => prev - 1);
   };
 
@@ -494,7 +505,7 @@ function ScreeningTest() {
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               <ListenAgainButton
-                disabled={!trialCount}
+                disabled={!trialCount || !isRetryAvailable}
                 onClick={handleListenAgain}>
                 다시 듣기
               </ListenAgainButton>
