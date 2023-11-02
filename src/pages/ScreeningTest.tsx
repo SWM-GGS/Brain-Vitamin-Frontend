@@ -159,7 +159,8 @@ function ScreeningTest() {
 
       // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
       media.ondataavailable = function (e) {
-        resolve(e.data);
+        const blob = new Blob([e.data], { type: 'audio/mp3' });
+        resolve(blob);
       };
     });
   };
@@ -172,10 +173,13 @@ function ScreeningTest() {
       }
       console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
 
+      const currentTime = new Date().getTime();
+      const fileName = `${generateUniqueNumber()}-${currentTime}.mp3`;
+
       // File 생성자를 사용해 파일로 변환
-      const sound = new File([audioUrl], 'soundBlob', {
+      const sound = new File([audioUrl], fileName, {
         lastModified: new Date().getTime(),
-        type: 'audio',
+        type: 'audio/mp3',
       });
       console.log(sound); // File 정보 출력
 
@@ -191,14 +195,12 @@ function ScreeningTest() {
         },
         requestHandler: new FetchHttpHandler({ keepAlive: false }),
       });
-      const path = `screeningTestAudios/${generateUniqueNumber()}-${
-        sound.lastModified
-      }`;
+      const path = `screeningTestAudios/${fileName}`;
       const uploadParams = {
         Bucket: bucket,
         Key: path,
         Body: sound,
-        ContentType: 'audio/mpeg',
+        ContentType: 'audio/mp3',
       };
       const uploadAudioFileToS3 = async () => {
         try {
