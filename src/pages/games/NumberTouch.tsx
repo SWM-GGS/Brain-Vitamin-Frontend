@@ -13,7 +13,7 @@ export default function NumberTouch({
   answerState,
 }: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
-  const maxNum = (difficulty - 1) * 5 + 20;
+  const maxNum = (difficulty - 1) * 5 + 10;
   const [current, setCurrent] = useState(1);
   let positionIndex = -1;
   const [randomColors, setRandomColors] = useState<string[]>([]);
@@ -64,7 +64,7 @@ export default function NumberTouch({
   return (
     <Container ref={containerRef}>
       <Text>
-        {current - 1} / {(difficulty - 1) * 5 + 20}
+        {current - 1} / {maxNum}
       </Text>
       <div ref={topRef}></div>
       {numbers.map((num) => {
