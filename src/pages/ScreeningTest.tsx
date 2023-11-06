@@ -16,6 +16,8 @@ import {
   Button as NumButton,
 } from '../components/common/GameButton';
 import { getRandomFloat } from '../utils/random';
+import { useFFmpeg } from '../hooks/useFFmpeg';
+import Splash from './Splash';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -101,6 +103,7 @@ function ScreeningTest() {
         setAnswers9(['4', '여름']);
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
+        audio.crossOrigin = 'use-credentials';
         audio.play();
       } catch (error) {
         console.error(error);
@@ -113,6 +116,7 @@ function ScreeningTest() {
   const [media, setMedia] = useState<MediaRecorder>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
   const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
+  const { loaded, transcode } = useFFmpeg();
 
   const onRecAudio = () => {
     // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
@@ -130,7 +134,9 @@ function ScreeningTest() {
     }
     // 마이크 사용 권한 획득
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm',
+      });
       mediaRecorder.start();
       setStream(stream);
       setMedia(mediaRecorder);
@@ -159,7 +165,8 @@ function ScreeningTest() {
 
       // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
       media.ondataavailable = function (e) {
-        resolve(e.data);
+        const blob = new Blob([e.data], { type: 'audio/webm' });
+        resolve(blob);
       };
     });
   };
@@ -170,37 +177,34 @@ function ScreeningTest() {
         reject(new Error('audioUrl not found'));
         return;
       }
-      console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
+      // console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
 
-      // File 생성자를 사용해 파일로 변환
-      const sound = new File([audioUrl], 'soundBlob', {
-        lastModified: new Date().getTime(),
-        type: 'audio',
-      });
-      console.log(sound); // File 정보 출력
-
-      // 음성 파일을 s3에 업로드
-      let uploadUrl = '';
-      const region = 'ap-northeast-2';
-      const bucket = 'brain-vitamin-user-files';
-      const s3Client = new S3Client({
-        region, // AWS 리전을 설정하세요
-        credentials: {
-          accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-          secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-        },
-        requestHandler: new FetchHttpHandler({ keepAlive: false }),
-      });
-      const path = `screeningTestAudios/${generateUniqueNumber()}-${
-        sound.lastModified
-      }`;
-      const uploadParams = {
-        Bucket: bucket,
-        Key: path,
-        Body: sound,
-        ContentType: 'audio/mpeg',
-      };
       const uploadAudioFileToS3 = async () => {
+        // ffmpeg을 이용하여 webm 파일을 mp3 파일로 변환
+        const sound = await transcode(audioUrl, 'audio/mp3');
+        // 음성 파일을 s3에 업로드
+        let uploadUrl = '';
+        const region = 'ap-northeast-2';
+        const bucket = 'brain-vitamin-user-files';
+        const s3Client = new S3Client({
+          region, // AWS 리전을 설정하세요
+          credentials: {
+            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+          },
+          requestHandler: new FetchHttpHandler({ keepAlive: false }),
+        });
+        const currentTime = new Date().getTime();
+        const fileName = `${generateUniqueNumber()}-${currentTime}.mp3`;
+        const path = `screeningTestAudios/${fileName}`;
+
+        const uploadParams = {
+          Bucket: bucket,
+          Key: path,
+          Body: sound,
+          ContentType: 'audio/mp3',
+        };
+
         try {
           const command = new PutObjectCommand(uploadParams);
           await s3Client.send(command);
@@ -322,6 +326,7 @@ function ScreeningTest() {
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
     const audio = new Audio(nextAudioUrl);
+    audio.crossOrigin = 'use-credentials';
     setCurrentAudio(null);
     if (nextAudioUrl) {
       audio.play();
@@ -393,6 +398,7 @@ function ScreeningTest() {
   const handleListenAgain = () => {
     const currentAudioUrl = questions[currentIndex].audioUrl;
     const audio = new Audio(currentAudioUrl);
+    audio.crossOrigin = 'use-credentials';
 
     if (currentAudioUrl) {
       audio.play();
@@ -477,6 +483,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
+  if (!loaded) return <Splash />;
   return (
     <Container>
       <Wrapper>
