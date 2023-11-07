@@ -44,7 +44,7 @@ const FlipWrapper = styled.div<{ $difficulty: number }>`
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 100%;
+  padding-bottom: ${(props) => (props.$difficulty === 3 ? '150%' : '100%')};
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     ${(props) => {
       if (props.$difficulty === 1) {
