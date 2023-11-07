@@ -58,7 +58,12 @@ function Family() {
 
   useEffect(() => {
     if (!familyKey) {
-      openModal('아직 가족 그룹이 없어요.', '/home');
+      setData({
+        emotionInfoDtoList: [],
+        postPreviewDtoList: [],
+        familyMemberDtoList: [],
+      });
+      setLoading(false);
       return;
     }
     const getData = async () => {
@@ -92,11 +97,9 @@ function Family() {
   };
 
   const renderImages = () => {
-    if (!data) return;
-    if (!data.postPreviewDtoList || data.postPreviewDtoList.length === 0) {
+    if (!data?.postPreviewDtoList || data.postPreviewDtoList.length === 0) {
       return <Empty>아직 게시물이 없어요.</Empty>;
-    }
-    if (!isMobile && data.postPreviewDtoList.length >= 5) {
+    } else if (!isMobile && data.postPreviewDtoList.length >= 5) {
       return (
         <>
           <ImageContainer2>
@@ -206,23 +209,30 @@ const Container2 = styled.div`
   gap: 2.8rem;
   justify-content: center;
   height: calc(var(--vh, 1vh) * 100);
-  @media screen and (min-width: 768px) {
-    align-items: center;
+  align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    padding: 1rem 3rem;
+    gap: 2rem;
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 1.6rem;
-    gap: 1rem;
+    gap: 2rem;
     align-content: flex-start;
   }
 `;
 const ImageContainer = styled.div`
-  width: 99rem;
-  height: 86.7rem;
+  width: 1050px;
+  height: 900px;
   border-radius: 2.1rem;
   display: flex;
   justify-content: space-between;
   gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 542px;
+    height: 460px;
+    gap: 2rem;
+  }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 0;
@@ -234,65 +244,83 @@ const ImageContainer = styled.div`
   }
 `;
 const MemberContainer = styled.div`
-  width: 35rem;
-  height: 86.7rem;
+  width: 360px;
+  height: 900px;
   border-radius: 2.1rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 4.2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 200px;
+    height: 460px;
+    padding: 1.6rem;
+  }
   @media screen and (max-width: 767px) {
     width: 35rem;
-    height: 30rem;
+    height: 250px;
     padding: 2rem;
   }
 `;
 const ImageContainer2 = styled.div`
-  width: 56.8rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-const ImageContainer3 = styled.div`
-  width: 41.9rem;
+  width: 580px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 300px;
+    gap: 2rem;
+  }
+`;
+const ImageContainer3 = styled.div`
+  width: 430px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 216px;
+    gap: 2rem;
+  }
 `;
 const LargeImage = styled.img`
-  height: 56.8rem;
-  background: orange;
   border-radius: 2rem;
 `;
 const SmallContainer = styled.div`
-  height: 27rem;
   display: flex;
   justify-content: space-between;
   gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
 `;
 const SmallImage = styled.img`
-  width: 27rem;
-  height: 100%;
-  background: purple;
+  width: 270px;
   border-radius: 2rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 135px;
+  }
 `;
 const MediumImage = styled.img`
-  height: 41.9rem;
-  background: green;
   border-radius: 2rem;
 `;
 const MemberBox = styled.div`
-  height: 73rem;
+  height: 100%;
   border-radius: 2.1rem;
   background: var(--gray-bg-color);
   padding: 3rem 2.4rem;
-  margin: 1.8rem 0 0 0;
   display: flex;
   flex-direction: column;
   gap: 5rem;
   overflow: auto;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 1.6rem;
+    padding: 1rem;
+  }
   @media screen and (max-width: 767px) {
-    height: 21rem;
     gap: 1rem;
     padding: 1rem;
   }
@@ -301,6 +329,9 @@ const MemberContainer2 = styled.div`
   display: flex;
   gap: 2.3rem;
   align-items: center;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 1rem;
+  }
 `;
 const Align = styled.div`
   display: flex;
@@ -311,6 +342,10 @@ const ProfileImage = styled.img`
   width: 6.2rem;
   height: 6.2rem;
   border-radius: 50%;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 4rem;
+    height: 4rem;
+  }
   @media screen and (max-width: 767px) {
     width: 5rem;
     height: 5rem;
@@ -320,7 +355,9 @@ const Name = styled.div`
   color: #433d3a;
   font-family: 'Pretendard-Medium';
   font-size: 2.6rem;
-  margin: 0 0 0.6rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.6rem;
+  }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
   }
@@ -330,16 +367,16 @@ const Empty = styled.div`
   font-size: 3rem;
   text-align: center;
   word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+  }
 `;
 const BigImage = styled.img`
-  width: 99rem;
-  height: 86.7rem;
+  width: 100%;
   border-radius: 2.1rem;
-  @media screen and (max-width: 767px) {
-    width: 30rem;
-    height: 30rem;
-    justify-content: center;
-  }
 `;
 
 export default Family;
