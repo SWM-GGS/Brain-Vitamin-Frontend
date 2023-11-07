@@ -98,7 +98,7 @@ export default function CardMatch({
   return (
     <Container $difficulty={difficulty}>
       {mixedCards.map((card) => (
-        <FlipWrapper key={card.idx}>
+        <FlipWrapper key={card.idx} $difficulty={difficulty}>
           <Flip
             $status={card.status}
             $clickable={clickable}
