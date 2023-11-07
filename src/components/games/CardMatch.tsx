@@ -40,13 +40,23 @@ const Card = styled.div`
   transform-style: preserve-3d;
 `;
 
-const FlipWrapper = styled.div`
+const FlipWrapper = styled.div<{ $difficulty: number }>`
   position: relative;
   width: 100%;
   height: 0;
   padding-bottom: 100%;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    padding-bottom: 50%;
+    ${(props) => {
+      if (props.$difficulty === 1) {
+        return `padding-bottom: 50%;`;
+      }
+      if (props.$difficulty === 2) {
+        return `padding-bottom: 70%;`;
+      }
+      if (props.$difficulty === 3) {
+        return `padding-bottom: 120%;`;
+      }
+    }}
   }
   @media screen and (max-width: 767px) {
     padding-bottom: 150%;
@@ -75,6 +85,7 @@ const Front = styled.div<{ $status: boolean; $background: string }>`
   backface-visibility: hidden;
   background: url(${(props) => props.$background});
   background-size: cover;
+  background-position: center;
   transform: ${(props) =>
     props.$status ? 'rotateY(0deg)' : 'rotateY(180deg)'};
   border-radius: 1.5rem;
