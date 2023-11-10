@@ -22,6 +22,8 @@ import PhoneNumberEdit from '../pages/PhoneNumberEdit.tsx';
 import Profile from '../pages/Profile.tsx';
 import FamilyPostRead from '../pages/FamilyPostRead.tsx';
 import CistDemo from '../pages/CistDemo.tsx';
+import Vitamin from '../pages/Vitamin.tsx';
+import VitaminAlbum from '../pages/VitaminAlbum.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -63,6 +65,8 @@ export default function Router() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/familyPostRead/:postId" element={<FamilyPostRead />} />
       <Route path="/cistDemo" element={<CistDemo />} />
+      <Route path="/vitamin" element={<Vitamin />} />
+      <Route path="/vitaminAlbum" element={<VitaminAlbum />} />
     </Routes>
   );
 }
