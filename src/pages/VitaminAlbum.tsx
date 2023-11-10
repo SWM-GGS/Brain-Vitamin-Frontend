@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import Button from '../components/common/Button';
 import { useModal } from '../hooks/useModal';
 import VitaminWrite from './VitaminWrite';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
@@ -12,7 +12,6 @@ import { RootState } from '../store/reducer';
 function VitaminAlbum() {
   const { accessToken } = useSelector((state: RootState) => state.user);
   const { isModalOpen, openModal, closeModal } = useModal();
-  const [data, setData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
