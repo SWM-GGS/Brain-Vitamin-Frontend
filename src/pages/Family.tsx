@@ -10,6 +10,7 @@ import Label from '../components/common/Label';
 import { useNavigate } from 'react-router';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import Button from '../components/common/Button';
 
 export type EmotionInfoDtoListProps = {
   id: number;
@@ -41,7 +42,11 @@ function Family() {
     postPreviewDtoList: PostPreviewDtoListProps[];
     familyMemberDtoList: FamilyMemberDtoListProps[];
   };
-  const [data, setData] = useState<Props>();
+  const [data, setData] = useState<Props>({
+    emotionInfoDtoList: [],
+    postPreviewDtoList: [],
+    familyMemberDtoList: [],
+  });
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
@@ -58,11 +63,6 @@ function Family() {
 
   useEffect(() => {
     if (!familyKey) {
-      setData({
-        emotionInfoDtoList: [],
-        postPreviewDtoList: [],
-        familyMemberDtoList: [],
-      });
       setLoading(false);
       return;
     }
@@ -94,6 +94,10 @@ function Family() {
     navigate(`/familyPostRead/${postId}`, {
       state: { emotionInfoDtoList: data?.emotionInfoDtoList },
     });
+  };
+
+  const toVitamin = () => {
+    navigate('/vitamin');
   };
 
   const renderImages = () => {
@@ -154,34 +158,39 @@ function Family() {
         <Container>
           <LeftTapBar />
           <Container2>
-            <ImageContainer>{renderImages()}</ImageContainer>
-            <MemberContainer>
-              <Label>가족 구성원</Label>
-              <MemberBox>
-                {data.familyMemberDtoList.length === 0 ? (
-                  <Empty>아직 구성원이 없어요.</Empty>
-                ) : (
-                  data.familyMemberDtoList.map((v) => (
-                    <MemberContainer2 key={v.name}>
-                      {v.profileImgUrl ? (
-                        <ProfileImage alt="" src={v.profileImgUrl} />
-                      ) : (
-                        <ProfileImage
-                          alt=""
-                          src="/assets/images/profile-default.svg"
-                        />
-                      )}
-                      <Align>
-                        <Name>
-                          {v.name}({v.relationship})
-                        </Name>
-                        {/* <Sub>접속중</Sub> */}
-                      </Align>
-                    </MemberContainer2>
-                  ))
-                )}
-              </MemberBox>
-            </MemberContainer>
+            <Container3>
+              <ImageContainer>{renderImages()}</ImageContainer>
+              <MemberContainer>
+                <Label>가족 구성원</Label>
+                <MemberBox>
+                  {data.familyMemberDtoList.length === 0 ? (
+                    <Empty>아직 구성원이 없어요.</Empty>
+                  ) : (
+                    data.familyMemberDtoList.map((v) => (
+                      <MemberContainer2 key={v.name}>
+                        {v.profileImgUrl ? (
+                          <ProfileImage alt="" src={v.profileImgUrl} />
+                        ) : (
+                          <ProfileImage
+                            alt=""
+                            src="/assets/images/profile-default.svg"
+                          />
+                        )}
+                        <Align>
+                          <Name>
+                            {v.name}({v.relationship})
+                          </Name>
+                          {/* <Sub>접속중</Sub> */}
+                        </Align>
+                      </MemberContainer2>
+                    ))
+                  )}
+                </MemberBox>
+              </MemberContainer>
+            </Container3>
+            <Button style={{ alignSelf: 'flex-end' }} onClick={toVitamin}>
+              우리가족 비타민 만들기
+            </Button>
           </Container2>
           <BottomTapBar />
         </Container>
@@ -206,6 +215,7 @@ const Container = styled.div`
 const Container2 = styled.div`
   padding: 5rem;
   display: flex;
+  flex-direction: column;
   gap: 2.8rem;
   justify-content: center;
   height: calc(var(--vh, 1vh) * 100);
@@ -217,6 +227,19 @@ const Container2 = styled.div`
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
     padding: 1.6rem;
+    gap: 2rem;
+    justify-content: flex-start;
+  }
+`;
+const Container3 = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2.8rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 2rem;
+  }
+  @media screen and (max-width: 767px) {
+    flex-wrap: wrap;
     gap: 2rem;
     align-content: flex-start;
   }
@@ -238,8 +261,8 @@ const ImageContainer = styled.div`
     padding: 0;
     gap: 1rem;
     align-content: center;
-    width: 35rem;
-    height: 30rem;
+    width: 300px;
+    height: 300px;
     justify-content: center;
   }
 `;
@@ -259,7 +282,7 @@ const MemberContainer = styled.div`
     padding: 1.6rem;
   }
   @media screen and (max-width: 767px) {
-    width: 35rem;
+    width: 300px;
     height: 250px;
     padding: 2rem;
   }
