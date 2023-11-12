@@ -23,9 +23,7 @@ export type EmotionInfoDtoListProps = {
   };
 };
 function Family() {
-  const { accessToken, familyKey } = useSelector(
-    (state: RootState) => state.user,
-  );
+  const { accessToken, id } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   type PostPreviewDtoListProps = {
@@ -62,14 +60,14 @@ function Family() {
   }, []);
 
   useEffect(() => {
-    if (!familyKey) {
+    if (!id) {
       setLoading(false);
       return;
     }
     const getData = async () => {
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/patient/family-stories/${familyKey}`,
+          `${import.meta.env.VITE_API_URL}/patient/family-stories/${id}`,
           // `${import.meta.env.VITE_API_URL}/patient/family-stories/${1}`,
           {
             headers: {

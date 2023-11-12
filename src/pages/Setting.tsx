@@ -38,6 +38,7 @@ function Setting() {
     localStorage.removeItem('accessToken');
     dispatch(
       userSlice.actions.setUser({
+        id: null,
         name: '',
         nickname: '',
         fontSize,
