@@ -4,14 +4,20 @@ import { styled } from 'styled-components';
 import Button from '../components/common/Button';
 import { useModal } from '../hooks/useModal';
 import VitaminWrite from './VitaminWrite';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
+import LayerPopup from '../components/common/LayerPopup';
 
 function VitaminAlbum() {
   const { accessToken } = useSelector((state: RootState) => state.user);
-  const { isModalOpen, openModal, closeModal } = useModal();
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  type ImageProp = {
+    pictureId: number;
+    imgUrl: string;
+  };
+  const [images, setImages] = useState<ImageProp[]>([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -24,7 +30,11 @@ function VitaminAlbum() {
             },
           },
         );
-        console.log(data);
+        if (data.isSuccess) {
+          setImages(data.result);
+        } else {
+          openModal(data.message);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -36,7 +46,15 @@ function VitaminAlbum() {
     <Container>
       <LeftTapBar />
       <Container2>
-        {/* <ImageContainer>{renderImages()}</ImageContainer> */}
+        <ImageContainer>
+          {images.length === 0 ? (
+            <Empty>아직 만들어진 비타민이 없어요.</Empty>
+          ) : (
+            images.map((v) => (
+              <Image key={v.pictureId} alt="" src={v.imgUrl}></Image>
+            ))
+          )}
+        </ImageContainer>
         <Button
           style={{ alignSelf: 'flex-end' }}
           onClick={() => openModal('사진 등록')}>
@@ -44,7 +62,16 @@ function VitaminAlbum() {
         </Button>
       </Container2>
       <BottomTapBar />
-      {isModalOpen && <VitaminWrite closeModal={closeModal} />}
+      {isModalOpen &&
+        (modalText === '사진 등록' ? (
+          <VitaminWrite closeModal={closeModal} />
+        ) : (
+          <LayerPopup
+            label={modalText}
+            centerButtonText="확인"
+            onClickCenterButton={closeModal}
+          />
+        ))}
     </Container>
   );
 }
@@ -72,6 +99,46 @@ const Container2 = styled.div`
     padding: 1.6rem;
     gap: 2rem;
     justify-content: flex-start;
+  }
+`;
+const ImageContainer = styled.div`
+  width: 1400px;
+  height: 900px;
+  border-radius: 2.1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 2.8rem;
+  overflow: auto;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 750px;
+    height: 460px;
+    gap: 2rem;
+  }
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    padding: 0;
+    gap: 1rem;
+    width: 100%;
+    height: 600px;
+  }
+`;
+const Empty = styled.div`
+  margin: auto;
+  font-size: 3rem;
+  text-align: center;
+  word-break: keep-all;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+  }
+`;
+const Image = styled.img`
+  border-radius: 2rem;
+  object-fit: cover;
+  @media screen and (max-width: 767px) {
+    width: 100%;
   }
 `;
 
