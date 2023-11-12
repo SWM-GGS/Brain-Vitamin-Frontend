@@ -74,10 +74,11 @@ function LogIn() {
           openModal(data.message);
           return;
         }
-        const { name, nickname, fontSize, familyKey } =
+        const { id, name, nickname, fontSize, familyKey } =
           data.result.patientDetailDto;
         dispatch(
           userSlice.actions.setUser({
+            id,
             name,
             nickname,
             fontSize,

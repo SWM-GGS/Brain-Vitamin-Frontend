@@ -45,13 +45,15 @@ function NameSet() {
         openModal(data.message);
         return;
       }
+      const { id, familyKey } = data.result.patientDetailDto;
       dispatch(
         userSlice.actions.setUser({
+          id,
           name,
           nickname,
           fontSize,
           phoneNumber: state.phoneNumber,
-          familyKey: data.result.patientDetailDto.familyKey,
+          familyKey,
           accessToken: data.result.tokenDto.accessTokenDto.accessToken,
         }),
       );
