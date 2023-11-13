@@ -41,7 +41,7 @@ function LayerPopup({
 
   return (
     <Container ref={layerPopupRef} onClick={closeModal}>
-      <Popup role="dialog" onClick={(e) => e.stopPropagation()}>
+      <Popup onClick={(e) => e.stopPropagation()}>
         <Label>{label}</Label>
         <Desc>{desc}</Desc>
         <ButtonWrapper>
@@ -79,7 +79,7 @@ const Container = styled.div`
   z-index: 1000;
 `;
 
-const Popup = styled.div`
+const Popup = styled.dialog`
   width: 87rem;
   min-height: 46rem;
   border-radius: 1.6rem;
