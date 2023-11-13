@@ -1,7 +1,7 @@
 import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Splash from './Splash';
@@ -10,6 +10,7 @@ import { useLocation, useParams } from 'react-router';
 import { EmotionInfoDtoListProps } from './Family';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function FamilyPostRead() {
   const { accessToken, familyKey, nickname } = useSelector(
@@ -88,6 +89,10 @@ function FamilyPostRead() {
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setData(data.result);
         setImages(
           data.result.postImgDtoList.map((v: PostImgDtoListProps) => v.imgUrl),
@@ -104,6 +109,9 @@ function FamilyPostRead() {
         );
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -142,11 +150,14 @@ function FamilyPostRead() {
       );
       if (!data.isSuccess) {
         openModal(data.message);
-      } else {
-        setCurrentEmotionType('');
+        return;
       }
+      setCurrentEmotionType('');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
     if (isSelectedNewEmotion) {
       try {
@@ -161,11 +172,14 @@ function FamilyPostRead() {
         );
         if (!data.isSuccess) {
           openModal(data.message);
-        } else {
-          setCurrentEmotionType(type);
+          return;
         }
+        setCurrentEmotionType(type);
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       }
     }
   };
@@ -338,14 +352,15 @@ function FamilyPostRead() {
           </CommentContainer>
         </ContentsContainer>
       </Container2>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

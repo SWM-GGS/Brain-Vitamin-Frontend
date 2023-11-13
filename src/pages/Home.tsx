@@ -1,12 +1,16 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useNavigate } from 'react-router';
+import { useModal } from '../hooks/useModal';
+import Splash from './Splash';
+import LayerPopup from '../components/common/LayerPopup';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function Home() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -18,6 +22,7 @@ function Home() {
   const [data, setData] = useState<Props>();
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   useEffect(() => {
     const getData = async () => {
@@ -30,9 +35,16 @@ function Home() {
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setData(data.result);
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -57,6 +69,7 @@ function Home() {
     navigate('/myPage');
   };
 
+  if (loading) return <Splash />;
   return (
     <Container>
       <LeftTapBar />
@@ -77,6 +90,14 @@ function Home() {
           </Box>
         </BoxWrapper>
       </Wrapper>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+          closeModal={closeModal}
+        />
+      )}
       <BottomTapBar />
     </Container>
   );

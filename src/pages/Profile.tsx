@@ -3,7 +3,7 @@ import Label from '../components/common/Label';
 import { useState } from 'react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -101,16 +102,19 @@ function Profile() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       dispatch(userSlice.actions.setNickname(newNickname));
       dispatch(userSlice.actions.setEducation(newEducation));
       dispatch(userSlice.actions.setProfileImgUrl(uploadUrl));
-      if (data.isSuccess) {
-        openModal(data.result, '/setting');
-      } else {
-        openModal(data.message);
-      }
+      openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -186,14 +190,15 @@ function Profile() {
           </Box>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

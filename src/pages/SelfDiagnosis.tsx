@@ -1,13 +1,15 @@
 import { Fragment, useEffect, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { Container } from '../components/common/Container';
+import Splash from './Splash';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function SelfDiagnosis() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -22,6 +24,7 @@ function SelfDiagnosis() {
   const chunkSize = 3;
   const navigate = useNavigate();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -34,6 +37,10 @@ function SelfDiagnosis() {
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         let questionArr: Props[] = [];
         for (let i = 0; i < data.result.length; i++) {
           questionArr.push({
@@ -49,6 +56,11 @@ function SelfDiagnosis() {
         setChoices(Array(questionArr.length + 1).fill(-1));
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
@@ -89,11 +101,18 @@ function SelfDiagnosis() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       navigate('/screeningTestResult', {
         state: { cogLevel: data.result.cogLevel, totalScore },
       });
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -109,6 +128,7 @@ function SelfDiagnosis() {
     return jsxLines;
   };
 
+  if (loading) return <Splash />;
   return (
     <Container>
       <Wrapper>
@@ -178,6 +198,7 @@ function SelfDiagnosis() {
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </Container>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import GameRouter from '../routes/gameRouter';
@@ -25,6 +25,8 @@ import mazeSound from '/assets/sounds/questions/maze.mp3';
 import overlappingSound from '/assets/sounds/questions/overlapping.mp3';
 import wordPuzzleSound from '/assets/sounds/questions/wordPuzzle.mp3';
 import { Container } from '../components/common/Container';
+import { useModal } from '../hooks/useModal';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 export type GameResultProps = {
   problemId: number;
@@ -57,6 +59,7 @@ function CogTraining() {
   const [loading, setLoading] = useState(true);
   const [answerState, setAnswerState] = useState('');
   const [showDescription, setShowDescription] = useState(false);
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const getNewData = (data: CogTrainingProps[]) => {
     const newData = [...data];
@@ -86,11 +89,17 @@ function CogTraining() {
           `${import.meta.env.VITE_API_URL}/patient/vitamins/cog-training`,
           { headers: { authorization: `Bearer ${accessToken}` } },
         );
-        console.log(data);
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setGameData(getNewData(data.result));
         setShowLayerPopup(true);
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -129,6 +138,10 @@ function CogTraining() {
         { finish, cogTrainingDtos: totalResults },
         { headers: { authorization: `Bearer ${accessToken}` } },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       // score: 맞으면 10점, 틀리면 0점, 안 풀면 -1점
       if (finish) {
         const totalScore = totalResults.reduce((p, c) => p + c.score, 0);
@@ -140,6 +153,9 @@ function CogTraining() {
       }
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -278,6 +294,14 @@ function CogTraining() {
               onClickLeftButton={() => setExitGame(false)}
               rightButtonText="종료"
               onClickRightButton={handleExitGame}
+            />
+          )}
+          {isModalOpen && (
+            <LayerPopup
+              label={modalText}
+              centerButtonText="확인"
+              onClickCenterButton={closeModal}
+              closeModal={closeModal}
             />
           )}
         </>

@@ -5,12 +5,13 @@ import { useState } from 'react';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { WidthContainer } from '../components/common/Container';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function LogIn() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -49,9 +50,16 @@ function LogIn() {
           content: '',
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       setAuthNum(data.result.authNum);
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -98,6 +106,9 @@ function LogIn() {
         navigate('/home');
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       }
     };
     if (phoneNumber === '01012345678' && code === '123456') {
@@ -148,6 +159,7 @@ function LogIn() {
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </WidthContainer>

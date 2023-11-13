@@ -3,17 +3,21 @@ import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import { useState } from 'react';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Header from '../components/common/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { WidthContainer } from '../components/common/Container';
+import { useModal } from '../hooks/useModal';
+import LayerPopup from '../components/common/LayerPopup';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function EducationSet() {
   const { state } = useLocation();
   const [education, setEducation] = useState('');
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   const goNext = () => {
     const postUserDetails = async () => {
@@ -33,6 +37,9 @@ function EducationSet() {
         );
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       }
     };
     postUserDetails();
@@ -117,6 +124,14 @@ function EducationSet() {
           다음
         </Button>
       </Box>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+          closeModal={closeModal}
+        />
+      )}
     </WidthContainer>
   );
 }

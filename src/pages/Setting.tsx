@@ -3,7 +3,7 @@ import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { useNavigate } from 'react-router';
@@ -11,6 +11,7 @@ import { useState } from 'react';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
@@ -69,10 +70,17 @@ function Setting() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -95,10 +103,17 @@ function Setting() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -157,12 +172,12 @@ function Setting() {
           </SubButtonContainer>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
       {isConfirmSignoutOpen && (
@@ -183,6 +198,7 @@ function Setting() {
           onClickRightButton={handleLogout}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

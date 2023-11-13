@@ -3,7 +3,7 @@ import Label from '../components/common/Label';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { usePhoneNumber } from '../hooks/usePhoneNumber';
 import { SideContainer } from '../components/common/Container';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function PhoneNumberEdit() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -42,10 +43,17 @@ function PhoneNumberEdit() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       dispatch(userSlice.actions.setPhoneNumber(phoneNumber));
       openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -80,14 +88,15 @@ function PhoneNumberEdit() {
           </Box>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

@@ -4,7 +4,7 @@ import Label from '../components/common/Label';
 import { useState } from 'react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import Header from '../components/common/Header';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { WidthContainer } from '../components/common/Container';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function NameSet() {
   const { state } = useLocation();
@@ -68,6 +69,9 @@ function NameSet() {
       openModal('회원가입에 성공하였습니다.', '/home');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -107,6 +111,7 @@ function NameSet() {
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </WidthContainer>

@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
@@ -18,6 +18,9 @@ import {
 import { getRandomFloat } from '../utils/random';
 import { useFFmpeg } from '../hooks/useFFmpeg';
 import Splash from './Splash';
+import { useModal } from '../hooks/useModal';
+import LayerPopup from '../components/common/LayerPopup';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function ScreeningTest() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -57,6 +60,8 @@ function ScreeningTest() {
   const [answers9, setAnswers9] = useState<string[]>([]);
   const [retryCount, setRetryCount] = useState(0);
   const [isRetryAvailable, setIsRetryAvailable] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   useEffect(() => {
     const getData = async () => {
@@ -69,6 +74,10 @@ function ScreeningTest() {
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setQuestions(data.result);
         const step7data = [
           '/assets/images/step7-1.png',
@@ -107,6 +116,11 @@ function ScreeningTest() {
         audio.play();
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
@@ -483,7 +497,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
-  if (!loaded) return <Splash />;
+  if (loading || !loaded) return <Splash />;
   return (
     <Container>
       <Wrapper>
@@ -621,6 +635,14 @@ function ScreeningTest() {
           )}
         </ButtonWrapper>
       </Wrapper>
+      {isModalOpen && (
+        <LayerPopup
+          label={modalText}
+          centerButtonText="확인"
+          onClickCenterButton={closeModal}
+          closeModal={closeModal}
+        />
+      )}
     </Container>
   );
 }
