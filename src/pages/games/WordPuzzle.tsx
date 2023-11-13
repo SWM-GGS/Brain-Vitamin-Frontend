@@ -89,24 +89,6 @@ export default function WordPuzzle({
     }
   }, []);
 
-  const getClientXY = (
-    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
-  ) => {
-    let [clientX, clientY] = [0, 0];
-
-    if ('touches' in e && e.touches.length > 0) {
-      // 터치 이벤트일 경우
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else if ('clientX' in e) {
-      // 드래그 이벤트일 경우
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    return [clientX, clientY];
-  };
-
   // onDragStart : Item을 잡기 시작했을 때 발생
   // onDrag : onDragStart 직후부터 onDragEnd 직전까지 계속 발생
   // onDragEnd : 잡은 Item을 놓았을 때 발생
@@ -254,6 +236,24 @@ export default function WordPuzzle({
     </>
   );
 }
+
+export const getClientXY = (
+  e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
+) => {
+  let [clientX, clientY] = [0, 0];
+
+  if ('touches' in e && e.touches.length > 0) {
+    // 터치 이벤트일 경우
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else if ('clientX' in e) {
+    // 드래그 이벤트일 경우
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
+
+  return [clientX, clientY];
+};
 
 const ShowAnswer = styled.div`
   font-size: 5rem;

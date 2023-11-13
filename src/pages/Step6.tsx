@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
+import { getClientXY } from './games/WordPuzzle';
 
 type CoordInfo = {
   top: number;
@@ -100,24 +101,6 @@ function Step6({ setFirstVertex, setSecondVertex }: Readonly<Step6Props>) {
     setLines((lines) =>
       lines.filter((line) => line.startItem !== startItem || line.isConnected),
     );
-  };
-
-  const getClientXY = (
-    e: React.DragEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
-  ) => {
-    let [clientX, clientY] = [0, 0];
-
-    if ('touches' in e && e.touches.length > 0) {
-      // 터치 이벤트일 경우
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else if ('clientX' in e) {
-      // 드래그 이벤트일 경우
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    return [clientX, clientY];
   };
 
   const findBox = (boxs: CoordInfo[], id: string) => {
