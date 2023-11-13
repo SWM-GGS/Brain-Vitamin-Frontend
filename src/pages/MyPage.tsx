@@ -10,6 +10,7 @@ import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function MyPage() {
   type Props = {
@@ -104,12 +105,8 @@ function MyPage() {
       } catch (error) {
         console.error(error);
         const axiosError = error as AxiosError;
-        openModal(
-          `[일시적인 오류 발생]
-          이용에 불편을 드려 죄송합니다.
-          status: ${axiosError.response?.status}
-          statusText: ${axiosError.response?.statusText}`,
-        );
+        const errorMessage = getErrorMessage(axiosError);
+        openModal(errorMessage);
       } finally {
         setLoading(false);
       }

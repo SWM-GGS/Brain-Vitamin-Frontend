@@ -11,6 +11,7 @@ import { useState } from 'react';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
@@ -78,12 +79,8 @@ function Setting() {
     } catch (error) {
       console.error(error);
       const axiosError = error as AxiosError;
-      openModal(
-        `[일시적인 오류 발생]
-          이용에 불편을 드려 죄송합니다.
-          status: ${axiosError.response?.status}
-          statusText: ${axiosError.response?.statusText}`,
-      );
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
@@ -115,12 +112,8 @@ function Setting() {
     } catch (error) {
       console.error(error);
       const axiosError = error as AxiosError;
-      openModal(
-        `[일시적인 오류 발생]
-          이용에 불편을 드려 죄송합니다.
-          status: ${axiosError.response?.status}
-          statusText: ${axiosError.response?.statusText}`,
-      );
+      const errorMessage = getErrorMessage(axiosError);
+      openModal(errorMessage);
     }
   };
 
