@@ -24,6 +24,7 @@ import FamilyPostRead from '../pages/FamilyPostRead.tsx';
 import CistDemo from '../pages/CistDemo.tsx';
 import Vitamin from '../pages/Vitamin.tsx';
 import VitaminAlbum from '../pages/VitaminAlbum.tsx';
+import VitaminPlay from '../pages/VitaminPlay.tsx';
 
 export default function Router() {
   const isLoggedIn = useSelector(
@@ -67,6 +68,7 @@ export default function Router() {
       <Route path="/cistDemo" element={<CistDemo />} />
       <Route path="/vitamin" element={<Vitamin />} />
       <Route path="/vitaminAlbum" element={<VitaminAlbum />} />
+      <Route path="/vitaminPlay" element={<VitaminPlay />} />
     </Routes>
   );
 }
