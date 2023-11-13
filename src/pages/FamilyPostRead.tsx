@@ -1,7 +1,7 @@
 import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import Splash from './Splash';
@@ -88,6 +88,10 @@ function FamilyPostRead() {
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setData(data.result);
         setImages(
           data.result.postImgDtoList.map((v: PostImgDtoListProps) => v.imgUrl),
@@ -104,6 +108,13 @@ function FamilyPostRead() {
         );
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        openModal(
+          `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+        );
       } finally {
         setLoading(false);
       }
@@ -142,11 +153,18 @@ function FamilyPostRead() {
       );
       if (!data.isSuccess) {
         openModal(data.message);
-      } else {
-        setCurrentEmotionType('');
+        return;
       }
+      setCurrentEmotionType('');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
     if (isSelectedNewEmotion) {
       try {
@@ -161,11 +179,18 @@ function FamilyPostRead() {
         );
         if (!data.isSuccess) {
           openModal(data.message);
-        } else {
-          setCurrentEmotionType(type);
+          return;
         }
+        setCurrentEmotionType(type);
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        openModal(
+          `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+        );
       }
     }
   };
@@ -338,14 +363,15 @@ function FamilyPostRead() {
           </CommentContainer>
         </ContentsContainer>
       </Container2>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

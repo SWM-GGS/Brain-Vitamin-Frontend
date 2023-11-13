@@ -3,7 +3,7 @@ import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import { useNavigate } from 'react-router';
@@ -69,10 +69,21 @@ function Setting() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -95,10 +106,21 @@ function Setting() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       openModal(data.result);
       handleOut();
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -157,12 +179,12 @@ function Setting() {
           </SubButtonContainer>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
       {isConfirmSignoutOpen && (
@@ -183,6 +205,7 @@ function Setting() {
           onClickRightButton={handleLogout}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

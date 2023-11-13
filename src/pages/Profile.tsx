@@ -3,7 +3,7 @@ import Label from '../components/common/Label';
 import { useState } from 'react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import { useSelector } from 'react-redux';
@@ -101,16 +101,23 @@ function Profile() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       dispatch(userSlice.actions.setNickname(newNickname));
       dispatch(userSlice.actions.setEducation(newEducation));
       dispatch(userSlice.actions.setProfileImgUrl(uploadUrl));
-      if (data.isSuccess) {
-        openModal(data.result, '/setting');
-      } else {
-        openModal(data.message);
-      }
+      openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -186,14 +193,15 @@ function Profile() {
           </Box>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

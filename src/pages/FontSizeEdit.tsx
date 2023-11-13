@@ -4,7 +4,7 @@ import Button from '../components/common/Button';
 import { useState } from 'react';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import BottomTapBar from '../components/common/BottomTabBar';
@@ -32,10 +32,21 @@ function FontSizeEdit() {
           },
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       dispatch(userSlice.actions.setFontSize(fontSize));
       openModal(data.result, '/setting');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -85,14 +96,15 @@ function FontSizeEdit() {
           </Button>
         </Container3>
       </SideContainer>
-      <BottomTapBar />
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
+      <BottomTapBar />
     </Container>
   );
 }

@@ -68,19 +68,26 @@ function Family() {
       try {
         const { data } = await axios.get(
           `${import.meta.env.VITE_API_URL}/patient/family-stories/${id}`,
-          // `${import.meta.env.VITE_API_URL}/patient/family-stories/${1}`,
           {
             headers: {
               authorization: `Bearer ${accessToken}`,
             },
           },
         );
+        if (!data.isSuccess) {
+          openModal(data.message);
+          return;
+        }
         setData(data.result);
       } catch (error) {
         console.error(error);
-        if ((error as AxiosError).response?.status === 400) {
-          openModal('아직 가족 그룹이 없어요.', '/home');
-        }
+        const axiosError = error as AxiosError;
+        openModal(
+          `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+        );
       } finally {
         setLoading(false);
       }
@@ -148,59 +155,55 @@ function Family() {
     }
   };
 
+  if (loading) return <Splash />;
   return (
-    <>
-      {loading || !data ? (
-        <Splash />
-      ) : (
-        <Container>
-          <LeftTapBar />
-          <Container2>
-            <Container3>
-              <ImageContainer>{renderImages()}</ImageContainer>
-              <MemberContainer>
-                <Label>가족 구성원</Label>
-                <MemberBox>
-                  {data.familyMemberDtoList.length === 0 ? (
-                    <Empty>아직 구성원이 없어요.</Empty>
-                  ) : (
-                    data.familyMemberDtoList.map((v) => (
-                      <MemberContainer2 key={v.name}>
-                        {v.profileImgUrl ? (
-                          <ProfileImage alt="" src={v.profileImgUrl} />
-                        ) : (
-                          <ProfileImage
-                            alt=""
-                            src="/assets/images/profile-default.svg"
-                          />
-                        )}
-                        <Align>
-                          <Name>
-                            {v.name}({v.relationship})
-                          </Name>
-                          {/* <Sub>접속중</Sub> */}
-                        </Align>
-                      </MemberContainer2>
-                    ))
-                  )}
-                </MemberBox>
-              </MemberContainer>
-            </Container3>
-            <Button style={{ alignSelf: 'flex-end' }} onClick={toVitamin}>
-              우리가족 비타민 만들기
-            </Button>
-          </Container2>
-          <BottomTapBar />
-        </Container>
-      )}
+    <Container>
+      <LeftTapBar />
+      <Container2>
+        <Container3>
+          <ImageContainer>{renderImages()}</ImageContainer>
+          <MemberContainer>
+            <Label>가족 구성원</Label>
+            <MemberBox>
+              {data.familyMemberDtoList.length === 0 ? (
+                <Empty>아직 구성원이 없어요.</Empty>
+              ) : (
+                data.familyMemberDtoList.map((v) => (
+                  <MemberContainer2 key={v.name}>
+                    {v.profileImgUrl ? (
+                      <ProfileImage alt="" src={v.profileImgUrl} />
+                    ) : (
+                      <ProfileImage
+                        alt=""
+                        src="/assets/images/profile-default.svg"
+                      />
+                    )}
+                    <Align>
+                      <Name>
+                        {v.name}({v.relationship})
+                      </Name>
+                      {/* <Sub>접속중</Sub> */}
+                    </Align>
+                  </MemberContainer2>
+                ))
+              )}
+            </MemberBox>
+          </MemberContainer>
+        </Container3>
+        <Button style={{ alignSelf: 'flex-end' }} onClick={toVitamin}>
+          우리가족 비타민 만들기
+        </Button>
+      </Container2>
       {isModalOpen && (
         <LayerPopup
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
-    </>
+      <BottomTapBar />
+    </Container>
   );
 }
 

@@ -5,10 +5,11 @@ import Button from '../components/common/Button';
 import { useModal } from '../hooks/useModal';
 import VitaminWrite from './VitaminWrite';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import LayerPopup from '../components/common/LayerPopup';
+import Splash from './Splash';
 
 function VitaminAlbum() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -18,6 +19,7 @@ function VitaminAlbum() {
     imgUrl: string;
   };
   const [images, setImages] = useState<ImageProp[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -30,18 +32,28 @@ function VitaminAlbum() {
             },
           },
         );
-        if (data.isSuccess) {
-          setImages(data.result);
-        } else {
+        if (!data.isSuccess) {
           openModal(data.message);
+          return;
         }
+        setImages(data.result);
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        openModal(
+          `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+        );
+      } finally {
+        setLoading(false);
       }
     };
     getData();
   }, []);
 
+  if (loading) return <Splash />;
   return (
     <Container>
       <LeftTapBar />
@@ -61,7 +73,6 @@ function VitaminAlbum() {
           사진 등록하기
         </Button>
       </Container2>
-      <BottomTapBar />
       {isModalOpen &&
         (modalText === '사진 등록' ? (
           <VitaminWrite closeModal={closeModal} />
@@ -70,8 +81,10 @@ function VitaminAlbum() {
             label={modalText}
             centerButtonText="확인"
             onClickCenterButton={closeModal}
+            closeModal={closeModal}
           />
         ))}
+      <BottomTapBar />
     </Container>
   );
 }

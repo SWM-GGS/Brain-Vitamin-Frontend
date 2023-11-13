@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useModal } from '../hooks/useModal';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import LayerPopup from '../components/common/LayerPopup';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
@@ -130,13 +130,20 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
           },
         },
       );
-      if (data.isSuccess) {
-        openModal(data.result, '/vitaminAlbum');
-      } else {
+      if (!data.isSuccess) {
         openModal(data.message);
+        return;
       }
+      openModal(data.result, '/vitaminAlbum');
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -244,6 +251,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </Container>

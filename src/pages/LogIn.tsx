@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppDispatch } from '../store';
 import userSlice from '../slices/user';
 import LayerPopup from '../components/common/LayerPopup';
@@ -49,9 +49,20 @@ function LogIn() {
           content: '',
         },
       );
+      if (!data.isSuccess) {
+        openModal(data.message);
+        return;
+      }
       setAuthNum(data.result.authNum);
     } catch (error) {
       console.error(error);
+      const axiosError = error as AxiosError;
+      openModal(
+        `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+      );
     }
   };
 
@@ -98,6 +109,13 @@ function LogIn() {
         navigate('/home');
       } catch (error) {
         console.error(error);
+        const axiosError = error as AxiosError;
+        openModal(
+          `[일시적인 오류 발생]
+          이용에 불편을 드려 죄송합니다.
+          status: ${axiosError.response?.status}
+          statusText: ${axiosError.response?.statusText}`,
+        );
       }
     };
     if (phoneNumber === '01012345678' && code === '123456') {
@@ -148,6 +166,7 @@ function LogIn() {
           label={modalText}
           centerButtonText="확인"
           onClickCenterButton={closeModal}
+          closeModal={closeModal}
         />
       )}
     </WidthContainer>
