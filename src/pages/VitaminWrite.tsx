@@ -26,7 +26,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
   const startYear = 1950;
   const [year, setYear] = useState(currentYear);
   const [season, setSeason] = useState('봄');
-  const [place, setplace] = useState('');
+  const [place, setPlace] = useState('');
   const [headCount, setHeadCount] = useState('');
   const { isModalOpen, modalText, openModal } = useModal();
   const relationships = [
@@ -206,7 +206,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
               label="장소"
               desc="장소를 입력해주세요"
               value={place}
-              callbackFn={(e) => setplace(e.target.value)}
+              callbackFn={(e) => setPlace(e.target.value)}
             />
           </InputContainer>
           <InputContainer>
