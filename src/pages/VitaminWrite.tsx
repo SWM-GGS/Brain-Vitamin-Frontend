@@ -30,9 +30,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
   const [headCount, setHeadCount] = useState('');
   const { isModalOpen, modalText, openModal } = useModal();
   const relationships = [
-    '나',
-    '남편',
-    '아내',
+    '배우자',
     '아들',
     '딸',
     '아버지',
@@ -54,8 +52,6 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
     '조카딸',
     '외할머니',
     '외할아버지',
-    '시아버지',
-    '시어머니',
   ].map((v, i) => {
     return { label: v, value: i + 1 };
   });
