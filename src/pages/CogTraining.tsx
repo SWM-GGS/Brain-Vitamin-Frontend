@@ -217,15 +217,6 @@ function CogTraining() {
     }
   };
 
-  const renderAnswerState = () => {
-    if (answerState === 'correct') {
-      return <Correct />;
-    }
-    if (answerState === 'incorrect') {
-      return <Incorrect />;
-    }
-  };
-
   if (loading) return <Splash />;
   return (
     <Container>
@@ -267,7 +258,7 @@ function CogTraining() {
               </Button>
             </ButtonWrapper>
           </Wrapper>
-          <AnswerFeedback>{renderAnswerState()}</AnswerFeedback>
+          <AnswerFeedback>{renderAnswerState(answerState)}</AnswerFeedback>
           {showLayerPopup && (
             <LayerPopup
               label={gameData[gameIndex].trainingName}
@@ -309,6 +300,15 @@ function CogTraining() {
     </Container>
   );
 }
+
+export const renderAnswerState = (answerState: string) => {
+  if (answerState === 'correct') {
+    return <Correct />;
+  }
+  if (answerState === 'incorrect') {
+    return <Incorrect />;
+  }
+};
 
 const Wrapper = styled.div``;
 
