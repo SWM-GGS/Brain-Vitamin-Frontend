@@ -9,33 +9,31 @@ function Loading() {
 
   useEffect(() => {
     const startAnimation = async () => {
-      while (true) {
-        await pillControls.start({ opacity: 0 });
-        await brainControls.start({ opacity: 0 });
-        await plus1Controls.start({ opacity: 0 });
-        await plus2Controls.start({ opacity: 0 });
+      await pillControls.start({ opacity: 0 });
+      await brainControls.start({ opacity: 0 });
+      await plus1Controls.start({ opacity: 0 });
+      await plus2Controls.start({ opacity: 0 });
 
-        // pill
-        await pillControls.start({ opacity: 1, scale: 0.5 });
-        await pillControls.start({ rotate: 360, x: 30, y: -30, scale: 1 });
-        await pillControls.start({ x: 0, y: 0 });
+      // pill
+      await pillControls.start({ opacity: 1, scale: 0.5 });
+      await pillControls.start({ rotate: 360, x: 30, y: -30, scale: 1 });
+      await pillControls.start({ x: 0, y: 0 });
 
-        // brain
-        await brainControls.start({ opacity: 1, scale: 0.2 });
-        await brainControls.start({ scale: 1 });
+      // brain
+      await brainControls.start({ opacity: 1, scale: 0.2 });
+      await brainControls.start({ scale: 1 });
 
-        // pill
-        await pillControls.start({ x: -20, y: 20 });
-        await pillControls.start({
-          x: 0,
-          y: 0,
-          transition: { type: 'spring', stiffness: 100, damping: 10 },
-        });
+      // pill
+      await pillControls.start({ x: -20, y: 20 });
+      await pillControls.start({
+        x: 0,
+        y: 0,
+        transition: { type: 'spring', stiffness: 100, damping: 10 },
+      });
 
-        // plus1, plus2
-        await plus1Controls.start({ opacity: 1, rotate: 180 });
-        await plus2Controls.start({ opacity: 1, rotate: 180 });
-      }
+      // plus1, plus2
+      await plus1Controls.start({ opacity: 1, rotate: 180 });
+      await plus2Controls.start({ opacity: 1, rotate: 180 });
     };
     startAnimation();
   }, [pillControls, brainControls, plus1Controls, plus2Controls]);
