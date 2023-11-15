@@ -48,7 +48,7 @@ function VitaminAlbum() {
       }
     };
     getData();
-  }, []);
+  }, [isModalOpen]);
 
   if (loading) return <Splash />;
   return (
