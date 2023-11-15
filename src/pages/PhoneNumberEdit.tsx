@@ -61,32 +61,30 @@ function PhoneNumberEdit() {
     <Container>
       <LeftTapBar />
       <SideContainer>
-        <Container3>
-          <Box>
-            <Wrapper>
-              <Label style={{ textAlign: 'center' }}>전화번호 변경하기</Label>
-              <Margin1 />
-              <ShortInput
-                label="전화번호"
-                desc="010 1234 5678"
-                value={phoneNumber}
-                callbackFn={onChangePhoneNumber}
-                buttonText="인증하기"
-                onClickButton={sendCode}
-              />
-              <Margin2 />
-              <Input
-                label="인증번호"
-                desc="인증번호를 입력해주세요"
-                value={code}
-                callbackFn={onChangeCode}
-              />
-            </Wrapper>
-            <Button disabled={!phoneNumber || !code} onClick={handleSave}>
-              저장
-            </Button>
-          </Box>
-        </Container3>
+        <Box>
+          <Wrapper>
+            <Label style={{ textAlign: 'center' }}>전화번호 변경하기</Label>
+            <Margin1 />
+            <ShortInput
+              label="전화번호"
+              desc="010 1234 5678"
+              value={phoneNumber}
+              callbackFn={onChangePhoneNumber}
+              buttonText="인증하기"
+              onClickButton={sendCode}
+            />
+            <Margin2 />
+            <Input
+              label="인증번호"
+              desc="인증번호를 입력해주세요"
+              value={code}
+              callbackFn={onChangeCode}
+            />
+          </Wrapper>
+          <Button disabled={!phoneNumber || !code} onClick={handleSave}>
+            저장
+          </Button>
+        </Box>
       </SideContainer>
       {isModalOpen && (
         <LayerPopup
@@ -107,14 +105,6 @@ const Container = styled.div`
     justify-content: space-between;
   }
 `;
-const Container3 = styled.div`
-  max-width: 192rem;
-  display: flex;
-  justify-content: center;
-  padding: 1.6rem;
-  align-items: center;
-`;
-
 const Box = styled.div`
   width: 86.8rem;
   height: 71.9rem;
@@ -132,8 +122,8 @@ const Box = styled.div`
     padding: 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 25rem;
-    height: 35rem;
+    width: 100%;
+    height: 440px;
     padding: 1.6rem;
   }
 `;

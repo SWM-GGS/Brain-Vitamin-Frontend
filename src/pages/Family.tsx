@@ -280,7 +280,7 @@ const MemberContainer = styled.div`
     padding: 1.6rem;
   }
   @media screen and (max-width: 767px) {
-    width: 300px;
+    width: 100%;
     height: 250px;
     padding: 2rem;
   }

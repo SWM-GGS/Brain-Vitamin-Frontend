@@ -151,8 +151,8 @@ const Box = styled.button`
     padding: 1.5rem;
   }
   @media screen and (max-width: 767px) {
-    width: 17.9rem;
-    height: 12.25rem;
+    width: 224px;
+    height: 154px;
     padding: 1.35rem 1.1rem;
   }
 `;

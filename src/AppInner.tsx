@@ -22,7 +22,6 @@ function AppInner() {
     const isVersionLatest = checkIsVersionLatest();
     if (!isVersionLatest) {
       openModal('최신 버전으로 앱을 업데이트해주세요.');
-      setVersion();
     }
     const timer = setTimeout(() => {
       setShowSplash(false);
@@ -147,13 +146,14 @@ function AppInner() {
         <LayerPopup
           label={modalText}
           centerButtonText="업데이트하기"
-          onClickCenterButton={() =>
+          onClickCenterButton={() => {
+            setVersion();
             window.open(
               'https://play.google.com/store/apps/details?id=com.brainvitamin',
               'WindowName',
               'noopener',
-            )
-          }
+            );
+          }}
           closeModal={closeModal}
         />
       )}

@@ -19,7 +19,7 @@ function ShortInput({
   ...props
 }: Readonly<Props>) {
   return (
-    <ShortInputWrapper {...props} style={props.style}>
+    <ShortInputContainer {...props} style={props.style}>
       <ShortInputBox
         style={{
           background: value ? 'white' : '#f4f4f4',
@@ -41,16 +41,19 @@ function ShortInput({
         onClick={onClickButton}>
         {buttonText}
       </ShortButton>
-    </ShortInputWrapper>
+    </ShortInputContainer>
   );
 }
 
-const ShortInputWrapper = styled.div`
+const ShortInputContainer = styled.div`
   display: flex;
   gap: 0.8rem;
 `;
 
 const ShortInputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 30.7rem;
   height: 7.8rem;
   border-radius: 0.8rem;
@@ -60,8 +63,8 @@ const ShortInputBox = styled.div`
     padding: 1rem;
   }
   @media screen and (max-width: 767px) {
-    width: 16rem;
-    height: 7rem;
+    width: 180px;
+    height: 86px;
   }
 `;
 
@@ -69,9 +72,8 @@ const ShortButton = styled.button`
   color: white;
   font-size: 1.4rem;
   border-radius: 0.8rem;
-  padding: 2rem 2.4rem;
   @media screen and (max-width: 767px) {
-    padding: 1rem 1.5rem;
+    height: 86px;
   }
 `;
 

@@ -133,62 +133,58 @@ function Profile() {
     <Container>
       <LeftTapBar />
       <SideContainer>
-        <Container3>
-          <Box>
-            <Label style={{ textAlign: 'center' }}>회원정보 변경하기</Label>
-            <Contents>
-              <ProfileContainer>
-                <input
-                  style={{ display: 'none' }}
-                  type="file"
-                  id="image"
-                  accept="image/jpg, image/jpeg, image/png"
-                  onChange={onChangeProfileImgUrl}
-                />
-                <ImageContainer>
-                  <label htmlFor="image">
-                    {renderProfileImage()}
-                    <ChangeImageText>사진 변경</ChangeImageText>
-                  </label>
-                </ImageContainer>
-                <Name>{nickname}</Name>
-                <Sub>가족 고유번호 : {familyKey}</Sub>
-              </ProfileContainer>
-              <InfoContainer>
-                <InputWrapper>
-                  <Section>
-                    <Intro>별명을 입력해주세요</Intro>
-                    <Input
-                      label="별명"
-                      desc="별명을 입력해주세요"
-                      value={newNickname}
-                      callbackFn={onChangeNickname}
-                    />
-                  </Section>
-                  <Section>
-                    <Intro>학력을 입력해주세요</Intro>
-                    <EduSelect
-                      value={newEducation}
-                      onChange={(e) =>
-                        handleEdu((e.target as HTMLSelectElement).value)
-                      }>
-                      <option value="무학">무학</option>
-                      <option value="초졸">초졸</option>
-                      <option value="중졸">중졸</option>
-                      <option value="고졸">고졸</option>
-                      <option value="대졸">대졸</option>
-                    </EduSelect>
-                  </Section>
-                </InputWrapper>
-              </InfoContainer>
-            </Contents>
-            <Button
-              disabled={!newNickname || !newEducation}
-              onClick={handleSave}>
-              저장
-            </Button>
-          </Box>
-        </Container3>
+        <Box>
+          <Label style={{ textAlign: 'center' }}>회원정보 변경하기</Label>
+          <Contents>
+            <ProfileContainer>
+              <input
+                style={{ display: 'none' }}
+                type="file"
+                id="image"
+                accept="image/jpg, image/jpeg, image/png"
+                onChange={onChangeProfileImgUrl}
+              />
+              <ImageContainer>
+                <label htmlFor="image">
+                  {renderProfileImage()}
+                  <ChangeImageText>사진 변경</ChangeImageText>
+                </label>
+              </ImageContainer>
+              <Name>{nickname}</Name>
+              <Sub>가족 고유번호 : {familyKey}</Sub>
+            </ProfileContainer>
+            <InfoContainer>
+              <InputWrapper>
+                <Section>
+                  <Intro>별명을 입력해주세요</Intro>
+                  <Input
+                    label="별명"
+                    desc="별명을 입력해주세요"
+                    value={newNickname}
+                    callbackFn={onChangeNickname}
+                  />
+                </Section>
+                <Section>
+                  <Intro>학력을 입력해주세요</Intro>
+                  <EduSelect
+                    value={newEducation}
+                    onChange={(e) =>
+                      handleEdu((e.target as HTMLSelectElement).value)
+                    }>
+                    <option value="무학">무학</option>
+                    <option value="초졸">초졸</option>
+                    <option value="중졸">중졸</option>
+                    <option value="고졸">고졸</option>
+                    <option value="대졸">대졸</option>
+                  </EduSelect>
+                </Section>
+              </InputWrapper>
+            </InfoContainer>
+          </Contents>
+          <Button disabled={!newNickname || !newEducation} onClick={handleSave}>
+            저장
+          </Button>
+        </Box>
       </SideContainer>
       {isModalOpen && (
         <LayerPopup
@@ -209,12 +205,6 @@ const Container = styled.div`
     justify-content: space-between;
   }
 `;
-const Container3 = styled.div`
-  max-width: 192rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 const Box = styled.div`
   width: 87rem;
   height: 68.3rem;
@@ -233,7 +223,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 53rem;
+    height: 650px;
     padding: 2rem;
   }
 `;
@@ -353,14 +343,11 @@ const ImageContainer = styled.div`
     pointer-events: none;
   }
   width: 20rem;
-  height: 20rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 15rem;
-    height: 15rem;
   }
   @media screen and (max-width: 767px) {
-    width: 10rem;
-    height: 10rem;
+    width: 125px;
   }
 `;
 const ChangeImageText = styled.span`

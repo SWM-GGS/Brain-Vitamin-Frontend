@@ -7,8 +7,8 @@ function Loading() {
   const plus1Controls = useAnimation();
   const plus2Controls = useAnimation();
 
-  const startAnimation = async () => {
-    while (true) {
+  useEffect(() => {
+    const startAnimation = async () => {
       await pillControls.start({ opacity: 0 });
       await brainControls.start({ opacity: 0 });
       await plus1Controls.start({ opacity: 0 });
@@ -34,12 +34,9 @@ function Loading() {
       // plus1, plus2
       await plus1Controls.start({ opacity: 1, rotate: 180 });
       await plus2Controls.start({ opacity: 1, rotate: 180 });
-    }
-  };
-
-  useEffect(() => {
+    };
     startAnimation();
-  }, []);
+  }, [pillControls, brainControls, plus1Controls, plus2Controls]);
 
   return (
     <svg

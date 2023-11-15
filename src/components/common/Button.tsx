@@ -15,7 +15,7 @@ const Button = styled.button`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 4rem;
+    height: 50px;
     font-size: 1.4rem;
   }
   &:disabled {

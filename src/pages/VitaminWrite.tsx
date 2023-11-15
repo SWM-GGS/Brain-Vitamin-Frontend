@@ -285,8 +285,8 @@ const Popup = styled.div`
     padding: 3rem 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 300px;
-    height: 500px;
+    width: 330px;
+    height: 600px;
     padding: 2rem;
   }
 `;
@@ -359,8 +359,8 @@ const ImageContainer = styled.div`
     height: 200px;
   }
   @media screen and (max-width: 767px) {
-    width: 10rem;
-    height: 10rem;
+    width: 125px;
+    height: 125px;
   }
 `;
 const ChangeImageText = styled.span`

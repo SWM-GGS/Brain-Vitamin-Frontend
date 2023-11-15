@@ -167,21 +167,23 @@ function MyPage() {
                 <Intro>지난 주보다 좋아졌어요!</Intro>
                 {Object.entries(positiveValues).map(([k, v]) => (
                   <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}이{' '}
-                    <PercentUp>{v.toFixed(1)}% </PercentUp>
-                    높아졌어요
+                    {ability[k as keyof typeof ability]}
+                    <PercentUp> +{v.toFixed(1)}% </PercentUp>
                   </InfoText>
                 ))}
               </StatusBox>
               <StatusBox>
-                <Intro>지난 주보다 신경쓰면 좋아요!</Intro>
+                <Intro>더 신경쓰면 좋아요</Intro>
                 {Object.entries(negativeValues).map(([k, v]) => (
                   <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}이{' '}
-                    <PercentDown>{-v.toFixed(1)}% </PercentDown>
-                    낮아졌어요
+                    {ability[k as keyof typeof ability]}
+                    <PercentDown> {v.toFixed(1)}% </PercentDown>
                   </InfoText>
                 ))}
+                <InfoText>
+                  계산능력
+                  <PercentDown> -100% </PercentDown>
+                </InfoText>
               </StatusBox>
             </StatusContainer>
           </LeftContainer>
@@ -250,10 +252,9 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 1.6rem;
+    padding: 1.4rem;
     gap: 1rem;
     align-content: flex-start;
-    margin: 0 0 11rem 0;
   }
 `;
 const Container3 = styled.div`
@@ -306,12 +307,16 @@ const RightContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 22rem;
-    padding: 1.6rem;
-    gap: 1rem;
+    height: 220px;
+    padding: 1.4rem;
+    gap: 0.5rem;
   }
 `;
 const DateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
   height: 25.1rem;
   border-radius: 2.1rem;
   background: #fff;
@@ -320,10 +325,12 @@ const DateBox = styled.div`
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     height: 13rem;
     padding: 2rem;
+    gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    height: 12rem;
-    padding: 1.6rem;
+    height: 120px;
+    padding: 1.4rem;
+    gap: 1rem;
   }
 `;
 const StatusContainer = styled.div`
@@ -338,6 +345,9 @@ const StatusContainer = styled.div`
   }
 `;
 const StatusBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
   width: 100%;
   height: 52rem;
   border-radius: 2.1rem;
@@ -347,25 +357,24 @@ const StatusBox = styled.div`
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     height: 27rem;
     padding: 2rem;
+    gap: 1rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
     height: 100%;
-    padding: 1.6rem;
+    padding: 1.4rem;
+    gap: 0.5rem;
   }
 `;
 const Intro = styled.p`
   font-family: 'Pretendard-Bold';
   font-size: 2.6rem;
   color: #433d3a;
-  margin: 0 0 2.2rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.2rem;
-    margin: 0 0 1rem 0;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.8rem;
-    margin: 0 0 1rem 0;
     word-break: keep-all;
   }
 `;
@@ -428,7 +437,7 @@ const DayBox = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 4.8rem;
+    height: 60px;
     border-radius: 1.5rem;
     border-width: 0.2rem;
   }
@@ -459,15 +468,12 @@ const InfoText = styled.p`
   font-size: 2.2rem;
   color: #433d3a;
   font-family: 'Pretendard-Medium';
-  margin: 0 0 1.8rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
-    margin: 0 0 1rem 0;
     word-break: keep-all;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
-    margin: 0 0 1rem 0;
     word-break: keep-all;
   }
 `;
@@ -487,22 +493,19 @@ const ResultCircle = styled.div`
     font-size: 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 7rem;
-    height: 7rem;
+    width: 78px;
+    height: 78px;
     font-size: 1.6rem;
   }
 `;
 const ResultScore = styled.span`
   font-size: 3rem;
   font-family: 'Pretendard-Medium';
-  margin: 3rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.4rem;
-    margin: 1rem 0;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.8rem;
-    margin: 1rem 0;
+    font-size: 1.6rem;
   }
 `;
 const Desc = styled.span`
@@ -513,13 +516,20 @@ const Desc = styled.span`
     font-size: 1.4rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 `;
 const Align = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 1rem;
+  }
+  @media screen and (max-width: 767px) {
+    gap: 0.5rem;
+  }
 `;
 const PercentUp = styled.span`
   color: forestgreen;
