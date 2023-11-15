@@ -235,7 +235,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 46rem;
+    height: 575px;
     padding: 6rem 2rem;
     flex-direction: column;
   }
@@ -266,8 +266,8 @@ const ProfileImage = styled.img`
     height: 15rem;
   }
   @media screen and (max-width: 767px) {
-    width: 10rem;
-    height: 10rem;
+    width: 125px;
+    height: 125px;
   }
 `;
 const Name = styled.span`
@@ -290,7 +290,7 @@ const Sub = styled.span`
 `;
 const EditButton = styled.button`
   width: 100%;
-  height: 5.7rem;
+  height: 71px;
   border-radius: 0.8rem;
   border: 0.2rem solid #e8e8e8;
   font-size: 2.2rem;
@@ -335,7 +335,7 @@ const SubButtonContainer = styled.div`
 `;
 const SignoutButton = styled.button`
   width: 20rem;
-  height: 5.7rem;
+  height: 71px;
   border-radius: 0.8rem;
   background: #ffe1e1;
   color: #ff3c3c;
@@ -352,7 +352,7 @@ const SignoutButton = styled.button`
 `;
 const LogoutButton = styled.button`
   width: 20rem;
-  height: 5.7rem;
+  height: 71px;
   border-radius: 0.8rem;
   border: 0.2rem solid #e8e8e8;
   background: none;

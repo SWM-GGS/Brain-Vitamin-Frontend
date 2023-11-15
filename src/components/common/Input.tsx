@@ -28,6 +28,9 @@ function Input({ label, desc, value, callbackFn, ...props }: Readonly<Props>) {
 }
 
 const InputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 41.2rem;
   height: 7.8rem;
   border-radius: 0.8rem;
@@ -39,7 +42,7 @@ const InputBox = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 7rem;
+    height: 86px;
   }
 `;
 

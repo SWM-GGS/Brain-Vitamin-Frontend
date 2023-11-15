@@ -203,8 +203,8 @@ const GameWrapper = styled.div`
     height: 500px;
   }
   @media screen and (max-width: 767px) {
-    width: 30rem;
-    height: 50rem;
+    width: 100%;
+    height: 600px;
     padding: 1.6rem;
   }
 `;
@@ -229,7 +229,7 @@ const ButtonWrapper = styled.div`
     width: 900px;
   }
   @media screen and (max-width: 767px) {
-    width: 30rem;
+    width: 100%;
   }
 `;
 

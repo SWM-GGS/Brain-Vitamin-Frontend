@@ -359,8 +359,8 @@ const ImageContainer = styled.div`
     height: 200px;
   }
   @media screen and (max-width: 767px) {
-    width: 10rem;
-    height: 10rem;
+    width: 125px;
+    height: 125px;
   }
 `;
 const ChangeImageText = styled.span`
