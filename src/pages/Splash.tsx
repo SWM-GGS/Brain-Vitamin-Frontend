@@ -1,9 +1,12 @@
 import { styled } from 'styled-components';
+import Loading from '../components/common/Loading';
 
 function Splash() {
   return (
     <Container>
-      <Logo alt="로고" src="/assets/images/logo.svg" />
+      <LoadingWrapper>
+        <Loading />
+      </LoadingWrapper>
     </Container>
   );
 }
@@ -15,16 +18,13 @@ const Container = styled.div`
   height: calc(var(--vh, 1vh) * 100);
 `;
 
-const Logo = styled.img`
-  width: 40rem;
-  height: 40rem;
+const LoadingWrapper = styled.div`
+  width: 350px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 25rem;
-    height: 25rem;
+    width: 250px;
   }
   @media screen and (max-width: 767px) {
-    width: 20rem;
-    height: 20rem;
+    width: 150px;
   }
 `;
 
