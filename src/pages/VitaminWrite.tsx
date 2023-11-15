@@ -211,7 +211,9 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
               label="인원수"
               desc="인원수를 입력해주세요"
               value={headCount}
-              callbackFn={(e) => setHeadCount(e.target.value)}
+              callbackFn={(e) =>
+                setHeadCount(e.target.value.replace(/\D/g, ''))
+              }
             />
           </InputContainer>
           <InputContainer>
