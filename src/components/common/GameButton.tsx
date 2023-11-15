@@ -37,7 +37,7 @@ const Button = styled.button<{
     ${(props) => props.$isML && `min-width: 105px; padding: 1rem 1rem;`}
     ${(props) => props.$isMedium && `width: 130px; height: 130px;`}
     ${(props) => props.$isSmall && `width: 70px; height: 70px;`}
-    ${(props) => props.$isLongMobileSmall && `min-width: 200px;`}
+    ${(props) => props.$isLongMobileSmall && `min-width: 180px;`}
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
