@@ -25,7 +25,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
   const currentYear = new Date().getFullYear();
   const startYear = 1950;
   const [year, setYear] = useState(currentYear);
-  const [season, setSeason] = useState('봄');
+  const [season, setSeason] = useState('SPRING');
   const [place, setPlace] = useState('');
   const [headCount, setHeadCount] = useState('');
   const { isModalOpen, modalText, openModal } = useModal();
@@ -96,7 +96,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
         secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
       },
     });
-    const path = `vitamin/${generateUniqueNumber()}-${image.name}`;
+    const path = `vitamin/${generateUniqueNumber()}`;
     const uploadParams = {
       Bucket: bucket,
       Key: path,
@@ -131,7 +131,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
         openModal(data.message);
         return;
       }
-      openModal(data.result, '/vitaminAlbum');
+      openModal(data.result);
     } catch (error) {
       console.error(error);
       const axiosError = error as AxiosError;
@@ -208,7 +208,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
           <InputContainer>
             <Intro>사진에 몇 명이 있나요?</Intro>
             <Input
-              label="인원"
+              label="인원수"
               desc="인원수를 입력해주세요"
               value={headCount}
               callbackFn={(e) => setHeadCount(e.target.value)}
