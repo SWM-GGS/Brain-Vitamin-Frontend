@@ -285,8 +285,8 @@ const Popup = styled.div`
     padding: 3rem 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 300px;
-    height: 500px;
+    width: 330px;
+    height: 600px;
     padding: 2rem;
   }
 `;
