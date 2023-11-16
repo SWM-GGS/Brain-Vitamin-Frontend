@@ -129,7 +129,7 @@ const ImageContainer = styled.div`
     padding: 0;
     gap: 1rem;
     width: 100%;
-    height: 600px;
+    height: 620px;
   }
 `;
 const Empty = styled.div`
