@@ -259,11 +259,13 @@ const ButtonContainer = styled.div`
   }
 `;
 const ProfileImage = styled.img`
-  width: 20rem;
-  height: 20rem;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 15rem;
-    height: 15rem;
+    width: 200px;
+    height: 200px;
   }
   @media screen and (max-width: 767px) {
     width: 125px;
