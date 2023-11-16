@@ -160,9 +160,11 @@ function VitaminPlay() {
         )}
       </GameWrapper>
       <ButtonWrapper>
-        <Button disabled={isNextButtonClicked} onClick={handleNextButtonClick}>
-          다음
-        </Button>
+        <Button
+          text="다음"
+          disabled={isNextButtonClicked}
+          onClick={handleNextButtonClick}
+        />
       </ButtonWrapper>
       <AnswerFeedback>{renderAnswerState(answerState)}</AnswerFeedback>
       {isModalOpen && (

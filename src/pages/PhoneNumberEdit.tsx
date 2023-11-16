@@ -15,6 +15,7 @@ import { useModal } from '../hooks/useModal';
 import { usePhoneNumber } from '../hooks/usePhoneNumber';
 import { SideContainer } from '../components/common/Container';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import { useState } from 'react';
 
 function PhoneNumberEdit() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -28,9 +29,11 @@ function PhoneNumberEdit() {
     sendCode,
     checkCodeCorrect,
   } = usePhoneNumber(openModal);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const handleSave = async () => {
     if (!checkCodeCorrect()) return;
+    setSubmitLoading(true);
     try {
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/patient/phone-number`,
@@ -54,6 +57,8 @@ function PhoneNumberEdit() {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -81,9 +86,12 @@ function PhoneNumberEdit() {
               callbackFn={onChangeCode}
             />
           </Wrapper>
-          <Button disabled={!phoneNumber || !code} onClick={handleSave}>
-            저장
-          </Button>
+          <Button
+            text="저장"
+            disabled={!phoneNumber || !code}
+            onClick={handleSave}
+            loading={submitLoading}
+          />
         </Box>
       </SideContainer>
       {isModalOpen && (

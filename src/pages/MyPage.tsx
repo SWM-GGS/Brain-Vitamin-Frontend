@@ -208,10 +208,10 @@ function MyPage() {
           </RightContainer>
         </Container3>
         <Button
+          text="회원정보 수정하기"
           style={{ alignSelf: 'flex-end', width: '22rem' }}
-          onClick={toSetting}>
-          회원정보 수정하기
-        </Button>
+          onClick={toSetting}
+        />
       </Container2>
       {isModalOpen && (
         <LayerPopup

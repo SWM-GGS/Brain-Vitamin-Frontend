@@ -112,10 +112,10 @@ function PhoneNumberSet() {
           </CheckContainer>
         </Wrapper>
         <Button
+          text="다음"
           disabled={!phoneNumber || !code || !termsChecked || !privacyChecked}
-          onClick={goNext}>
-          다음
-        </Button>
+          onClick={goNext}
+        />
       </Box>
       {isModalOpen && (
         <LayerPopup

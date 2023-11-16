@@ -26,6 +26,7 @@ function Profile() {
   const [newEducation, setNewEducation] = useState(education);
   const dispatch = useAppDispatch();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
@@ -63,6 +64,7 @@ function Profile() {
   };
 
   const handleSave = async () => {
+    setSubmitLoading(true);
     let uploadUrl = profileImgUrl;
     if (profileImg) {
       const region = 'ap-northeast-2';
@@ -115,6 +117,8 @@ function Profile() {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -181,9 +185,12 @@ function Profile() {
               </InputWrapper>
             </InfoContainer>
           </Contents>
-          <Button disabled={!newNickname || !newEducation} onClick={handleSave}>
-            저장
-          </Button>
+          <Button
+            text="저장"
+            disabled={!newNickname || !newEducation}
+            onClick={handleSave}
+            loading={submitLoading}
+          />
         </Box>
       </SideContainer>
       {isModalOpen && (

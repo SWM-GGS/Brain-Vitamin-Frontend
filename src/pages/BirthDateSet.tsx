@@ -73,9 +73,7 @@ function BirthDateSet() {
             </GenderButton>
           </GenderWrapper>
         </Wrapper>
-        <Button disabled={!birthDate || !gender} onClick={goNext}>
-          다음
-        </Button>
+        <Button text="다음" disabled={!birthDate || !gender} onClick={goNext} />
       </Box>
       {isModalOpen && (
         <LayerPopup

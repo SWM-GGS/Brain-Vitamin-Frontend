@@ -56,6 +56,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
     return { label: v, value: i + 1 };
   });
   const [selectedFamily, setSelectedFamily] = useState<Option[]>([]);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
@@ -86,6 +87,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
 
   const handleSave = async () => {
     if (!image) return;
+    setSubmitLoading(true);
     let uploadUrl = '';
     const region = 'ap-northeast-2';
     const bucket = 'brain-vitamin-user-files';
@@ -137,6 +139,8 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -228,6 +232,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
           </InputContainer>
           <Button
             style={{ width: '100%' }}
+            text="저장"
             onClick={handleSave}
             disabled={
               !image ||
@@ -236,9 +241,9 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
               !place ||
               !headCount ||
               selectedFamily.length === 0
-            }>
-            저장
-          </Button>
+            }
+            loading={submitLoading}
+          />
         </FormContainer>
       </Popup>
       {isModalOpen && (

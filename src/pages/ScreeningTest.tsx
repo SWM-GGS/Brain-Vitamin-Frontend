@@ -629,9 +629,9 @@ function ScreeningTest() {
         </Box>
         <ButtonWrapper>
           {currentStep > stepCnt ? (
-            <Button onClick={onSubmit}>검사 종료</Button>
+            <Button text="검사 종료" onClick={onSubmit} />
           ) : (
-            <Button onClick={handleNextStep}>다음</Button>
+            <Button text="다음" onClick={handleNextStep} />
           )}
         </ButtonWrapper>
       </Wrapper>
