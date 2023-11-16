@@ -264,6 +264,9 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  @media screen and (max-width: 767px) {
+    align-items: flex-end;
+  }
 `;
 const Popup = styled.div`
   width: 800px;
@@ -285,9 +288,10 @@ const Popup = styled.div`
     padding: 3rem 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 330px;
-    height: 600px;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 93);
     padding: 2rem;
+    border-radius: 1.6rem 1.6rem 0 0;
   }
 `;
 const Header = styled.div`
