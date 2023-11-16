@@ -180,10 +180,6 @@ function MyPage() {
                     <PercentDown> {v.toFixed(1)}% </PercentDown>
                   </InfoText>
                 ))}
-                <InfoText>
-                  계산능력
-                  <PercentDown> -100% </PercentDown>
-                </InfoText>
               </StatusBox>
             </StatusContainer>
           </LeftContainer>
@@ -307,7 +303,7 @@ const RightContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 220px;
+    height: 210px;
     padding: 1.4rem;
     gap: 0.5rem;
   }
@@ -328,9 +324,9 @@ const DateBox = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    height: 120px;
+    height: 110px;
     padding: 1.4rem;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const StatusContainer = styled.div`
@@ -378,18 +374,25 @@ const Intro = styled.p`
     word-break: keep-all;
   }
 `;
-const IntroContainer = styled.div``;
+const IntroContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    gap: 0.5rem;
+  }
+  @media screen and (max-width: 767px) {
+    gap: 0.5rem;
+  }
+`;
 const ResultDate = styled.p`
   font-size: 2.2rem;
   color: #433d3a;
-  margin: 0 0 1.3rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
-    margin: 0 0 0.5rem 0;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
-    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
   }
 `;
 const ResultBox = styled.div`
@@ -505,7 +508,7 @@ const ResultScore = styled.span`
     font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 `;
 const Desc = styled.span`
