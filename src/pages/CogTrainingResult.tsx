@@ -42,7 +42,7 @@ function CogTrainingResult() {
           </MyWrapper>
         </Box>
         <ButtonWrapper>
-          <Button onClick={toHome}>홈으로 돌아가기</Button>
+          <Button text="홈으로 돌아가기" onClick={toHome} />
         </ButtonWrapper>
       </Wrapper>
     </Container>
