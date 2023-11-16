@@ -1,6 +1,34 @@
 import { styled } from 'styled-components';
+import FadeLoader from './FadeLoader';
 
-const Button = styled.button`
+type Props = {
+  text: string;
+  onClick: () => void;
+  disabled?: boolean;
+  style?: React.CSSProperties;
+  loading?: boolean;
+};
+function Button({ text, onClick, disabled, style, loading }: Readonly<Props>) {
+  return (
+    <StyledButton
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        ...style,
+      }}>
+      {loading ? (
+        <FadeLoader color="white" width={3} height={10} margin={8} />
+      ) : (
+        text
+      )}
+    </StyledButton>
+  );
+}
+
+const StyledButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 35.8rem;
   height: 5.2rem;
   background: var(--main-color);

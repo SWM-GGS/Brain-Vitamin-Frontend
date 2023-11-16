@@ -63,7 +63,7 @@ const ShortInputBox = styled.div`
     padding: 1rem;
   }
   @media screen and (max-width: 767px) {
-    width: 180px;
+    width: 100%;
     height: 86px;
   }
 `;
@@ -72,6 +72,7 @@ const ShortButton = styled.button`
   color: white;
   font-size: 1.4rem;
   border-radius: 0.8rem;
+  padding: 0 15px;
   @media screen and (max-width: 767px) {
     height: 86px;
   }

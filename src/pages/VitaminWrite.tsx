@@ -56,6 +56,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
     return { label: v, value: i + 1 };
   });
   const [selectedFamily, setSelectedFamily] = useState<Option[]>([]);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
@@ -86,6 +87,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
 
   const handleSave = async () => {
     if (!image) return;
+    setSubmitLoading(true);
     let uploadUrl = '';
     const region = 'ap-northeast-2';
     const bucket = 'brain-vitamin-user-files';
@@ -137,6 +139,8 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -228,6 +232,7 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
           </InputContainer>
           <Button
             style={{ width: '100%' }}
+            text="저장"
             onClick={handleSave}
             disabled={
               !image ||
@@ -236,9 +241,9 @@ function VitaminWrite({ closeModal }: Readonly<Props>) {
               !place ||
               !headCount ||
               selectedFamily.length === 0
-            }>
-            저장
-          </Button>
+            }
+            loading={submitLoading}
+          />
         </FormContainer>
       </Popup>
       {isModalOpen && (
@@ -264,6 +269,9 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  @media screen and (max-width: 767px) {
+    align-items: flex-end;
+  }
 `;
 const Popup = styled.div`
   width: 800px;
@@ -285,9 +293,10 @@ const Popup = styled.div`
     padding: 3rem 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 330px;
-    height: 600px;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 93);
     padding: 2rem;
+    border-radius: 1.6rem 1.6rem 0 0;
   }
 `;
 const Header = styled.div`
@@ -335,8 +344,17 @@ const ProfileContainer = styled.div`
 `;
 const Image = styled.img`
   display: block;
-  width: 100%;
-  height: auto;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 200px;
+    height: 200px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 125px;
+    height: 125px;
+  }
 `;
 const ImageContainer = styled.div`
   position: relative;

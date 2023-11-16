@@ -237,7 +237,7 @@ function CogTraining() {
                 <Num>
                   {gameIndex + 1}/{gameData.length}
                 </Num>
-                <Button onClick={() => setExitGame(true)}>게임 종료</Button>
+                <Button text="게임 종료" onClick={() => setExitGame(true)} />
               </Section>
             </StatusWrapper>
             <GameWrapper>
@@ -252,10 +252,10 @@ function CogTraining() {
             </GameWrapper>
             <ButtonWrapper>
               <Button
+                text="다음"
                 disabled={isNextButtonClicked}
-                onClick={handleNextButtonClick}>
-                다음
-              </Button>
+                onClick={handleNextButtonClick}
+              />
             </ButtonWrapper>
           </Wrapper>
           <AnswerFeedback>{renderAnswerState(answerState)}</AnswerFeedback>

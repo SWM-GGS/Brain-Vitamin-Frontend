@@ -20,6 +20,7 @@ function LogIn() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value.trim());
@@ -65,6 +66,7 @@ function LogIn() {
 
   const handleLogIn = () => {
     const logIn = async () => {
+      setSubmitLoading(true);
       try {
         const { data } = await axios.post(
           `${import.meta.env.VITE_API_URL}/patient/login`,
@@ -109,6 +111,8 @@ function LogIn() {
         const axiosError = error as AxiosError;
         const errorMessage = getErrorMessage(axiosError);
         openModal(errorMessage);
+      } finally {
+        setSubmitLoading(false);
       }
     };
     if (phoneNumber === '01012345678' && code === '123456') {
@@ -148,11 +152,14 @@ function LogIn() {
             callbackFn={onChangeCode}
           />
           <Margin3 />
-          <Button disabled={!phoneNumber || !code} onClick={handleLogIn}>
-            로그인
-          </Button>
+          <Button
+            text="로그인"
+            disabled={!phoneNumber || !code}
+            onClick={handleLogIn}
+            loading={submitLoading}
+          />
         </Wrapper>
-        <Button onClick={toSignUp}>처음이신가요? 회원가입하기</Button>
+        <Button text="처음이신가요? 회원가입하기" onClick={toSignUp} />
       </Box>
       {isModalOpen && (
         <LayerPopup

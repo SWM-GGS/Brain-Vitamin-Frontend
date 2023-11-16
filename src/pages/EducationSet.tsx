@@ -120,9 +120,7 @@ function EducationSet() {
             </EduButton>
           </ButtonWrapper>
         </Wrapper>
-        <Button disabled={!education} onClick={goNext}>
-          다음
-        </Button>
+        <Button text="다음" disabled={!education} onClick={goNext} />
       </Box>
       {isModalOpen && (
         <LayerPopup

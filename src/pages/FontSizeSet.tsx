@@ -51,11 +51,11 @@ function FontSizeSet() {
         </Box>
       </BoxWrapper>
       <Button
+        text="다음"
         style={{ margin: '0 auto' }}
         disabled={!fontSize}
-        onClick={goNext}>
-        다음
-      </Button>
+        onClick={goNext}
+      />
     </Container>
   );
 }

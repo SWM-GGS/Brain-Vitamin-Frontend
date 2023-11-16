@@ -65,10 +65,10 @@ function VitaminAlbum() {
           )}
         </ImageContainer>
         <Button
+          text="사진 등록하기"
           style={{ alignSelf: 'flex-end' }}
-          onClick={() => openModal('사진 등록')}>
-          사진 등록하기
-        </Button>
+          onClick={() => openModal('사진 등록')}
+        />
       </Container2>
       {isModalOpen &&
         (modalText === '사진 등록' ? (
@@ -129,7 +129,7 @@ const ImageContainer = styled.div`
     padding: 0;
     gap: 1rem;
     width: 100%;
-    height: 600px;
+    height: 620px;
   }
 `;
 const Empty = styled.div`

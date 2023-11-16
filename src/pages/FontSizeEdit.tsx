@@ -19,8 +19,10 @@ function FontSizeEdit() {
   const dispatch = useAppDispatch();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const handleSave = async () => {
+    setSubmitLoading(true);
     try {
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/patient/font-size`,
@@ -44,6 +46,8 @@ function FontSizeEdit() {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -86,11 +90,12 @@ function FontSizeEdit() {
             </Box>
           </BoxWrapper>
           <Button
+            text="저장"
             style={{ margin: '0 auto' }}
             disabled={!fontSize}
-            onClick={handleSave}>
-            저장
-          </Button>
+            onClick={handleSave}
+            loading={submitLoading}
+          />
         </Container3>
       </SideContainer>
       {isModalOpen && (

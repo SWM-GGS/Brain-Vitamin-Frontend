@@ -22,6 +22,7 @@ function NameSet() {
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value.trim());
@@ -32,6 +33,7 @@ function NameSet() {
   };
 
   const signUp = async () => {
+    setSubmitLoading(true);
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/signup`,
@@ -72,6 +74,8 @@ function NameSet() {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -102,9 +106,12 @@ function NameSet() {
             </Section>
           </InputWrapper>
         </Wrapper>
-        <Button disabled={!name || !nickname} onClick={signUp}>
-          회원가입
-        </Button>
+        <Button
+          text="회원가입"
+          disabled={!name || !nickname}
+          onClick={signUp}
+          loading={submitLoading}
+        />
       </Box>
       {isModalOpen && (
         <LayerPopup

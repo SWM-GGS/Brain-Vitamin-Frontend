@@ -187,9 +187,11 @@ function Family() {
             </MemberBox>
           </MemberContainer>
         </Container3>
-        <Button style={{ alignSelf: 'flex-end' }} onClick={toVitamin}>
-          우리가족 비타민 만들기
-        </Button>
+        <Button
+          text="우리가족 비타민 만들기"
+          style={{ alignSelf: 'flex-end' }}
+          onClick={toVitamin}
+        />
       </Container2>
       {isModalOpen && (
         <LayerPopup

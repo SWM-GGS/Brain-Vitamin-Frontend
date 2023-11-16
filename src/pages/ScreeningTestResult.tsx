@@ -36,7 +36,7 @@ function screeningTestResult() {
               합산한 점수가 8점 이상이면 경도인지장애로 진단할 수 있으며, 치매에
               대한 정밀 검사와 치매 예방을 위한 적극적인 관리가 필요합니다.
             </Sub>
-            <Button onClick={toHome}>홈으로 돌아가기</Button>
+            <Button text="홈으로 돌아가기" onClick={toHome} />
           </ResultWrapper>
         </Box>
       </Wrapper>

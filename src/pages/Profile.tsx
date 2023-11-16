@@ -26,6 +26,7 @@ function Profile() {
   const [newEducation, setNewEducation] = useState(education);
   const dispatch = useAppDispatch();
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onChangeProfileImgUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageArr = e.target.files;
@@ -63,6 +64,7 @@ function Profile() {
   };
 
   const handleSave = async () => {
+    setSubmitLoading(true);
     let uploadUrl = profileImgUrl;
     if (profileImg) {
       const region = 'ap-northeast-2';
@@ -115,6 +117,8 @@ function Profile() {
       const axiosError = error as AxiosError;
       const errorMessage = getErrorMessage(axiosError);
       openModal(errorMessage);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -181,9 +185,12 @@ function Profile() {
               </InputWrapper>
             </InfoContainer>
           </Contents>
-          <Button disabled={!newNickname || !newEducation} onClick={handleSave}>
-            저장
-          </Button>
+          <Button
+            text="저장"
+            disabled={!newNickname || !newEducation}
+            onClick={handleSave}
+            loading={submitLoading}
+          />
         </Box>
       </SideContainer>
       {isModalOpen && (
@@ -311,8 +318,17 @@ const InfoContainer = styled.div`
 `;
 const ProfileImage = styled.img`
   display: block;
-  width: 100%;
-  height: auto;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 200px;
+    height: 200px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 125px;
+    height: 125px;
+  }
 `;
 const Name = styled.span`
   font-family: 'Pretendard-Bold';
@@ -341,13 +357,6 @@ const ImageContainer = styled.div`
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
     pointer-events: none;
-  }
-  width: 20rem;
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 15rem;
-  }
-  @media screen and (max-width: 767px) {
-    width: 125px;
   }
 `;
 const ChangeImageText = styled.span`
