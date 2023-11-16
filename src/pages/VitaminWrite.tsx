@@ -335,8 +335,17 @@ const ProfileContainer = styled.div`
 `;
 const Image = styled.img`
   display: block;
-  width: 100%;
-  height: auto;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 200px;
+    height: 200px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 125px;
+    height: 125px;
+  }
 `;
 const ImageContainer = styled.div`
   position: relative;
