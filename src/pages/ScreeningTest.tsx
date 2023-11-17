@@ -113,6 +113,7 @@ function ScreeningTest() {
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.crossOrigin = 'use-credentials';
+        setCurrentAudio(audio);
         audio.play();
       } catch (error) {
         console.error(error);
@@ -126,25 +127,81 @@ function ScreeningTest() {
     getData();
   }, []);
 
-  const [stream, setStream] = useState<MediaStream>();
-  const [media, setMedia] = useState<MediaRecorder>();
-  const [source, setSource] = useState<MediaStreamAudioSourceNode>();
-  const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [media, setMedia] = useState<MediaRecorder | null>(null);
+  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>(null);
+  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>(null);
+  const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
+    null,
+  );
   const { loaded, transcode } = useFFmpeg();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!waveformAnalyser) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    waveformAnalyser.fftSize = 2048; // FFT 크기 설정
+    const bufferLength = waveformAnalyser.frequencyBinCount; // 주파수 영역의 데이터 수
+    const dataArray = new Uint8Array(bufferLength); // 주파수 데이터를 저장할 배열
+
+    const draw = () => {
+      requestAnimationFrame(draw);
+
+      waveformAnalyser.getByteTimeDomainData(dataArray); // 주파수 데이터 얻기
+
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'orange';
+
+      ctx.beginPath();
+
+      const sliceWidth = (WIDTH * 1.0) / bufferLength;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = (v * HEIGHT) / 2;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
+      }
+
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+    };
+    draw();
+  }, [waveformAnalyser, canvasRef]);
 
   const onRecAudio = () => {
     // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
     const audioCtx = new window.AudioContext();
     // 자바스크립트를 통해 음원의 진행상태에 직접접근에 사용된다.
     const analyser = audioCtx.createScriptProcessor(0, 1, 1);
+    const waveformAnalyser = audioCtx.createAnalyser();
     setAnalyser(analyser);
+    setWaveformAnalyser(waveformAnalyser);
 
     function makeSound(stream: MediaStream) {
       // 내 컴퓨터의 마이크나 다른 소스를 통해 발생한 오디오 스트림의 정보를 보여준다.
       const source = audioCtx.createMediaStreamSource(stream);
       setSource(source);
       source.connect(analyser);
+      source.connect(waveformAnalyser);
       analyser.connect(audioCtx.destination);
+      waveformAnalyser.connect(audioCtx.destination);
     }
     // 마이크 사용 권한 획득
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -161,7 +218,7 @@ function ScreeningTest() {
   // 사용자가 음성 녹음을 중지했을 때
   const offRecAudio = () => {
     return new Promise((resolve, reject) => {
-      if (!media || !stream || !analyser || !source) {
+      if (!media || !stream || !analyser || !waveformAnalyser || !source) {
         reject(new Error('offRecAudio failed'));
         return;
       }
@@ -175,6 +232,7 @@ function ScreeningTest() {
       media.stop();
       // 메서드가 호출 된 노드 연결 해제
       analyser.disconnect();
+      waveformAnalyser.disconnect();
       source.disconnect();
 
       // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
@@ -182,6 +240,12 @@ function ScreeningTest() {
         const blob = new Blob([e.data], { type: 'audio/webm' });
         resolve(blob);
       };
+
+      setStream(null);
+      setMedia(null);
+      setSource(null);
+      setAnalyser(null);
+      setWaveformAnalyser(null);
     });
   };
 
@@ -525,11 +589,16 @@ function ScreeningTest() {
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
-              <ListenAgainButton
-                disabled={!trialCount || !isRetryAvailable}
-                onClick={handleListenAgain}>
-                다시 듣기
-              </ListenAgainButton>
+              {questions[currentIndex].mikeOn && (
+                <canvas ref={canvasRef} width={300} height={100} />
+              )}
+              {questions[currentIndex].step !== 11 && (
+                <ListenAgainButton
+                  disabled={!trialCount || !isRetryAvailable}
+                  onClick={handleListenAgain}>
+                  다시 듣기
+                </ListenAgainButton>
+              )}
               {questions[currentIndex].step === 6 && (
                 <Step6Container>
                   <Step6Image alt="" src={questions[currentIndex].imgUrl} />
