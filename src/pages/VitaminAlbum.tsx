@@ -120,7 +120,7 @@ const ImageContainer = styled.div`
   gap: 2.8rem;
   overflow: auto;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 750px;
+    width: 770px;
     height: 460px;
     gap: 2rem;
   }

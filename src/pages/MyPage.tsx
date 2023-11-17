@@ -168,7 +168,8 @@ function MyPage() {
                 {Object.entries(positiveValues).map(([k, v]) => (
                   <InfoText key={k}>
                     {ability[k as keyof typeof ability]}
-                    <PercentUp> +{v.toFixed(1)}% </PercentUp>
+                    <br />
+                    <PercentUp>+{v.toFixed(1)}% </PercentUp>
                   </InfoText>
                 ))}
               </StatusBox>
@@ -177,7 +178,8 @@ function MyPage() {
                 {Object.entries(negativeValues).map(([k, v]) => (
                   <InfoText key={k}>
                     {ability[k as keyof typeof ability]}
-                    <PercentDown> {v.toFixed(1)}% </PercentDown>
+                    <br />
+                    <PercentDown>{v.toFixed(1)}% </PercentDown>
                   </InfoText>
                 ))}
               </StatusBox>
