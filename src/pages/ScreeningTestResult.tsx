@@ -33,8 +33,11 @@ function screeningTestResult() {
             <Sub>
               진단 결과 {nickname}님의 합산 점수는 {totalScore}점입니다.
               <br />
-              합산한 점수가 8점 이상이면 경도인지장애로 진단할 수 있으며, 치매에
-              대한 정밀 검사와 치매 예방을 위한 적극적인 관리가 필요합니다.
+              보다 정확한 진단을 위해 귀하의 연령과 교육년수를 함께 고려하였음을
+              알려드립니다.
+              <br />
+              치매에 대한 정밀 검사와 치매 예방을 위한 적극적인 관리가
+              필요합니다.
             </Sub>
             <Button text="홈으로 돌아가기" onClick={toHome} />
           </ResultWrapper>
@@ -95,8 +98,8 @@ const Result = styled.div<{ $cogLevel: string }>`
   font-family: 'Pretendard-Bold';
   color: white;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 13rem;
-    height: 13rem;
+    width: 130px;
+    height: 130px;
     font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
@@ -131,7 +134,7 @@ const Sub = styled.p`
   margin: 0 0 6.8rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
-    margin: 0 0 3.5rem 0;
+    margin: 0 0 2.5rem 0;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
