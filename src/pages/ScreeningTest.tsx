@@ -117,6 +117,16 @@ function ScreeningTest() {
         audio.crossOrigin = 'use-credentials';
         setCurrentAudio(audio);
         audio.play();
+        audio.addEventListener('loadedmetadata', (e) => {
+          if (e.target) {
+            const duration = (e.target as HTMLAudioElement).duration;
+
+            setIsRetryAvailable(false);
+            setTimeout(() => {
+              setIsRetryAvailable(true);
+            }, duration * 1000);
+          }
+        });
       } catch (error) {
         console.error(error);
         const axiosError = error as AxiosError;
@@ -411,6 +421,16 @@ function ScreeningTest() {
     setCurrentAudio(null);
     if (nextAudioUrl) {
       audio.play();
+      audio.addEventListener('loadedmetadata', (e) => {
+        if (e.target) {
+          const duration = (e.target as HTMLAudioElement).duration;
+
+          setIsRetryAvailable(false);
+          setTimeout(() => {
+            setIsRetryAvailable(true);
+          }, duration * 1000);
+        }
+      });
       setCurrentAudio(audio);
     }
 
