@@ -129,6 +129,11 @@ function VitaminPlay() {
       } else {
         setGameIndex((prev) => prev + 1);
         setIsNextButtonClicked(false);
+        buttonRefs.current.forEach((el) => {
+          if (el) {
+            initButtonStyle(el);
+          }
+        });
       }
     })();
   }, [isSelectedAnswerCorrect]);
@@ -216,7 +221,7 @@ const Image = styled.img`
   object-fit: contain;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 500px;
-    height: 300px;
+    height: 180px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
