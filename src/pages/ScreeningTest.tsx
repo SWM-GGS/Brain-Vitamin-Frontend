@@ -62,6 +62,8 @@ function ScreeningTest() {
   const [isRetryAvailable, setIsRetryAvailable] = useState(true);
   const [loading, setLoading] = useState(true);
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [finalSubmitLoading, setFinalSubmitLoading] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -319,7 +321,7 @@ function ScreeningTest() {
             },
           );
           if (data.result.stop) {
-            setTotalScore((prev) => prev + data.result);
+            setTotalScore((prev) => prev + data.result.score);
             setRetryCount(0);
           } else {
             // 추가 질문 추가
@@ -381,6 +383,7 @@ function ScreeningTest() {
   };
 
   const handleNextStep = async () => {
+    setSubmitLoading(true);
     // 0. 이전 오디오 멈춤
     stopPreviousAudio();
 
@@ -440,9 +443,11 @@ function ScreeningTest() {
 
     // 6. 현재 문제 인덱스 갱신
     setCurrentIndex((prev) => prev + 1);
+    setSubmitLoading(false);
   };
 
   const onSubmit = async () => {
+    setFinalSubmitLoading(true);
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
@@ -458,6 +463,8 @@ function ScreeningTest() {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      setFinalSubmitLoading(false);
     }
   };
 
@@ -698,9 +705,17 @@ function ScreeningTest() {
         </Box>
         <ButtonWrapper>
           {currentStep > stepCnt ? (
-            <Button text="검사 종료" onClick={onSubmit} />
+            <Button
+              text="검사 종료"
+              onClick={onSubmit}
+              loading={finalSubmitLoading}
+            />
           ) : (
-            <Button text="다음" onClick={handleNextStep} />
+            <Button
+              text="다음"
+              onClick={handleNextStep}
+              loading={submitLoading}
+            />
           )}
         </ButtonWrapper>
       </Wrapper>
