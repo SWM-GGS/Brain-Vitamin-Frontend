@@ -80,7 +80,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 300px;
+    height: 320px;
     margin: 2rem 1.6rem 0 1.6rem;
   }
 `;
@@ -106,6 +106,7 @@ const Sub = styled.p`
   border-radius: 5.9rem;
   margin: 3.4rem 0 0 0;
   text-align: center;
+  word-break: keep-all;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.6rem;
   }

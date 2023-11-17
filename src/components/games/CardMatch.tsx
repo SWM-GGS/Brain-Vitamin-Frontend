@@ -100,7 +100,7 @@ const Back = styled.div<{ $status: boolean }>`
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  background: royalblue;
+  background: var(--main-bg-color);
   transform: ${(props) =>
     props.$status ? 'rotateY(180deg)' : 'rotateY(0deg)'};
   border-radius: 1.5rem;
@@ -119,8 +119,8 @@ const Back = styled.div<{ $status: boolean }>`
     background-repeat: no-repeat;
     opacity: 0.8;
     @media screen and (min-width: 768px) and (max-height: 1079px) {
-      width: 7rem;
-      height: 7rem;
+      width: 100px;
+      height: 100px;
     }
     @media screen and (max-width: 767px) {
       width: 5rem;

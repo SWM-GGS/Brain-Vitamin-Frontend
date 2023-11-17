@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import FadeLoader from './FadeLoader';
+import { FadeLoader } from '@salmonco/react-loader-spinner';
 
 type Props = {
   text: string;
