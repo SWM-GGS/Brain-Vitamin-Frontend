@@ -127,7 +127,7 @@ function Setting() {
               <PrivacyButton
                 onClick={() =>
                   window.open(
-                    'http://brain-vitamin-web-front-deploy.s3-website.ap-northeast-2.amazonaws.com/privacy',
+                    'https://dqr7en7diq4ph.cloudfront.net/privacy',
                     '개인정보처리방침',
                     'noopener',
                   )
