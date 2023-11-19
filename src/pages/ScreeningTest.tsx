@@ -258,23 +258,30 @@ function ScreeningTest() {
 
   const handleEachProblemAnswerSubmit = (blob: Blob | null) => {
     return new Promise((resolve) => {
+      const formData = new FormData();
+
+      const jsonData = {
+        firstVertex,
+        secondVertex,
+        screeningTestId: questions[currentIndex].screeningTestId,
+        count: retryCount,
+      };
+      if (blob) {
+        formData.append('audioFile', blob);
+      }
+      formData.append('jsonData', JSON.stringify(jsonData));
+
       const submitAnswer = async () => {
         try {
           const { data } = await axios.post(
             `${
               import.meta.env.VITE_API_URL
             }/patient/vitamins/screening-test/detail`,
-            {
-              firstVertex,
-              secondVertex,
-              audioFileUrl: blob,
-              screeningTestId: questions[currentIndex].screeningTestId,
-              count: retryCount,
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'audio/webm',
+                'Content-Type': 'multipart/form-data',
               },
             },
           );
