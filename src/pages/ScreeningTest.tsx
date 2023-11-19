@@ -17,9 +17,10 @@ import Splash from './Splash';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import { generateUniqueNumber } from '../modules/generateUniqueNumber';
 
 function ScreeningTest() {
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const { accessToken, id } = useSelector((state: RootState) => state.user);
   type Props = {
     step: number;
     audioUrl: string;
@@ -267,7 +268,9 @@ function ScreeningTest() {
         count: retryCount,
       };
       if (blob) {
-        formData.append('audioFile', blob);
+        const fileName = `${generateUniqueNumber()}-${id}.mp3`;
+        const file = new File([blob], fileName, { type: 'audio/webm' });
+        formData.append('audioFile', file);
       }
       formData.append('jsonData', JSON.stringify(jsonData));
 
