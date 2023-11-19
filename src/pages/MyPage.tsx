@@ -75,6 +75,7 @@ function MyPage() {
           return;
         }
         setData(data.result);
+        if (!data.result.changesFromLastWeekDto) return;
         const percentInfo =
           data.result.changesFromLastWeekDto.changedFromLastWeek;
         const positiveValues: {

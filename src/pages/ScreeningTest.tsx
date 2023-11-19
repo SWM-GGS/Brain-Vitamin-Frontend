@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
 import axios, { AxiosError } from 'axios';
@@ -18,6 +18,9 @@ import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
+import { useFFmpeg } from '../hooks/useFFmpeg';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { FetchHttpHandler } from '@smithy/fetch-http-handler';
 
 function ScreeningTest() {
   const { accessToken, id } = useSelector((state: RootState) => state.user);
@@ -61,6 +64,16 @@ function ScreeningTest() {
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
   const [submitLoading, setSubmitLoading] = useState(false);
   const [finalSubmitLoading, setFinalSubmitLoading] = useState(false);
+
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [media, setMedia] = useState<MediaRecorder | null>(null);
+  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>(null);
+  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>(null);
+  const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
+    null,
+  );
+  const { loaded, transcode } = useFFmpeg();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -135,15 +148,6 @@ function ScreeningTest() {
     };
     getData();
   }, []);
-
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [media, setMedia] = useState<MediaRecorder | null>(null);
-  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>(null);
-  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>(null);
-  const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
-    null,
-  );
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (!waveformAnalyser) return;
@@ -223,19 +227,16 @@ function ScreeningTest() {
     });
   };
 
-  // 사용자가 음성 녹음을 중지했을 때
   const offRecAudio = () => {
     return new Promise((resolve, reject) => {
       if (!media || !stream || !analyser || !waveformAnalyser || !source) {
         reject(new Error('offRecAudio failed'));
         return;
       }
-
       // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
       stream.getAudioTracks().forEach(function (track) {
         track.stop();
       });
-
       // 미디어 캡처 중지
       media.stop();
       // 메서드가 호출 된 노드 연결 해제
@@ -257,34 +258,69 @@ function ScreeningTest() {
     });
   };
 
-  const handleEachProblemAnswerSubmit = (blob: Blob | null) => {
-    return new Promise((resolve) => {
-      const formData = new FormData();
-
-      const jsonData = {
-        firstVertex,
-        secondVertex,
-        screeningTestId: questions[currentIndex].screeningTestId,
-        count: retryCount,
-      };
-      if (blob) {
-        const fileName = `${generateUniqueNumber()}-${id}.mp3`;
-        const file = new File([blob], fileName, { type: 'audio/webm' });
-        formData.append('audioFile', file);
+  const onSubmitAudioFile = useCallback((audioUrl: Blob) => {
+    return new Promise((resolve, reject) => {
+      if (!audioUrl) {
+        reject(new Error('audioUrl not found'));
+        return;
       }
-      formData.append('jsonData', JSON.stringify(jsonData));
+      // console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
+      const uploadAudioFileToS3 = async () => {
+        // ffmpeg을 이용하여 webm 파일을 mp3 파일로 변환
+        const sound = await transcode(audioUrl, 'audio/mp3');
+        // 음성 파일을 s3에 업로드
+        let uploadUrl = '';
+        const region = 'ap-northeast-2';
+        const bucket = 'brain-vitamin-user-files';
+        const s3Client = new S3Client({
+          region, // AWS 리전을 설정하세요
+          credentials: {
+            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+          },
+          requestHandler: new FetchHttpHandler({ keepAlive: false }),
+        });
+        const currentTime = new Date().getTime();
+        const fileName = `${generateUniqueNumber()}-${currentTime}-${id}.mp3`;
+        const path = `screeningTestAudios/${fileName}`;
+        const uploadParams = {
+          Bucket: bucket,
+          Key: path,
+          Body: sound,
+          ContentType: 'audio/mp3',
+        };
+        try {
+          const command = new PutObjectCommand(uploadParams);
+          await s3Client.send(command);
+          uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
+          console.log('uploadUrl', uploadUrl);
+          resolve(uploadUrl);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      uploadAudioFileToS3();
+    });
+  }, []);
 
+  const handleEachProblemAnswerSubmit = (uploadUrl: string | null) => {
+    return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
           const { data } = await axios.post(
             `${
               import.meta.env.VITE_API_URL
             }/patient/vitamins/screening-test/detail`,
-            formData,
+            {
+              firstVertex,
+              secondVertex,
+              audioFileUrl: uploadUrl,
+              screeningTestId: questions[currentIndex].screeningTestId,
+              count: retryCount,
+            },
             {
               headers: {
                 authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'multipart/form-data',
               },
             },
           );
@@ -361,8 +397,9 @@ function ScreeningTest() {
       try {
         // 1-1-1. 녹음 중지
         const blob = await offRecAudio();
+        const uploadUrl = await onSubmitAudioFile(blob as Blob);
         // 1-1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
-        await handleEachProblemAnswerSubmit(blob as Blob);
+        await handleEachProblemAnswerSubmit(uploadUrl as string);
       } catch (error) {
         console.error(error);
       }
@@ -544,7 +581,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
-  if (loading) return <Splash />;
+  if (loading || !loaded) return <Splash />;
   return (
     <Container>
       <Wrapper>

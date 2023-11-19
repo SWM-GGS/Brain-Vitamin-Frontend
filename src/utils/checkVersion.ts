@@ -1,4 +1,4 @@
-const latestVersion = '7';
+const latestVersion = '8';
 
 export const checkIsVersionLatest = () => {
   const version = localStorage.getItem('version');
