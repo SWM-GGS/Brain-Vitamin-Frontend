@@ -136,125 +136,31 @@ function ScreeningTest() {
     getData();
   }, []);
 
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [media, setMedia] = useState<MediaRecorder | null>(null);
-  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>(null);
-  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>(null);
-  const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
-    null,
-  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [transcript, setTranscript] = useState('');
+  let recognition: SpeechRecognition | null = null;
 
-  useEffect(() => {
-    if (!waveformAnalyser) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const WIDTH = canvas.width;
-    const HEIGHT = canvas.height;
+  const startListening = () => {
+    recognition = new window.webkitSpeechRecognition();
+    recognition.lang = 'ko';
 
-    waveformAnalyser.fftSize = 2048; // FFT 크기 설정
-    const bufferLength = waveformAnalyser.frequencyBinCount; // 주파수 영역의 데이터 수
-    const dataArray = new Uint8Array(bufferLength); // 주파수 데이터를 저장할 배열
-
-    const draw = () => {
-      requestAnimationFrame(draw);
-
-      waveformAnalyser.getByteTimeDomainData(dataArray); // 주파수 데이터 얻기
-
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'orange';
-
-      ctx.beginPath();
-
-      const sliceWidth = (WIDTH * 1.0) / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * HEIGHT) / 2;
-
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-      }
-
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
+    recognition.onresult = (event) => {
+      const current = event.resultIndex;
+      const transcript = event.results[current][0].transcript;
+      setTranscript(transcript);
     };
-    draw();
-  }, [waveformAnalyser, canvasRef]);
 
-  const onRecAudio = () => {
-    // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
-    const audioCtx = new window.AudioContext();
-    // 자바스크립트를 통해 음원의 진행상태에 직접접근에 사용된다.
-    const analyser = audioCtx.createScriptProcessor(0, 1, 1);
-    const waveformAnalyser = audioCtx.createAnalyser();
-    setAnalyser(analyser);
-    setWaveformAnalyser(waveformAnalyser);
-
-    function makeSound(stream: MediaStream) {
-      // 내 컴퓨터의 마이크나 다른 소스를 통해 발생한 오디오 스트림의 정보를 보여준다.
-      const source = audioCtx.createMediaStreamSource(stream);
-      setSource(source);
-      source.connect(analyser);
-      source.connect(waveformAnalyser);
-      analyser.connect(audioCtx.destination);
-      waveformAnalyser.connect(audioCtx.destination);
-    }
-    // 마이크 사용 권한 획득
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm',
-      });
-      mediaRecorder.start();
-      setStream(stream);
-      setMedia(mediaRecorder);
-      makeSound(stream);
-    });
+    recognition.start();
   };
 
-  // 사용자가 음성 녹음을 중지했을 때
-  const offRecAudio = () => {
-    return new Promise((resolve, reject) => {
-      if (!media || !stream || !analyser || !waveformAnalyser || !source) {
-        reject(new Error('offRecAudio failed'));
-        return;
-      }
+  const stopListening = () => {
+    if (recognition) {
+      recognition.stop();
+    }
+  };
 
-      // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
-      stream.getAudioTracks().forEach(function (track) {
-        track.stop();
-      });
-
-      // 미디어 캡처 중지
-      media.stop();
-      // 메서드가 호출 된 노드 연결 해제
-      analyser.disconnect();
-      waveformAnalyser.disconnect();
-      source.disconnect();
-
-      // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
-      media.ondataavailable = function (e) {
-        const blob = new Blob([e.data], { type: 'audio/webm' });
-        resolve(blob);
-      };
-
-      setStream(null);
-      setMedia(null);
-      setSource(null);
-      setAnalyser(null);
-      setWaveformAnalyser(null);
-    });
+  const resetTranscript = () => {
+    setTranscript('');
   };
 
   const handleEachProblemAnswerSubmit = (blob: Blob | null) => {
@@ -360,9 +266,10 @@ function ScreeningTest() {
       // 1-1. 음성 제출인 경우
       try {
         // 1-1-1. 녹음 중지
-        const blob = await offRecAudio();
+        stopListening();
+        openModal(transcript);
         // 1-1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
-        await handleEachProblemAnswerSubmit(blob as Blob);
+        // await handleEachProblemAnswerSubmit(blob as Blob);
       } catch (error) {
         console.error(error);
       }
@@ -393,19 +300,20 @@ function ScreeningTest() {
     // 3. 다음 문제가 mike on일 경우 녹음 시작
     if (questions[currentIndex + 1].mikeOn) {
       // 질문이 끝난 후 녹음 시작
+      resetTranscript();
       if (nextAudioUrl) {
         audio.addEventListener('loadedmetadata', (e) => {
           if (e.target) {
             const duration = (e.target as HTMLAudioElement).duration;
             const timer = setTimeout(() => {
-              onRecAudio();
+              startListening();
               setCurrentTimer(null);
             }, duration * 1000);
             setCurrentTimer(timer);
           }
         });
       } else {
-        onRecAudio();
+        startListening();
       }
     }
 
