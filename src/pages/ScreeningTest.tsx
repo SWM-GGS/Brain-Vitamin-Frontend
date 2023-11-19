@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
 import axios, { AxiosError } from 'axios';
@@ -6,9 +6,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { useNavigate } from 'react-router';
 import { Container } from '../components/common/Container';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { generateUniqueNumber } from '../modules/generateUniqueNumber';
-import { FetchHttpHandler } from '@smithy/fetch-http-handler';
 import Step6 from './Step6';
 import {
   ButtonContainer,
@@ -16,7 +13,6 @@ import {
   Button as NumButton,
 } from '../components/common/GameButton';
 import { getRandomFloat } from '../utils/random';
-import { useFFmpeg } from '../hooks/useFFmpeg';
 import Splash from './Splash';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
@@ -146,7 +142,6 @@ function ScreeningTest() {
   const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
     null,
   );
-  const { loaded, transcode } = useFFmpeg();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -261,55 +256,7 @@ function ScreeningTest() {
     });
   };
 
-  const onSubmitAudioFile = useCallback((audioUrl: Blob) => {
-    return new Promise((resolve, reject) => {
-      if (!audioUrl) {
-        reject(new Error('audioUrl not found'));
-        return;
-      }
-      // console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
-
-      const uploadAudioFileToS3 = async () => {
-        // ffmpeg을 이용하여 webm 파일을 mp3 파일로 변환
-        const sound = await transcode(audioUrl, 'audio/mp3');
-        // 음성 파일을 s3에 업로드
-        let uploadUrl = '';
-        const region = 'ap-northeast-2';
-        const bucket = 'brain-vitamin-user-files';
-        const s3Client = new S3Client({
-          region, // AWS 리전을 설정하세요
-          credentials: {
-            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-          },
-          requestHandler: new FetchHttpHandler({ keepAlive: false }),
-        });
-        const currentTime = new Date().getTime();
-        const fileName = `${generateUniqueNumber()}-${currentTime}.mp3`;
-        const path = `screeningTestAudios/${fileName}`;
-
-        const uploadParams = {
-          Bucket: bucket,
-          Key: path,
-          Body: sound,
-          ContentType: 'audio/mp3',
-        };
-
-        try {
-          const command = new PutObjectCommand(uploadParams);
-          await s3Client.send(command);
-          uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
-          console.log('uploadUrl', uploadUrl);
-          resolve(uploadUrl);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      uploadAudioFileToS3();
-    });
-  }, []);
-
-  const handleEachProblemAnswerSubmit = (uploadUrl: string | null) => {
+  const handleEachProblemAnswerSubmit = (blob: Blob | null) => {
     return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
@@ -320,13 +267,14 @@ function ScreeningTest() {
             {
               firstVertex,
               secondVertex,
-              audioFileUrl: uploadUrl,
+              audioFileUrl: blob,
               screeningTestId: questions[currentIndex].screeningTestId,
               count: retryCount,
             },
             {
               headers: {
                 authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'audio/webm',
               },
             },
           );
@@ -402,11 +350,9 @@ function ScreeningTest() {
       // 1-1. 음성 제출인 경우
       try {
         // 1-1-1. 녹음 중지
-        const audioFileUrl = await offRecAudio();
-        // 1-1-2. 파일 저장
-        const uploadUrl = await onSubmitAudioFile(audioFileUrl as Blob);
-        // 1-1-3. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
-        await handleEachProblemAnswerSubmit(uploadUrl as string);
+        const blob = await offRecAudio();
+        // 1-1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+        await handleEachProblemAnswerSubmit(blob as Blob);
       } catch (error) {
         console.error(error);
       }
@@ -588,7 +534,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
-  if (loading || !loaded) return <Splash />;
+  if (loading) return <Splash />;
   return (
     <Container>
       <Wrapper>
