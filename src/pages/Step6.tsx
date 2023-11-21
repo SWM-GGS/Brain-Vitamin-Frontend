@@ -243,8 +243,8 @@ const Board = styled.div`
   justify-items: center;
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 300px;
-    height: 300px;
+    width: 270px;
+    height: 270px;
     border: 2px solid black;
   }
   @media screen and (max-width: 767px) {

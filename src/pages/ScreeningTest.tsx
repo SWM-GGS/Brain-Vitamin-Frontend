@@ -618,7 +618,7 @@ function ScreeningTest() {
               </Question>
               {questions[currentIndex].mikeOn && (
                 <>
-                  <canvas ref={canvasRef} width={300} height={100} />
+                  <canvas ref={canvasRef} width={300} height={50} />
                   <RecordingText>
                     {listening && `녹음중... ${transcript}`}
                   </RecordingText>
@@ -928,8 +928,8 @@ const Step6Image = styled.img`
   width: 600px;
   height: 600px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 300px;
-    height: 300px;
+    width: 270px;
+    height: 270px;
   }
   @media screen and (max-width: 767px) {
     width: 250px;
@@ -974,7 +974,7 @@ const LetterBox = styled.div`
 const Step11Image = styled.img`
   width: 350px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 250px;
+    width: 200px;
   }
   @media screen and (max-width: 767px) {
     width: 250px;
