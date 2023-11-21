@@ -18,9 +18,9 @@ import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
-import { useFFmpeg } from '../hooks/useFFmpeg';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { FetchHttpHandler } from '@smithy/fetch-http-handler';
+import useSpeechToText from '../hooks/useSpeechToText';
 
 function ScreeningTest() {
   const { accessToken, id } = useSelector((state: RootState) => state.user);
@@ -72,8 +72,14 @@ function ScreeningTest() {
   const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
     null,
   );
-  const { loaded, transcode } = useFFmpeg();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const {
+    listening,
+    transcript,
+    startListening,
+    stopListening,
+    resetTranscript,
+  } = useSpeechToText();
 
   useEffect(() => {
     const getData = async () => {
@@ -214,6 +220,8 @@ function ScreeningTest() {
       source.connect(waveformAnalyser);
       analyser.connect(audioCtx.destination);
       waveformAnalyser.connect(audioCtx.destination);
+      resetTranscript();
+      startListening();
     }
     // 마이크 사용 권한 획득
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -243,6 +251,7 @@ function ScreeningTest() {
       analyser.disconnect();
       waveformAnalyser.disconnect();
       source.disconnect();
+      stopListening();
 
       // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
       media.ondataavailable = function (e) {
@@ -266,8 +275,6 @@ function ScreeningTest() {
       }
       // console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
       const uploadAudioFileToS3 = async () => {
-        // ffmpeg을 이용하여 webm 파일을 mp3 파일로 변환
-        const sound = await transcode(audioUrl, 'audio/mp3');
         // 음성 파일을 s3에 업로드
         let uploadUrl = '';
         const region = 'ap-northeast-2';
@@ -286,7 +293,7 @@ function ScreeningTest() {
         const uploadParams = {
           Bucket: bucket,
           Key: path,
-          Body: sound,
+          Body: audioUrl,
           ContentType: 'audio/mp3',
         };
         try {
@@ -581,7 +588,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
-  if (loading || !loaded) return <Splash />;
+  if (loading) return <Splash />;
   return (
     <Container>
       <Wrapper>
@@ -610,7 +617,12 @@ function ScreeningTest() {
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               {questions[currentIndex].mikeOn && (
-                <canvas ref={canvasRef} width={300} height={100} />
+                <>
+                  <canvas ref={canvasRef} width={300} height={100} />
+                  <RecordingText>
+                    {listening && `녹음중... ${transcript}`}
+                  </RecordingText>
+                </>
               )}
               {questions[currentIndex].step !== 11 && (
                 <ListenAgainButton
@@ -963,6 +975,15 @@ const Step11Image = styled.img`
   }
   @media screen and (max-width: 767px) {
     width: 250px;
+  }
+`;
+const RecordingText = styled.span`
+  font-size: 3rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
   }
 `;
 
