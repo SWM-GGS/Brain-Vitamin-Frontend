@@ -48,7 +48,7 @@ function NameSet() {
         openModal(data.message);
         return;
       }
-      const { id, familyKey } = data.result.patientDetailDto;
+      const { id, familyKey, familyId } = data.result.patientDetailDto;
       dispatch(
         userSlice.actions.setUser({
           id,
@@ -57,6 +57,7 @@ function NameSet() {
           fontSize,
           phoneNumber: state.phoneNumber,
           familyKey,
+          familyId,
           accessToken: data.result.tokenDto.accessTokenDto.accessToken,
         }),
       );

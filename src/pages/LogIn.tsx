@@ -84,7 +84,7 @@ function LogIn() {
           openModal(data.message);
           return;
         }
-        const { id, name, nickname, fontSize, familyKey } =
+        const { id, name, nickname, fontSize, familyKey, familyId } =
           data.result.patientDetailDto;
         dispatch(
           userSlice.actions.setUser({
@@ -94,6 +94,7 @@ function LogIn() {
             fontSize,
             phoneNumber,
             familyKey,
+            familyId,
             accessToken: data.result.tokenDto.accessTokenDto.accessToken,
           }),
         );
