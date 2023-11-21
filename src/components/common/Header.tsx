@@ -27,13 +27,13 @@ function Header({ label }: Readonly<Props>) {
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  font-size: 3rem;
+  font-size: 2.4rem;
   font-family: 'Pretendard-Medium';
   position: fixed;
   top: 1rem;
   left: 1rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
@@ -47,12 +47,12 @@ const Back = styled.img`
   width: 6rem;
   height: 6rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 5rem;
-    height: 5rem;
+    width: 50px;
+    height: 50px;
   }
   @media screen and (max-width: 767px) {
-    width: 4rem;
-    height: 4rem;
+    width: 50px;
+    height: 50px;
   }
 `;
 
