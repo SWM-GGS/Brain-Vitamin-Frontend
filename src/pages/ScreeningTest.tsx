@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
 import { styled } from 'styled-components';
 import axios, { AxiosError } from 'axios';
@@ -17,13 +17,10 @@ import Splash from './Splash';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
-import { generateUniqueNumber } from '../modules/generateUniqueNumber';
-import { useFFmpeg } from '../hooks/useFFmpeg';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { FetchHttpHandler } from '@smithy/fetch-http-handler';
+import useSpeechToText from '../hooks/useSpeechToText';
 
 function ScreeningTest() {
-  const { accessToken, id } = useSelector((state: RootState) => state.user);
+  const { accessToken } = useSelector((state: RootState) => state.user);
   type Props = {
     step: number;
     audioUrl: string;
@@ -64,16 +61,13 @@ function ScreeningTest() {
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
   const [submitLoading, setSubmitLoading] = useState(false);
   const [finalSubmitLoading, setFinalSubmitLoading] = useState(false);
-
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [media, setMedia] = useState<MediaRecorder | null>(null);
-  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>(null);
-  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>(null);
-  const [waveformAnalyser, setWaveformAnalyser] = useState<AnalyserNode | null>(
-    null,
-  );
-  const { loaded, transcode } = useFFmpeg();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const {
+    listening,
+    transcript,
+    startListening,
+    stopListening,
+    abortListening,
+  } = useSpeechToText();
 
   useEffect(() => {
     const getData = async () => {
@@ -147,163 +141,14 @@ function ScreeningTest() {
       }
     };
     getData();
-  }, []);
 
-  useEffect(() => {
-    if (!waveformAnalyser) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const WIDTH = canvas.width;
-    const HEIGHT = canvas.height;
-
-    waveformAnalyser.fftSize = 2048; // FFT 크기 설정
-    const bufferLength = waveformAnalyser.frequencyBinCount; // 주파수 영역의 데이터 수
-    const dataArray = new Uint8Array(bufferLength); // 주파수 데이터를 저장할 배열
-
-    const draw = () => {
-      requestAnimationFrame(draw);
-
-      waveformAnalyser.getByteTimeDomainData(dataArray); // 주파수 데이터 얻기
-
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'orange';
-
-      ctx.beginPath();
-
-      const sliceWidth = (WIDTH * 1.0) / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * HEIGHT) / 2;
-
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-      }
-
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
+    return () => {
+      startListening();
+      abortListening();
     };
-    draw();
-  }, [waveformAnalyser, canvasRef]);
-
-  const onRecAudio = () => {
-    // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
-    const audioCtx = new window.AudioContext();
-    // 자바스크립트를 통해 음원의 진행상태에 직접접근에 사용된다.
-    const analyser = audioCtx.createScriptProcessor(0, 1, 1);
-    const waveformAnalyser = audioCtx.createAnalyser();
-    setAnalyser(analyser);
-    setWaveformAnalyser(waveformAnalyser);
-
-    function makeSound(stream: MediaStream) {
-      // 내 컴퓨터의 마이크나 다른 소스를 통해 발생한 오디오 스트림의 정보를 보여준다.
-      const source = audioCtx.createMediaStreamSource(stream);
-      setSource(source);
-      source.connect(analyser);
-      source.connect(waveformAnalyser);
-      analyser.connect(audioCtx.destination);
-      waveformAnalyser.connect(audioCtx.destination);
-    }
-    // 마이크 사용 권한 획득
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm',
-      });
-      mediaRecorder.start();
-      setStream(stream);
-      setMedia(mediaRecorder);
-      makeSound(stream);
-    });
-  };
-
-  const offRecAudio = () => {
-    return new Promise((resolve, reject) => {
-      if (!media || !stream || !analyser || !waveformAnalyser || !source) {
-        reject(new Error('offRecAudio failed'));
-        return;
-      }
-      // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
-      stream.getAudioTracks().forEach(function (track) {
-        track.stop();
-      });
-      // 미디어 캡처 중지
-      media.stop();
-      // 메서드가 호출 된 노드 연결 해제
-      analyser.disconnect();
-      waveformAnalyser.disconnect();
-      source.disconnect();
-
-      // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
-      media.ondataavailable = function (e) {
-        const blob = new Blob([e.data], { type: 'audio/webm' });
-        resolve(blob);
-      };
-
-      setStream(null);
-      setMedia(null);
-      setSource(null);
-      setAnalyser(null);
-      setWaveformAnalyser(null);
-    });
-  };
-
-  const onSubmitAudioFile = useCallback((audioUrl: Blob) => {
-    return new Promise((resolve, reject) => {
-      if (!audioUrl) {
-        reject(new Error('audioUrl not found'));
-        return;
-      }
-      // console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
-      const uploadAudioFileToS3 = async () => {
-        // ffmpeg을 이용하여 webm 파일을 mp3 파일로 변환
-        const sound = await transcode(audioUrl, 'audio/mp3');
-        // 음성 파일을 s3에 업로드
-        let uploadUrl = '';
-        const region = 'ap-northeast-2';
-        const bucket = 'brain-vitamin-user-files';
-        const s3Client = new S3Client({
-          region, // AWS 리전을 설정하세요
-          credentials: {
-            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-          },
-          requestHandler: new FetchHttpHandler({ keepAlive: false }),
-        });
-        const currentTime = new Date().getTime();
-        const fileName = `${generateUniqueNumber()}-${currentTime}-${id}.mp3`;
-        const path = `screeningTestAudios/${fileName}`;
-        const uploadParams = {
-          Bucket: bucket,
-          Key: path,
-          Body: sound,
-          ContentType: 'audio/mp3',
-        };
-        try {
-          const command = new PutObjectCommand(uploadParams);
-          await s3Client.send(command);
-          uploadUrl = `https://${bucket}.s3.${region}.amazonaws.com/${path}`;
-          console.log('uploadUrl', uploadUrl);
-          resolve(uploadUrl);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      uploadAudioFileToS3();
-    });
   }, []);
 
-  const handleEachProblemAnswerSubmit = (uploadUrl: string | null) => {
+  const handleEachProblemAnswerSubmit = (audioText: string | null) => {
     return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
@@ -314,7 +159,7 @@ function ScreeningTest() {
             {
               firstVertex,
               secondVertex,
-              audioFileUrl: uploadUrl,
+              audioText,
               screeningTestId: questions[currentIndex].screeningTestId,
               count: retryCount,
             },
@@ -396,10 +241,9 @@ function ScreeningTest() {
       // 1-1. 음성 제출인 경우
       try {
         // 1-1-1. 녹음 중지
-        const blob = await offRecAudio();
-        const uploadUrl = await onSubmitAudioFile(blob as Blob);
+        stopListening();
         // 1-1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
-        await handleEachProblemAnswerSubmit(uploadUrl as string);
+        await handleEachProblemAnswerSubmit(transcript);
       } catch (error) {
         console.error(error);
       }
@@ -435,14 +279,18 @@ function ScreeningTest() {
           if (e.target) {
             const duration = (e.target as HTMLAudioElement).duration;
             const timer = setTimeout(() => {
-              onRecAudio();
+              startListening();
               setCurrentTimer(null);
             }, duration * 1000);
             setCurrentTimer(timer);
           }
         });
       } else {
-        onRecAudio();
+        const timer = setTimeout(() => {
+          startListening();
+          setCurrentTimer(null);
+        }, 2000);
+        setCurrentTimer(timer);
       }
     }
 
@@ -460,6 +308,7 @@ function ScreeningTest() {
   };
 
   const onSubmit = async () => {
+    abortListening();
     setFinalSubmitLoading(true);
     try {
       const { data } = await axios.post(
@@ -581,7 +430,7 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
-  if (loading || !loaded) return <Splash />;
+  if (loading) return <Splash />;
   return (
     <Container>
       <Wrapper>
@@ -610,7 +459,10 @@ function ScreeningTest() {
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               {questions[currentIndex].mikeOn && (
-                <canvas ref={canvasRef} width={300} height={100} />
+                <>
+                  <RecordingState>{listening && '녹음중...'}</RecordingState>
+                  <RecordingText>{transcript}</RecordingText>
+                </>
               )}
               {questions[currentIndex].step !== 11 && (
                 <ListenAgainButton
@@ -868,13 +720,16 @@ const Question = styled.p`
   font-size: 4rem;
   word-break: keep-all;
   font-family: 'Pretendard-Medium';
+  text-align: center;
+  line-height: 6rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.2rem;
+    line-height: 3rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
     margin: 0 0 1rem 0;
-    text-align: center;
+    line-height: 2.5rem;
   }
 `;
 
@@ -913,8 +768,8 @@ const Step6Image = styled.img`
   width: 600px;
   height: 600px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 300px;
-    height: 300px;
+    width: 270px;
+    height: 270px;
   }
   @media screen and (max-width: 767px) {
     width: 250px;
@@ -959,10 +814,30 @@ const LetterBox = styled.div`
 const Step11Image = styled.img`
   width: 350px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 250px;
+    width: 200px;
   }
   @media screen and (max-width: 767px) {
     width: 250px;
+  }
+`;
+const RecordingState = styled.span`
+  font-size: 3rem;
+  color: red;
+  font-family: Pretendard-Medium;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+  }
+`;
+const RecordingText = styled.span`
+  font-size: 5rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
   }
 `;
 

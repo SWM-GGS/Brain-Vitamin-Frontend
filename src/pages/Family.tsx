@@ -1,5 +1,4 @@
 import LeftTapBar from '../components/common/LeftTabBar';
-import BottomTapBar from '../components/common/BottomTabBar';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
@@ -12,6 +11,7 @@ import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import Button from '../components/common/Button';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 export type EmotionInfoDtoListProps = {
   id: number;
@@ -24,7 +24,9 @@ export type EmotionInfoDtoListProps = {
   };
 };
 function Family() {
-  const { accessToken, id } = useSelector((state: RootState) => state.user);
+  const { accessToken, familyId } = useSelector(
+    (state: RootState) => state.user,
+  );
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   type PostPreviewDtoListProps = {
@@ -61,14 +63,15 @@ function Family() {
   }, []);
 
   useEffect(() => {
-    if (!id) {
+    if (!familyId) {
       setLoading(false);
       return;
     }
+
     const getData = async () => {
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/patient/family-stories/${id}`,
+          `${import.meta.env.VITE_API_URL}/patient/family-stories/${familyId}`,
           {
             headers: {
               authorization: `Bearer ${accessToken}`,
@@ -157,6 +160,7 @@ function Family() {
     <Container>
       <LeftTapBar />
       <Container2>
+        <Header label="우리가족 이야기" />
         <Container3>
           <ImageContainer>{renderImages()}</ImageContainer>
           <MemberContainer>
@@ -201,7 +205,6 @@ function Family() {
           closeModal={closeModal}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }

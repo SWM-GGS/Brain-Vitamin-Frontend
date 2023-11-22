@@ -6,6 +6,7 @@ const initialState = {
   nickname: '',
   phoneNumber: '',
   familyKey: '',
+  familyId: null,
   accessToken: '',
   fontSize: 2,
   profileImgUrl: '',
@@ -21,6 +22,7 @@ const userSlice = createSlice({
       state.nickname = action.payload.nickname;
       state.phoneNumber = action.payload.phoneNumber;
       state.familyKey = action.payload.familyKey;
+      state.familyId = action.payload.familyId;
       state.fontSize = action.payload.fontSize;
       state.accessToken = action.payload.accessToken;
       state.profileImgUrl = action.payload.profileImgUrl;

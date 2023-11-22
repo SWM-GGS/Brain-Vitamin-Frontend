@@ -46,7 +46,7 @@ const Container = styled.div`
   width: 27rem;
   height: calc(var(--vh, 1vh) * 100);
   background: #fff;
-  padding: 2.2rem;
+  padding: 4rem 2.2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
