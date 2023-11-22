@@ -10,25 +10,33 @@ const useSpeechToText = () => {
     recognition.lang = 'ko';
     recognition.continuous = true;
 
+    recognition.onstart = () => {
+      setListening(true);
+    };
+
     recognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
       setTranscript(transcript);
     };
 
+    recognition.onend = () => {
+      setListening(false);
+    };
+
     recognition.start();
-    setListening(true);
   };
 
   const stopListening = () => {
     if (recognition) {
       recognition.stop();
-      setListening(false);
     }
   };
 
-  const resetTranscript = () => {
-    setTranscript('');
+  const abortListening = () => {
+    if (recognition) {
+      recognition.abort();
+    }
   };
 
   return {
@@ -36,7 +44,7 @@ const useSpeechToText = () => {
     transcript,
     startListening,
     stopListening,
-    resetTranscript,
+    abortListening,
   };
 };
 
