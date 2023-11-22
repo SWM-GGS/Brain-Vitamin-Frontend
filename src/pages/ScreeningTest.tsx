@@ -459,9 +459,10 @@ function ScreeningTest() {
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
               {questions[currentIndex].mikeOn && (
-                <RecordingText>
-                  {listening && `녹음중... ${transcript}`}
-                </RecordingText>
+                <>
+                  <RecordingState>{listening && '녹음중...'}</RecordingState>
+                  <RecordingText>{transcript}</RecordingText>
+                </>
               )}
               {questions[currentIndex].step !== 11 && (
                 <ListenAgainButton
@@ -819,13 +820,24 @@ const Step11Image = styled.img`
     width: 250px;
   }
 `;
-const RecordingText = styled.span`
+const RecordingState = styled.span`
   font-size: 3rem;
+  color: red;
+  font-family: Pretendard-Medium;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.8rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;
+  }
+`;
+const RecordingText = styled.span`
+  font-size: 5rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 2.4rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 2rem;
   }
 `;
 
