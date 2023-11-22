@@ -22,6 +22,7 @@ const useSpeechToText = () => {
 
     recognition.onend = () => {
       setListening(false);
+      resetTranscript();
     };
 
     recognition.start();
@@ -37,6 +38,10 @@ const useSpeechToText = () => {
     if (recognition) {
       recognition.abort();
     }
+  };
+
+  const resetTranscript = () => {
+    setTranscript('');
   };
 
   return {

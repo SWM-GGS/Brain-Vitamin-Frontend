@@ -148,7 +148,7 @@ function ScreeningTest() {
     };
   }, []);
 
-  const handleEachProblemAnswerSubmit = (audioText: string | null) => {
+  const handleEachProblemAnswerSubmit = (audioContent: string | null) => {
     return new Promise((resolve) => {
       const submitAnswer = async () => {
         try {
@@ -159,7 +159,7 @@ function ScreeningTest() {
             {
               firstVertex,
               secondVertex,
-              audioText,
+              audioContent,
               screeningTestId: questions[currentIndex].screeningTestId,
               count: retryCount,
             },
@@ -193,25 +193,19 @@ function ScreeningTest() {
     });
   };
 
-  const handleStep6789Submit = async () => {
-    if (questions[currentIndex].step === 6) {
+  const handleStep6789Submit = async (step: number) => {
+    if (step === 6) {
       await handleEachProblemAnswerSubmit(null);
     }
-    if (
-      questions[currentIndex].step === 7 &&
-      clickedTarget7.current === '/assets/images/step7-2.png'
-    ) {
+    if (step === 7 && clickedTarget7.current === '/assets/images/step7-2.png') {
       setTotalScore((prev) => prev + 1);
       setRetryCount(0);
     }
-    if (
-      questions[currentIndex].step === 8 &&
-      clickedTarget8.current === '/assets/images/step8-4.png'
-    ) {
+    if (step === 8 && clickedTarget8.current === '/assets/images/step8-4.png') {
       setTotalScore((prev) => prev + 1);
       setRetryCount(0);
     }
-    if (questions[currentIndex].step === 9) {
+    if (step === 9) {
       if (clickedTargets9[0] === '4') {
         setTotalScore((prev) => prev + 1);
       }
@@ -240,16 +234,15 @@ function ScreeningTest() {
     if (questions[currentIndex].mikeOn && !currentTimer) {
       // 1-1. 음성 제출인 경우
       try {
-        // 1-1-1. 녹음 중지
         stopListening();
-        // 1-1-2. 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
+        // 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
         await handleEachProblemAnswerSubmit(transcript);
       } catch (error) {
         console.error(error);
       }
     }
     // 1-2. 음성 제출이 아닌 경우
-    handleStep6789Submit();
+    handleStep6789Submit(questions[currentIndex].step);
 
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
@@ -286,11 +279,7 @@ function ScreeningTest() {
           }
         });
       } else {
-        const timer = setTimeout(() => {
-          startListening();
-          setCurrentTimer(null);
-        }, 2000);
-        setCurrentTimer(timer);
+        startListening();
       }
     }
 
@@ -308,6 +297,7 @@ function ScreeningTest() {
   };
 
   const onSubmit = async () => {
+    stopListening();
     abortListening();
     setFinalSubmitLoading(true);
     try {
@@ -460,7 +450,13 @@ function ScreeningTest() {
               </Question>
               {questions[currentIndex].mikeOn && (
                 <>
-                  <RecordingState>{listening && '녹음중...'}</RecordingState>
+                  {listening ? (
+                    <Recording>녹음중</Recording>
+                  ) : (
+                    <RecordButton onClick={startListening}>
+                      녹음하기
+                    </RecordButton>
+                  )}
                   <RecordingText>{transcript}</RecordingText>
                 </>
               )}
@@ -820,17 +816,6 @@ const Step11Image = styled.img`
     width: 250px;
   }
 `;
-const RecordingState = styled.span`
-  font-size: 3rem;
-  color: red;
-  font-family: Pretendard-Medium;
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
-  }
-  @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
-  }
-`;
 const RecordingText = styled.span`
   font-size: 5rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
@@ -838,6 +823,31 @@ const RecordingText = styled.span`
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
+  }
+`;
+const Recording = styled.span`
+  color: red;
+  font-size: 3rem;
+  font-family: Pretendard-Medium;
+  padding: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
+  }
+`;
+const RecordButton = styled.button`
+  color: green;
+  font-size: 3rem;
+  font-family: Pretendard-Medium;
+  border-radius: 30px;
+  padding: 1rem;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    font-size: 1.8rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.6rem;
   }
 `;
 
