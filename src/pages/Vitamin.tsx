@@ -22,7 +22,7 @@ function Vitamin() {
       <Wrapper>
         <Box onClick={toVitaminAlbum}>
           <VitaminImage alt="" src="/assets/images/vitamin.svg" />
-          <Label>앨범 보기</Label>
+          <Label>추억 보러 가기</Label>
           <Sub>퀴즈에 나올 사진을 등록해주세요.</Sub>
         </Box>
         <Box onClick={toVitaminPlay}>
