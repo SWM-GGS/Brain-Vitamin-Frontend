@@ -21,8 +21,8 @@ function Vitamin() {
       <Header label="우리가족 비타민" />
       <Wrapper>
         <Box onClick={toVitaminAlbum}>
-          <VitaminImage alt="" src="/assets/images/vitamin.svg" />
-          <Label>앨범 보기</Label>
+          <VitaminImage alt="" src="/assets/images/album.svg" />
+          <Label>추억 보러 가기</Label>
           <Sub>퀴즈에 나올 사진을 등록해주세요.</Sub>
         </Box>
         <Box onClick={toVitaminPlay}>
@@ -86,7 +86,9 @@ const Box = styled.div`
 
 const VitaminImage = styled.img`
   margin: 0 0 4.9rem 0;
+  width: 250px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 160px;
     margin: 0 0 2rem 0;
   }
   @media screen and (max-width: 767px) {
