@@ -135,7 +135,6 @@ function ScreeningTest() {
 
     return () => {
       stopAudio();
-      stopRecording();
     };
   }, []);
 
@@ -438,10 +437,12 @@ function ScreeningTest() {
               {questions[currentIndex].mikeOn && (
                 <>
                   {listening ? (
-                    <Recording>녹음중</Recording>
+                    <RecordStopButton onClick={stopListening}>
+                      녹음 종료
+                    </RecordStopButton>
                   ) : (
                     <RecordButton onClick={startListening}>
-                      녹음하기
+                      녹음 시작
                     </RecordButton>
                   )}
                   <RecordingText>{transcript}</RecordingText>
@@ -812,29 +813,36 @@ const RecordingText = styled.span`
     font-size: 2rem;
   }
 `;
-const Recording = styled.span`
+const RecordStopButton = styled.button`
   color: red;
-  font-size: 3rem;
+  font-size: 5rem;
   font-family: Pretendard-Medium;
-  padding: 1rem;
+  border-radius: 60px;
+  padding: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
+    padding: 2rem;
+    border-radius: 40px;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 2.2rem;
+    padding: 1.6rem;
   }
 `;
 const RecordButton = styled.button`
   color: green;
-  font-size: 3rem;
+  font-size: 5rem;
   font-family: Pretendard-Medium;
-  border-radius: 30px;
-  padding: 1rem;
+  border-radius: 60px;
+  padding: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
+    padding: 2rem;
+    border-radius: 40px;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 2.2rem;
+    padding: 1.6rem;
   }
 `;
 
