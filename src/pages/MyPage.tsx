@@ -166,12 +166,12 @@ function MyPage() {
             </DateBox>
             <StatusContainer>
               <StatusBox>
-                <Intro>지난 주보다 좋아졌어요!</Intro>
+                <Intro>잘하고 있어요!</Intro>
                 {Object.entries(positiveValues).map(([k, v]) => (
                   <InfoText key={k}>
                     {ability[k as keyof typeof ability]}
                     <br />
-                    <PercentUp>+{v.toFixed(1)}% </PercentUp>
+                    <PercentUp>+{Math.round(v)}% </PercentUp>
                   </InfoText>
                 ))}
               </StatusBox>
@@ -181,7 +181,7 @@ function MyPage() {
                   <InfoText key={k}>
                     {ability[k as keyof typeof ability]}
                     <br />
-                    <PercentDown>{v.toFixed(1)}% </PercentDown>
+                    <PercentDown>{Math.round(v)}% </PercentDown>
                   </InfoText>
                 ))}
               </StatusBox>
