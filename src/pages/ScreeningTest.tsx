@@ -66,6 +66,7 @@ function ScreeningTest() {
     startListening,
     stopListening,
     abortListening,
+    resetTranscript,
   } = useSpeechToText();
 
   useEffect(() => {
@@ -118,18 +119,9 @@ function ScreeningTest() {
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.crossOrigin = 'use-credentials';
-        audioElement.current = audio;
         audio.play();
-        audio.addEventListener('loadedmetadata', (e) => {
-          if (e.target) {
-            const duration = (e.target as HTMLAudioElement).duration;
-
-            setIsRetryAvailable(false);
-            setTimeout(() => {
-              setIsRetryAvailable(true);
-            }, duration * 1000);
-          }
-        });
+        setCurrentAudio(audio);
+        setRetryCoolTime(audio);
       } catch (error) {
         console.error(error);
         const axiosError = error as AxiosError;
@@ -142,16 +134,26 @@ function ScreeningTest() {
     getData();
 
     return () => {
-      if (listening) {
-        stopListening();
-        abortListening();
-      }
-      stopPreviousAudio();
-      if (audioElement.current) {
-        audioElement.current.pause();
-      }
+      stopAudio();
+      stopRecording();
     };
   }, []);
+
+  const stopAudio = () => {
+    stopCurrentAudio();
+    stopAudioTimer();
+  };
+
+  const stopAudioTimer = () => {
+    if (audioTimer.current) {
+      clearTimeout(audioTimer.current);
+    }
+  };
+
+  const stopRecording = () => {
+    stopListening();
+    abortListening();
+  };
 
   const handleEachProblemAnswerSubmit = (audioContent: string | null) => {
     return new Promise((resolve) => {
@@ -221,29 +223,22 @@ function ScreeningTest() {
     }
   };
 
-  const stopPreviousAudio = () => {
-    if (audioElement.current) {
-      audioElement.current.pause();
-    }
-    if (audioTimer.current) {
-      clearTimeout(audioTimer.current);
-    }
-  };
-
   const handleNextStep = async () => {
     setSubmitLoading(true);
     // 0. 이전 오디오 멈춤
-    stopPreviousAudio();
+    stopAudio();
+    stopRecording();
 
     // 1. 답안 제출
     if (questions[currentIndex].mikeOn && !audioTimer.current) {
       // 1-1. 음성 제출인 경우
       try {
-        stopListening();
         // 현재 문제에 대한 오디오 파일 제출 -> 총 점수 갱신 or 추가 질문
         await handleEachProblemAnswerSubmit(transcript);
       } catch (error) {
         console.error(error);
+      } finally {
+        resetTranscript();
       }
     }
     // 1-2. 음성 제출이 아닌 경우
@@ -251,53 +246,24 @@ function ScreeningTest() {
 
     // 2. 다음 질문 음성 파일 재생
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
-    const audio = new Audio(nextAudioUrl);
-    audio.crossOrigin = 'use-credentials';
 
     if (nextAudioUrl) {
+      const audio = new Audio(nextAudioUrl);
+      audio.crossOrigin = 'use-credentials';
       audio.play();
-      audioElement.current = audio;
-      audio.addEventListener('loadedmetadata', (e) => {
-        if (e.target) {
-          const duration = (e.target as HTMLAudioElement).duration;
-
-          setIsRetryAvailable(false);
-          setTimeout(() => {
-            setIsRetryAvailable(true);
-            audioElement.current = null;
-          }, duration * 1000);
-        }
-      });
+      setCurrentAudio(audio);
+      setRetryCoolTime(audio);
     }
 
-    // 3. 다음 문제가 mike on일 경우 녹음 시작
-    if (questions[currentIndex + 1].mikeOn) {
-      // 질문이 끝난 후 녹음 시작
-      if (nextAudioUrl) {
-        audio.addEventListener('loadedmetadata', (e) => {
-          if (e.target) {
-            const duration = (e.target as HTMLAudioElement).duration;
-            const timer = setTimeout(() => {
-              startListening();
-              audioTimer.current = null;
-            }, duration * 1000);
-            audioTimer.current = timer;
-          }
-        });
-      } else {
-        startListening();
-      }
-    }
-
-    // 4. 다시 듣기 횟수 갱신
+    // 3. 다시 듣기 횟수 갱신
     setTrialCount(questions[currentIndex + 1].trial ?? 10);
 
-    // 5. 현재 스텝 갱신
+    // 4. 현재 스텝 갱신
     if (currentStep !== questions[currentIndex + 1].step) {
       setCurrentStep((prev) => prev + 1);
     }
 
-    // 6. 현재 문제 인덱스 갱신
+    // 5. 현재 문제 인덱스 갱신
     setCurrentIndex((prev) => prev + 1);
     setSubmitLoading(false);
   };
@@ -340,23 +306,37 @@ function ScreeningTest() {
 
   const handleListenAgain = () => {
     const currentAudioUrl = questions[currentIndex].audioUrl;
-    const audio = new Audio(currentAudioUrl);
-    audio.crossOrigin = 'use-credentials';
 
     if (currentAudioUrl) {
+      const audio = new Audio(currentAudioUrl);
+      audio.crossOrigin = 'use-credentials';
       audio.play();
-      audio.addEventListener('loadedmetadata', (e) => {
-        if (e.target) {
-          const duration = (e.target as HTMLAudioElement).duration;
-
-          setIsRetryAvailable(false);
-          setTimeout(() => {
-            setIsRetryAvailable(true);
-          }, duration * 1000);
-        }
-      });
+      setCurrentAudio(audio);
+      setRetryCoolTime(audio);
     }
     setTrialCount((prev) => prev - 1);
+  };
+
+  const setCurrentAudio = (audio: HTMLAudioElement) => {
+    audioElement.current = audio;
+  };
+
+  const stopCurrentAudio = () => {
+    if (audioElement.current) {
+      audioElement.current.pause();
+    }
+  };
+
+  const setRetryCoolTime = (audio: HTMLAudioElement) => {
+    audio.addEventListener('loadedmetadata', (e) => {
+      if (e.target) {
+        const duration = (e.target as HTMLAudioElement).duration;
+        setIsRetryAvailable(false);
+        setTimeout(() => {
+          setIsRetryAvailable(true);
+        }, duration * 1000);
+      }
+    });
   };
 
   const initButtonStyle = (el: HTMLElement) => {
