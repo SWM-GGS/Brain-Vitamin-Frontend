@@ -38,10 +38,8 @@ function ScreeningTest() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [trialCount, setTrialCount] = useState(10);
-  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
-    null,
-  );
-  const [currentTimer, setCurrentTimer] = useState<number | null>(null);
+  const audioElement = useRef<HTMLAudioElement | null>(null);
+  const audioTimer = useRef<number | null>(null);
   const stepCnt = 13;
   const navigate = useNavigate();
   const [firstVertex, setFirstVertex] = useState<number[]>([]);
@@ -120,7 +118,7 @@ function ScreeningTest() {
 
         const audio = new Audio(data.result[currentIndex].audioUrl);
         audio.crossOrigin = 'use-credentials';
-        setCurrentAudio(audio);
+        audioElement.current = audio;
         audio.play();
         audio.addEventListener('loadedmetadata', (e) => {
           if (e.target) {
@@ -144,8 +142,14 @@ function ScreeningTest() {
     getData();
 
     return () => {
-      startListening();
-      abortListening();
+      if (listening) {
+        stopListening();
+        abortListening();
+      }
+      stopPreviousAudio();
+      if (audioElement.current) {
+        audioElement.current.pause();
+      }
     };
   }, []);
 
@@ -218,11 +222,11 @@ function ScreeningTest() {
   };
 
   const stopPreviousAudio = () => {
-    if (currentAudio) {
-      currentAudio.pause();
+    if (audioElement.current) {
+      audioElement.current.pause();
     }
-    if (currentTimer) {
-      clearTimeout(currentTimer);
+    if (audioTimer.current) {
+      clearTimeout(audioTimer.current);
     }
   };
 
@@ -232,7 +236,7 @@ function ScreeningTest() {
     stopPreviousAudio();
 
     // 1. 답안 제출
-    if (questions[currentIndex].mikeOn && !currentTimer) {
+    if (questions[currentIndex].mikeOn && !audioTimer.current) {
       // 1-1. 음성 제출인 경우
       try {
         stopListening();
@@ -249,9 +253,10 @@ function ScreeningTest() {
     const nextAudioUrl = questions[currentIndex + 1].audioUrl;
     const audio = new Audio(nextAudioUrl);
     audio.crossOrigin = 'use-credentials';
-    setCurrentAudio(null);
+
     if (nextAudioUrl) {
       audio.play();
+      audioElement.current = audio;
       audio.addEventListener('loadedmetadata', (e) => {
         if (e.target) {
           const duration = (e.target as HTMLAudioElement).duration;
@@ -259,10 +264,10 @@ function ScreeningTest() {
           setIsRetryAvailable(false);
           setTimeout(() => {
             setIsRetryAvailable(true);
+            audioElement.current = null;
           }, duration * 1000);
         }
       });
-      setCurrentAudio(audio);
     }
 
     // 3. 다음 문제가 mike on일 경우 녹음 시작
@@ -274,9 +279,9 @@ function ScreeningTest() {
             const duration = (e.target as HTMLAudioElement).duration;
             const timer = setTimeout(() => {
               startListening();
-              setCurrentTimer(null);
+              audioTimer.current = null;
             }, duration * 1000);
-            setCurrentTimer(timer);
+            audioTimer.current = timer;
           }
         });
       } else {
