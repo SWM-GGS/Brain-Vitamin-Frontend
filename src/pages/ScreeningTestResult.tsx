@@ -47,7 +47,11 @@ function screeningTestResult() {
   );
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
+`;
 
 const Box = styled.div`
   width: 1700px;
