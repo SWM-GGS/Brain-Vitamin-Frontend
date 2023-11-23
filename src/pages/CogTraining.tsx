@@ -17,13 +17,6 @@ import {
 import correctSound from '/assets/sounds/correct.mp3';
 import incorrectSound from '/assets/sounds/incorrect.mp3';
 import startSound from '/assets/sounds/start.mp3';
-import cardMatchSound from '/assets/sounds/questions/cardMatch.mp3';
-import coloringSound from '/assets/sounds/questions/coloring.mp3';
-import dateQuizSound from '/assets/sounds/questions/dateQuiz.mp3';
-import marketSound from '/assets/sounds/questions/market.mp3';
-import mazeSound from '/assets/sounds/questions/maze.mp3';
-import overlappingSound from '/assets/sounds/questions/overlapping.mp3';
-import wordPuzzleSound from '/assets/sounds/questions/wordPuzzle.mp3';
 import { Container } from '../components/common/Container';
 import { useModal } from '../hooks/useModal';
 import { getErrorMessage } from '../utils/getErrorMessage';
@@ -201,19 +194,45 @@ function CogTraining() {
   const getSound = (gameIndex: number) => {
     switch (gameData[gameIndex].pathUri) {
       case 'cardMatch':
-        return cardMatchSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/cardMatch.mp3';
       case 'coloring':
-        return coloringSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/coloring.mp3';
       case 'wordPuzzle':
-        return wordPuzzleSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/wordPuzzle.mp3';
       case 'market':
-        return marketSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/market.mp3';
       case 'overlapping':
-        return overlappingSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/overlapping.mp3';
       case 'dateQuiz':
-        return dateQuizSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/dateQuiz.mp3';
       case 'maze':
-        return mazeSound;
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/maze.mp3';
+      case 'wordMemory':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/wordMemory.mp3';
+      case 'flagMemory':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/flagMemory.mp3';
+      case 'flagMatch':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/flagMatch.mp3';
+      case 'numberTouch':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/numberTouch.mp3';
+      case 'shownColor':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/shownColor.mp3';
+      case 'meaningColor':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/meaningColor.mp3';
+      case 'sameColor':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/sameColor.mp3';
+      case 'nearTime':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/nearTime.mp3';
+      case 'changeCalculate':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/changeCalculate.mp3';
+      case 'basicCalculate':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/basicCalculate.mp3';
+      case 'patternNumber':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/patternNumber.mp3';
+      case 'dayOfWeek':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/dayOfWeek.mp3';
+      case 'compassDirection':
+        return 'https://brain-vitamin-bucket.s3.ap-northeast-2.amazonaws.com/cogTraining-description/compassDirection.mp3';
     }
   };
 
