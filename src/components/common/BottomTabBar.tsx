@@ -21,10 +21,10 @@ function BottomTapBar() {
       </Tap>
       <Tap
         style={{
-          background: path === '/family' ? 'var(--main-bg-color)' : 'none',
-          color: path === '/family' ? 'var(--main-color)' : '#433D3A',
+          background: path === '/vitamin' ? 'var(--main-bg-color)' : 'none',
+          color: path === '/vitamin' ? 'var(--main-color)' : '#433D3A',
         }}
-        onClick={() => onClickTap('/family')}>
+        onClick={() => onClickTap('/vitamin')}>
         가족
       </Tap>
       <Tap
