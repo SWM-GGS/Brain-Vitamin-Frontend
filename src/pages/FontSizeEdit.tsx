@@ -13,6 +13,7 @@ import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 function FontSizeEdit() {
   const [fontSize, setFontSize] = useState(0);
@@ -54,6 +55,7 @@ function FontSizeEdit() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="글자크기 변경" />
       <SideContainer>
         <Container3>
           <Label>글자 크기를 설정해주세요</Label>
@@ -106,7 +108,6 @@ function FontSizeEdit() {
           closeModal={closeModal}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }

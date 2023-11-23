@@ -18,6 +18,7 @@ import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import useSpeechToText from '../hooks/useSpeechToText';
+import Header from '../components/common/Header';
 
 function ScreeningTest() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -423,6 +424,7 @@ function ScreeningTest() {
   if (loading) return <Splash />;
   return (
     <Container>
+      <Header label="검사 종료" />
       <Wrapper>
         <ProgressBarWrapper>
           {Array.from({ length: stepCnt }, (_, i) => i).map((v, idx) => (
@@ -599,8 +601,8 @@ const Wrapper = styled.div`
 `;
 
 const Box = styled.div`
-  width: 146.3rem;
-  height: 65rem;
+  width: 1700px;
+  height: 800px;
   border-radius: 1.6rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -610,13 +612,13 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 80rem;
-    height: 33rem;
+    width: 900px;
+    height: 450px;
     margin: 2rem 0;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 52rem;
+    height: 500px;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -652,8 +654,8 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
     border: 0.2rem solid white;
   }
   @media screen and (max-width: 767px) {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 14px;
+    height: 14px;
     font-size: 0.7rem;
     border: 0.1rem solid white;
   }

@@ -229,7 +229,7 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 1.6rem;
+    padding: 5rem 1.6rem 1.6rem 1.6rem;
     gap: 2rem;
     justify-content: flex-start;
   }

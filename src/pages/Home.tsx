@@ -132,8 +132,8 @@ const Wrapper = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 71rem;
-  height: 80rem;
+  width: 800px;
+  height: 800px;
   border-radius: 3rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -143,8 +143,8 @@ const BigBox = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 38rem;
-    height: 38rem;
+    width: 450px;
+    height: 500px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -157,9 +157,9 @@ const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  height: 80rem;
+  height: 800px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    height: 38rem;
+    height: 500px;
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -172,7 +172,7 @@ const BoxWrapper = styled.div`
 `;
 
 const Box = styled.div`
-  width: 42rem;
+  width: 500px;
   height: 100%;
   border-radius: 3rem;
   background: #fff;
@@ -183,7 +183,7 @@ const Box = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 22rem;
+    width: 300px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;

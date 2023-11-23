@@ -43,7 +43,7 @@ function LeftTapBar() {
 }
 
 const Container = styled.div`
-  width: 27rem;
+  width: 350px;
   height: calc(var(--vh, 1vh) * 100);
   background: #fff;
   padding: 4rem 2.2rem;
@@ -51,7 +51,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 20rem;
+    width: 230px;
   }
   @media screen and (max-width: 767px) {
     display: none;

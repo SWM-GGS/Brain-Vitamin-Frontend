@@ -15,6 +15,7 @@ import {
 import Button from '../components/common/Button';
 import { AnswerFeedback } from '../components/common/AnswerFeedback';
 import { renderAnswerState } from './CogTraining';
+import Header from '../components/common/Header';
 
 function VitaminPlay() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -141,6 +142,7 @@ function VitaminPlay() {
   if (loading) return <Splash />;
   return (
     <Container>
+      <Header label="퀴즈 종료" />
       <GameWrapper>
         {data.length > 0 && (
           <>

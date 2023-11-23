@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 function MyPage() {
   type Props = {
@@ -134,6 +135,7 @@ function MyPage() {
     <Container>
       <LeftTapBar />
       <Container2>
+        <Header label="내 활동 보기" />
         <Container3>
           <LeftContainer>
             <DateBox>
@@ -212,7 +214,7 @@ function MyPage() {
         </Container3>
         <Button
           text="회원정보 수정하기"
-          style={{ alignSelf: 'flex-end', width: '22rem' }}
+          style={{ alignSelf: 'flex-end' }}
           onClick={toSetting}
         />
       </Container2>
@@ -224,7 +226,6 @@ function MyPage() {
           closeModal={closeModal}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }
@@ -251,7 +252,7 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 1.4rem;
+    padding: 5rem 1.6rem 1.6rem 1.6rem;
     gap: 1rem;
     align-content: flex-start;
   }
@@ -269,17 +270,17 @@ const Container3 = styled.div`
   }
 `;
 const LeftContainer = styled.div`
-  width: 75rem;
+  width: 800px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 2.8rem;
   @media screen and (min-width: 768px) {
-    height: 80rem;
+    height: 800px;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 38rem;
-    height: 36rem;
+    width: 490px;
+    height: 500px;
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -288,8 +289,8 @@ const LeftContainer = styled.div`
   }
 `;
 const RightContainer = styled.div`
-  width: 38rem;
-  height: 80rem;
+  width: 450px;
+  height: 800px;
   border-radius: 2.1rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
@@ -299,8 +300,8 @@ const RightContainer = styled.div`
   justify-content: space-between;
   gap: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 22rem;
-    height: 36rem;
+    width: 260px;
+    height: 500px;
     padding: 2rem;
     gap: 1rem;
   }
@@ -322,7 +323,7 @@ const DateBox = styled.div`
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 2.4rem 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    height: 13rem;
+    height: 140px;
     padding: 2rem;
     gap: 1rem;
   }
@@ -354,21 +355,22 @@ const StatusBox = styled.div`
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 2.4rem 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    height: 27rem;
+    height: 340px;
     padding: 2rem;
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 100%;
+    height: 260px;
     padding: 1.4rem;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 `;
 const Intro = styled.p`
   font-family: 'Pretendard-Bold';
   font-size: 2.6rem;
   color: #433d3a;
+  word-break: keep-all;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.2rem;
   }
@@ -385,7 +387,7 @@ const IntroContainer = styled.div`
     gap: 0.5rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 0.5rem;
+    gap: 1rem;
   }
 `;
 const ResultDate = styled.p`
@@ -424,13 +426,13 @@ const DayContainer = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 0.5rem;
+    gap: 1rem;
   }
 `;
 const DayBox = styled.div`
   width: 9.2rem;
   height: 10.6rem;
-  border-radius: 3rem;
+  border-radius: 20px;
   border-width: 0.3rem;
   border-style: solid;
   display: flex;
@@ -534,7 +536,7 @@ const Align = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 0.5rem;
+    gap: 1rem;
   }
 `;
 const PercentUp = styled.span`

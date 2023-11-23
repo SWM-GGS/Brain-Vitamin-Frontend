@@ -11,6 +11,7 @@ import { RootState } from '../store/reducer';
 import LayerPopup from '../components/common/LayerPopup';
 import Splash from './Splash';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 function VitaminAlbum() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -54,6 +55,7 @@ function VitaminAlbum() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="비타민 앨범" />
       <Container2>
         <ImageContainer>
           {images.length === 0 ? (
@@ -81,7 +83,6 @@ function VitaminAlbum() {
             closeModal={closeModal}
           />
         ))}
-      <BottomTapBar />
     </Container>
   );
 }
@@ -106,7 +107,7 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 1.6rem;
+    padding: 5rem 1.6rem 1.6rem 1.6rem;
     gap: 2rem;
     justify-content: flex-start;
   }

@@ -16,6 +16,7 @@ import { usePhoneNumber } from '../hooks/usePhoneNumber';
 import { SideContainer } from '../components/common/Container';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { useState } from 'react';
+import Header from '../components/common/Header';
 
 function PhoneNumberEdit() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -65,6 +66,7 @@ function PhoneNumberEdit() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="전화번호 변경" />
       <SideContainer>
         <Box>
           <Wrapper>
@@ -102,7 +104,6 @@ function PhoneNumberEdit() {
           closeModal={closeModal}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }

@@ -167,6 +167,9 @@ const InputWrapper = styled.div`
 
 const Section = styled.div`
   margin: 0 0 2.9rem 0;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 300px;
+  }
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 0 0 1.4rem 0;

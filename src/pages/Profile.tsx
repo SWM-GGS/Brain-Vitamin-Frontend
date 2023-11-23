@@ -16,6 +16,7 @@ import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
 import { generateUniqueNumber } from '../modules/generateUniqueNumber';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 function Profile() {
   const { nickname, familyKey, accessToken, profileImgUrl, education } =
@@ -136,6 +137,7 @@ function Profile() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="회원정보 변경" />
       <SideContainer>
         <Box>
           <Label style={{ textAlign: 'center' }}>회원정보 변경하기</Label>
@@ -201,7 +203,6 @@ function Profile() {
           closeModal={closeModal}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }
