@@ -7,7 +7,6 @@ import userSlice from '../slices/user';
 import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
-import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
