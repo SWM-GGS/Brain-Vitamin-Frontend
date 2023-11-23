@@ -25,7 +25,6 @@ function FlagMemory({
   const [candidates, setCandidates] = useState<string[]>([]);
   const showNext = gameData.showNext;
   const isShowNext = showNext !== undefined;
-  const [words, setWords] = useState<string[]>([]);
   const answers = problemPool.filter((v) => v.answer).map((v) => v.imgUrl);
   const { setAnswers, onClickButton, buttonRefs } = useGameLogic<string>(
     {
@@ -45,9 +44,7 @@ function FlagMemory({
   );
 
   useEffect(() => {
-    if (isShowNext) {
-      setWords(answers);
-    } else {
+    if (!isShowNext) {
       setAnswers(answers);
       setCandidates(
         problemPool.map((v) => v.imgUrl).sort(() => getRandomFloat() - 0.5),
@@ -66,7 +63,7 @@ function FlagMemory({
       />
       {isShowNext ? (
         <NumberContainer>
-          {words.map((v) => (
+          {answers.map((v) => (
             <FlagImage key={v} alt="" src={v} />
           ))}
         </NumberContainer>
