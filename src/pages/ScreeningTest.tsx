@@ -165,7 +165,10 @@ function ScreeningTest() {
             {
               firstVertex,
               secondVertex,
-              audioContent,
+              audioContent:
+                audioContent && questions[currentIndex].step === 4
+                  ? audioContent.replace(/\s+/g, '')
+                  : audioContent,
               screeningTestId: questions[currentIndex].screeningTestId,
               count: retryCount,
             },
