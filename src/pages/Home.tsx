@@ -62,7 +62,7 @@ function Home() {
   };
 
   const toFamily = () => {
-    navigate('/family');
+    navigate('/vitamin');
   };
 
   const toMyPage = () => {
