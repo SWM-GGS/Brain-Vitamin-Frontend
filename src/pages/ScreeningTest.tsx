@@ -405,6 +405,22 @@ function ScreeningTest() {
     setClickedTargets9(newClickedTargets);
   };
 
+  const renderQuestion = (step: number) => {
+    if (questions[currentIndex].hide || (step >= 6 && step <= 9)) {
+      if (step === 3) {
+        return '지금부터 외우셔야 하는 문장 하나를 불러드리겠습니다.';
+      } else if (step === 4) {
+        return '제가 불러드리는 숫자를 그대로 따라 해 주세요.';
+      } else if (step === 5) {
+        return '제가 불러드리는 말을 끝에서부터 거꾸로 따라 해 주세요.';
+      } else if (step === 12) {
+        return '제가 말씀드리는 대로 행동으로 따라해 주세요.';
+      }
+    } else {
+      return convertNewlineToJSX(questions[currentIndex].description);
+    }
+  };
+
   if (loading) return <Splash />;
   return (
     <Container>
@@ -428,11 +444,7 @@ function ScreeningTest() {
           {questions.length ? (
             <QuestionWrapper>
               <Question>
-                {questions[currentIndex].hide ||
-                (questions[currentIndex].step >= 6 &&
-                  questions[currentIndex].step <= 9)
-                  ? null
-                  : convertNewlineToJSX(questions[currentIndex].description)}
+                {renderQuestion(questions[currentIndex].step)}
               </Question>
               {questions[currentIndex].step !== 11 && (
                 <ListenAgainButton
