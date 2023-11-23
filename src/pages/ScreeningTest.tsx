@@ -434,6 +434,13 @@ function ScreeningTest() {
                   ? null
                   : convertNewlineToJSX(questions[currentIndex].description)}
               </Question>
+              {questions[currentIndex].step !== 11 && (
+                <ListenAgainButton
+                  disabled={!trialCount || !isRetryAvailable}
+                  onClick={handleListenAgain}>
+                  다시 듣기
+                </ListenAgainButton>
+              )}
               {questions[currentIndex].mikeOn && (
                 <>
                   {listening ? (
@@ -447,13 +454,6 @@ function ScreeningTest() {
                   )}
                   <RecordingText>{transcript}</RecordingText>
                 </>
-              )}
-              {questions[currentIndex].step !== 11 && (
-                <ListenAgainButton
-                  disabled={!trialCount || !isRetryAvailable}
-                  onClick={handleListenAgain}>
-                  다시 듣기
-                </ListenAgainButton>
               )}
               {questions[currentIndex].step === 6 && (
                 <Step6Container>
