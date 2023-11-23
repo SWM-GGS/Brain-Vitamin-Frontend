@@ -44,12 +44,10 @@ function FlagMemory({
   );
 
   useEffect(() => {
-    if (!isShowNext) {
-      setAnswers(answers);
-      setCandidates(
-        problemPool.map((v) => v.imgUrl).sort(() => getRandomFloat() - 0.5),
-      );
-    }
+    setAnswers(answers);
+    setCandidates(
+      problemPool.map((v) => v.imgUrl).sort(() => getRandomFloat() - 0.5),
+    );
   }, []);
 
   return (
