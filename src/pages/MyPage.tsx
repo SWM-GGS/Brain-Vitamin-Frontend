@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 import LeftTapBar from '../components/common/LeftTabBar';
-import BottomTapBar from '../components/common/BottomTabBar';
 import Button from '../components/common/Button';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';

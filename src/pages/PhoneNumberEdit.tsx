@@ -4,7 +4,6 @@ import Input from '../components/common/Input';
 import ShortInput from '../components/common/ShortInput';
 import Button from '../components/common/Button';
 import axios, { AxiosError } from 'axios';
-import BottomTapBar from '../components/common/BottomTabBar';
 import LeftTapBar from '../components/common/LeftTabBar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';

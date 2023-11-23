@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 import Label from '../components/common/Label';
 import LeftTapBar from '../components/common/LeftTabBar';
-import BottomTapBar from '../components/common/BottomTabBar';
 import { useNavigate } from 'react-router';
 import Header from '../components/common/Header';
 
