@@ -211,7 +211,7 @@ export const useGameLogic = <T>(
     const dx = Math.abs(positionA.left - positionB.left);
     const dy = Math.abs(positionA.top - positionB.top);
 
-    return dx < 60 && dy < 60;
+    return dx < 50 && dy < 50;
   };
 
   // 숫자가 처음 흩뿌려질 위치 조정

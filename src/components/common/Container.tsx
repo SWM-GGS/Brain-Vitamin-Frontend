@@ -27,12 +27,12 @@ const SideContainer = styled.div`
     width: 140rem;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 68rem;
+    width: 800px;
     padding: 1rem 3rem;
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 3rem 1.6rem;
+    padding: 5rem 1.6rem;
     gap: 1rem;
     align-content: flex-start;
   }

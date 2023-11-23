@@ -310,24 +310,31 @@ export const renderAnswerState = (answerState: string) => {
   }
 };
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  width: 100%;
+  @media screen and (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
 
 const GameWrapper = styled.div`
-  width: 146.3rem;
-  height: 75rem;
+  width: 1700px;
+  height: 800px;
   border-radius: 1.6rem;
   background: #fff;
   box-shadow: 1.5rem 1.3rem 2.8rem 0 rgba(0, 0, 0, 0.06);
   padding: 3rem;
   margin: 2.55rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 80rem;
-    height: 33rem;
+    width: 900px;
+    height: 450px;
     margin: 2rem 0;
   }
   @media screen and (max-width: 767px) {
-    width: 30rem;
-    height: 50rem;
+    width: 100%;
+    height: 500px;
     padding: 1.6rem;
     margin: 2rem 0;
   }
@@ -338,6 +345,13 @@ const StatusWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  width: 1700px;
+  @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 900px;
+  }
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
 `;
 
 const Num = styled.div`

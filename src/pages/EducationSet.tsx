@@ -146,7 +146,7 @@ const Box = styled.div`
   align-items: center;
   justify-content: space-between;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    height: 40rem;
+    height: 450px;
     padding: 2rem;
   }
   @media screen and (max-width: 767px) {
@@ -188,7 +188,7 @@ const EduButton = styled.button`
   font-size: 2.2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 1.8rem;
-    height: 4rem;
+    height: 5rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 1.6rem;

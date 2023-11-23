@@ -12,6 +12,7 @@ import LayerPopup from '../components/common/LayerPopup';
 import { useModal } from '../hooks/useModal';
 import { SideContainer } from '../components/common/Container';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import Header from '../components/common/Header';
 
 function Setting() {
   const { nickname, familyKey, accessToken, fontSize, profileImgUrl } =
@@ -120,6 +121,7 @@ function Setting() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="회원정보" />
       <SideContainer>
         <Container3>
           <Box>
@@ -198,7 +200,6 @@ function Setting() {
           onClickRightButton={handleLogout}
         />
       )}
-      <BottomTapBar />
     </Container>
   );
 }
@@ -229,8 +230,8 @@ const Box = styled.div`
   position: relative;
   gap: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 60rem;
-    height: 36rem;
+    width: 700px;
+    height: 460px;
     padding: 4rem;
   }
   @media screen and (max-width: 767px) {
@@ -326,7 +327,7 @@ const SubButtonContainer = styled.div`
   gap: 1.2rem;
   margin: 4.5rem 0 0 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 60rem;
+    width: 700px;
     margin: 2rem 0 0 0;
   }
   @media screen and (max-width: 767px) {

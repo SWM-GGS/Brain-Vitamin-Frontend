@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   gap: 2rem;
   text-align: center;
   @media screen and (max-width: 767px) {
-    justify-content: space-between;
+    justify-content: center;
   }
 `;
 

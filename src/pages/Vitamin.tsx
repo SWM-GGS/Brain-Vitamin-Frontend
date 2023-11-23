@@ -3,6 +3,7 @@ import Label from '../components/common/Label';
 import LeftTapBar from '../components/common/LeftTabBar';
 import BottomTapBar from '../components/common/BottomTabBar';
 import { useNavigate } from 'react-router';
+import Header from '../components/common/Header';
 
 function Vitamin() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function Vitamin() {
   return (
     <Container>
       <LeftTapBar />
+      <Header label="우리가족 비타민" />
       <Wrapper>
         <Box onClick={toVitaminAlbum}>
           <VitaminImage alt="" src="/assets/images/vitamin.svg" />
@@ -30,7 +32,6 @@ function Vitamin() {
           <Sub>앨범에서 랜덤으로 나오는 퀴즈를 풀어보아요!</Sub>
         </Box>
       </Wrapper>
-      <BottomTapBar />
     </Container>
   );
 }
@@ -57,8 +58,8 @@ const Wrapper = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 0;
-    gap: 1rem;
+    padding: 5rem 1.6rem 1.6rem 1.6rem;
+    gap: 2rem;
     align-content: flex-start;
   }
 `;
@@ -80,8 +81,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 320px;
-    margin: 2rem 1.6rem 0 1.6rem;
+    height: 300px;
   }
 `;
 
