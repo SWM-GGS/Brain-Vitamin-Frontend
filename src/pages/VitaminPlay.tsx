@@ -110,6 +110,7 @@ function VitaminPlay() {
       setAnswerState('incorrect');
       setIsSelectedAnswerCorrect((prev) => [...prev, false]);
     }
+    clickedTarget.current = null;
   };
 
   useEffect(() => {
