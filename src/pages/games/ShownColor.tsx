@@ -27,7 +27,7 @@ function ShownColor({
 
   return (
     <Container>
-      <GameQuestion text="다음 글자가 무슨색으로 쓰여있나요?" />
+      <GameQuestion text="다음 글자가 무슨 색으로 쓰여있나요?" />
       <Letter $color={color}>{letter}</Letter>
       <ButtonContainer>
         {candidates.map((v) => (
