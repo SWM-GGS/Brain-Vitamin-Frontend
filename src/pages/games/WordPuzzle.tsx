@@ -43,7 +43,10 @@ export default function WordPuzzle({
   const [boxs, setBoxs] = useState<BoxProps[]>([]);
   let [posX, posY] = [0, 0]; // 드래그 시 요소를 실제로 이동시키기 위해 필요
   let positionIndex = -1;
-  const maxNum = problemPool.reduce((p, v) => p + v.contents.length, 0);
+  let maxNum = 0;
+  if (problemPool) {
+    maxNum = problemPool.reduce((p, v) => p + v.contents.length, 0);
+  }
   const isCorrect = () => {
     let isIncorrect = false;
 
