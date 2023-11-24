@@ -647,6 +647,7 @@ const ProgressBarWrapper = styled.div`
   gap: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     gap: 2rem;
+    margin: 20px 0 0 0;
   }
   @media screen and (max-width: 767px) {
     gap: 1rem;
@@ -665,8 +666,8 @@ const Circle = styled.div<{ $step: number; $currentStep: number }>`
   align-items: center;
   position: relative;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 4rem;
-    height: 4rem;
+    width: 44px;
+    height: 44px;
     font-size: 2rem;
     border: 0.2rem solid white;
   }
