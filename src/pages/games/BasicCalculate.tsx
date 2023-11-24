@@ -33,8 +33,8 @@ function BasicCalculate({
   const [number4, setNumber4] = useState<number | null>(null);
   const [operation1, setOperation1] = useState('');
   const [operation2, setOperation2] = useState('');
-  const getValue1 = () => Math.floor(getRandomFloat() * 200);
-  const getValue2 = () => Math.floor(getRandomFloat() * 19 + 1);
+  const getValue1 = () => Math.floor(getRandomFloat() * 100);
+  const getValue2 = () => Math.floor(getRandomFloat() * 14 + 1);
 
   const setNumber = (
     answerPosition: number,
@@ -77,7 +77,6 @@ function BasicCalculate({
     let answer: number;
 
     if (operation === '+') {
-      setOperation1('+');
       if (answerPosition === 1 || answerPosition === 2) {
         // ? + x = y
         // x + ? = y
@@ -86,17 +85,15 @@ function BasicCalculate({
         // x + y = ?
         answer = x + y;
       }
+    } else if (answerPosition === 1) {
+      // ? - x = y
+      answer = x + y;
     } else {
-      setOperation1('-');
-      if (answerPosition === 1) {
-        // ? - x = y
-        answer = x + y;
-      } else {
-        // x - ? = y
-        // x - y = ?
-        answer = x - y;
-      }
+      // x - ? = y
+      // x - y = ?
+      answer = x - y;
     }
+
     setAnswer(answer);
     setNumber(answerPosition, x, y);
     setCandidates(
@@ -104,6 +101,7 @@ function BasicCalculate({
         () => getRandomFloat() - 0.5,
       ),
     );
+    setOperation1(operation);
   };
 
   const makeProblem2 = () => {
@@ -114,7 +112,6 @@ function BasicCalculate({
     let answer: number;
 
     if (operation === 'x') {
-      setOperation1('x');
       if (answerPosition === 1 || answerPosition === 2) {
         // ? * x = y
         // x * ? = y
@@ -125,25 +122,24 @@ function BasicCalculate({
         answer = x * y;
         setNumber(answerPosition, x, y);
       }
+    } else if (answerPosition === 1) {
+      // ? / x = y
+      answer = x * y;
+      setNumber(answerPosition, x, y);
     } else {
-      setOperation1('÷');
-      if (answerPosition === 1) {
-        // ? / x = y
-        answer = x * y;
-        setNumber(answerPosition, x, y);
-      } else {
-        // x / ? = y
-        // x / y = ?
-        answer = getValue2();
-        setNumber(answerPosition, answer * y, y);
-      }
+      // x / ? = y
+      // x / y = ?
+      answer = getValue2();
+      setNumber(answerPosition, answer * y, y);
     }
+
     setAnswer(answer);
     setCandidates(
       [answer, getRandomFloat() < 0.5 ? answer + 2 : answer - 2].sort(
         () => getRandomFloat() - 0.5,
       ),
     );
+    setOperation1(operation);
   };
 
   const getRandomOperation = () => {
@@ -163,7 +159,6 @@ function BasicCalculate({
 
   const handlePP = (answerPosition: number) => {
     let answer: number;
-    setOperation2('+');
     const x = getValue1();
     const y = getValue1();
     const z = getValue1();
@@ -182,7 +177,6 @@ function BasicCalculate({
 
   const handlePM = (answerPosition: number) => {
     let answer: number;
-    setOperation2('-');
     const x = getValue1();
     const y = getValue1();
     const z = getValue1();
@@ -199,7 +193,6 @@ function BasicCalculate({
 
   const handlePMul = (answerPosition: number) => {
     let answer: number;
-    setOperation1('x');
     const y = getValue2();
     if (answerPosition === 1) {
       // ? + x * y = z
@@ -225,7 +218,6 @@ function BasicCalculate({
 
   const handlePD = (answerPosition: number) => {
     let answer: number;
-    setOperation2('÷');
     const y = getValue2();
     if (answerPosition === 1) {
       // ? + x / y = z
@@ -256,7 +248,6 @@ function BasicCalculate({
 
   const handleMP = (answerPosition: number) => {
     let answer: number;
-    setOperation2('+');
     const x = getValue1();
     const y = getValue1();
     const z = getValue1();
@@ -280,7 +271,6 @@ function BasicCalculate({
 
   const handleMM = (answerPosition: number) => {
     let answer: number;
-    setOperation2('-');
     const x = getValue1();
     const y = getValue1();
     const z = getValue1();
@@ -300,7 +290,6 @@ function BasicCalculate({
 
   const handleMMul = (answerPosition: number) => {
     let answer: number;
-    setOperation1('x');
     const z = getValue1();
     const y = getValue2();
     if (answerPosition === 1) {
@@ -324,7 +313,6 @@ function BasicCalculate({
 
   const handleMD = (answerPosition: number) => {
     let answer: number;
-    setOperation2('÷');
     const x = getValue1();
     const y = getValue2();
     if (answerPosition === 1) {
@@ -353,7 +341,6 @@ function BasicCalculate({
 
   const handleMulP = (answerPosition: number) => {
     let answer: number;
-    setOperation2('+');
     const z = getValue1();
     const x = getValue2();
     if (answerPosition === 1 || answerPosition === 2) {
@@ -377,7 +364,6 @@ function BasicCalculate({
 
   const handleMulM = (answerPosition: number) => {
     let answer: number;
-    setOperation1('-');
     const z = getValue1();
     const x = getValue2();
     if (answerPosition === 1 || answerPosition === 2) {
@@ -398,7 +384,6 @@ function BasicCalculate({
 
   const handleDP = (answerPosition: number) => {
     let answer: number;
-    setOperation2('+');
     const x = getValue2();
     const z = getValue1();
     if (answerPosition === 1) {
@@ -427,7 +412,6 @@ function BasicCalculate({
 
   const handleDM = (answerPosition: number) => {
     let answer: number;
-    setOperation2('-');
     const x = getValue2();
     const z = getValue1();
     if (answerPosition === 1) {
@@ -456,7 +440,6 @@ function BasicCalculate({
 
   const handleP = (answerPosition: number, oper2: string) => {
     let answer: number;
-    setOperation1('+');
     if (oper2 === '+') {
       answer = handlePP(answerPosition);
     } else if (oper2 === '-') {
@@ -471,7 +454,6 @@ function BasicCalculate({
 
   const handleM = (answerPosition: number, oper2: string) => {
     let answer: number;
-    setOperation1('-');
     if (oper2 === '+') {
       answer = handleMP(answerPosition);
     } else if (oper2 === '-') {
@@ -486,7 +468,6 @@ function BasicCalculate({
 
   const handleMul = (answerPosition: number, oper2: string) => {
     let answer = 0;
-    setOperation1('x');
     if (oper2 === '+') {
       answer = handleMulP(answerPosition);
     } else if (oper2 === '-') {
@@ -497,7 +478,6 @@ function BasicCalculate({
 
   const handleD = (answerPosition: number, oper2: string) => {
     let answer = 0;
-    setOperation1('÷');
     if (oper2 === '+') {
       answer = handleDP(answerPosition);
     } else if (oper2 === '-') {
@@ -527,6 +507,8 @@ function BasicCalculate({
         () => getRandomFloat() - 0.5,
       ),
     );
+    setOperation1(oper1);
+    setOperation2(oper2);
   };
 
   useEffect(() => {
