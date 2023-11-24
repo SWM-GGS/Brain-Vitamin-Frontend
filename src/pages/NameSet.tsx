@@ -48,17 +48,20 @@ function NameSet() {
         openModal(data.message);
         return;
       }
-      const { id, familyKey, familyId } = data.result.patientDetailDto;
+      const { id, familyKey, familyId, profileImgUrl, education } =
+        data.result.patientDetailDto;
       dispatch(
         userSlice.actions.setUser({
           id,
           name,
           nickname,
-          fontSize,
           phoneNumber: state.phoneNumber,
           familyKey,
           familyId,
+          fontSize,
           accessToken: data.result.tokenDto.accessTokenDto.accessToken,
+          profileImgUrl,
+          education,
         }),
       );
       localStorage.setItem(

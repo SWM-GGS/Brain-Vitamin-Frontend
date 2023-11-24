@@ -49,16 +49,29 @@ function AppInner() {
           },
           { headers: { authorization: `Bearer ${accessToken}` } },
         );
-        const { name, nickname, phoneNumber, familyKey, fontSize } =
-          data.result.patientDetailDto;
+        const {
+          id,
+          name,
+          nickname,
+          phoneNumber,
+          familyKey,
+          familyId,
+          fontSize,
+          profileImgUrl,
+          education,
+        } = data.result.patientDetailDto;
         dispatch(
           userSlice.actions.setUser({
+            id,
             name,
             nickname,
             phoneNumber,
             familyKey,
+            familyId,
             fontSize,
             accessToken: data.result.tokenDto.accessTokenDto.accessToken,
+            profileImgUrl,
+            education,
           }),
         );
         localStorage.setItem(

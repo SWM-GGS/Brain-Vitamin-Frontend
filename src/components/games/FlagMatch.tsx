@@ -30,7 +30,7 @@ const FlagImage = styled.img`
   width: 300px;
   border: 0.2rem solid var(--black-color);
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 150px;
+    width: 140px;
   }
   @media screen and (max-width: 767px) {
     width: 100px;
@@ -40,7 +40,7 @@ const Letter = styled.span`
   font-size: 5rem;
   font-family: 'Pretendard-Bold';
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 3rem;
+    font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;

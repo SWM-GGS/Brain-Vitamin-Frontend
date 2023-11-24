@@ -84,18 +84,28 @@ function LogIn() {
           openModal(data.message);
           return;
         }
-        const { id, name, nickname, fontSize, familyKey, familyId } =
-          data.result.patientDetailDto;
+        const {
+          id,
+          name,
+          nickname,
+          familyKey,
+          familyId,
+          fontSize,
+          profileImgUrl,
+          education,
+        } = data.result.patientDetailDto;
         dispatch(
           userSlice.actions.setUser({
             id,
             name,
             nickname,
-            fontSize,
             phoneNumber,
             familyKey,
             familyId,
+            fontSize,
             accessToken: data.result.tokenDto.accessTokenDto.accessToken,
+            profileImgUrl,
+            education,
           }),
         );
         localStorage.setItem(
