@@ -87,9 +87,11 @@ const MyWrapper = styled.div`
 const ProfileImage = styled.img`
   width: 20rem;
   height: 20rem;
+  object-fit: cover;
+  border-radius: 10px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 15rem;
-    height: 15rem;
+    width: 185px;
+    height: 185px;
   }
   @media screen and (max-width: 767px) {
     width: 10rem;
