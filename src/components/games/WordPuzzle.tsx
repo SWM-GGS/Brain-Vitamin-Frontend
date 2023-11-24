@@ -45,6 +45,7 @@ const DropBox = styled.div`
 const Img = styled.img`
   width: 30rem;
   height: 30rem;
+  border-radius: 10px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 13rem;
     height: 13rem;

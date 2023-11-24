@@ -40,6 +40,7 @@ const Cell = styled.div<{ color?: string }>`
   background: ${(props) => props.color};
   border-right: 0.2rem solid #aaa;
   border-bottom: 0.2rem solid #aaa;
+  box-shadow: 2px 2px 2px 2px lightgray;
 `;
 
 const PaletteWrapper = styled.div`

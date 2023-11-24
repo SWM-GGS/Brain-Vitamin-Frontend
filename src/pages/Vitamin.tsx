@@ -75,7 +75,7 @@ const Box = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 380px;
+    width: 365px;
     height: 380px;
   }
   @media screen and (max-width: 767px) {

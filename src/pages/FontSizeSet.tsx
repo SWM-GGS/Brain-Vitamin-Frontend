@@ -84,6 +84,7 @@ const BoxWrapper = styled.div`
   }
   @media screen and (max-width: 767px) {
     margin: 3.3rem 0 5.6rem 0;
+    gap: 2rem;
   }
 `;
 
@@ -95,13 +96,13 @@ const Box = styled.button`
   padding: 3.7rem 2.2rem;
   word-break: keep-all;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 18rem;
-    height: 22rem;
+    width: 210px;
+    height: 260px;
     padding: 1.5rem;
   }
   @media screen and (max-width: 767px) {
-    width: 17.9rem;
-    height: 12.25rem;
+    width: 210px;
+    height: 150px;
     padding: 1.35rem 1.1rem;
   }
 `;

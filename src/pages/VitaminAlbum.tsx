@@ -54,7 +54,7 @@ function VitaminAlbum() {
   return (
     <Container>
       <LeftTapBar />
-      <Header label="비타민 앨범" />
+      <Header label="추억 보러 가기" />
       <Container2>
         <ImageContainer>
           {images.length === 0 ? (
