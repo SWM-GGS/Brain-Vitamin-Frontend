@@ -278,7 +278,7 @@ const LeftContainer = styled.div`
     height: 800px;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 490px;
+    width: 540px;
     height: 500px;
     gap: 2rem;
   }
@@ -299,7 +299,7 @@ const RightContainer = styled.div`
   justify-content: space-between;
   gap: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 260px;
+    width: 210px;
     height: 500px;
     padding: 2rem;
     gap: 1rem;
