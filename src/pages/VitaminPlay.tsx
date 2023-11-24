@@ -74,7 +74,7 @@ function VitaminPlay() {
   }, []);
 
   const initButtonStyle = (el: HTMLElement) => {
-    el.style.backgroundColor = 'var(--button-bg-color)';
+    el.style.backgroundColor = 'var(--main-color)';
     el.style.border = '0.2rem solid var(--gray-bg-color)';
     el.style.color = 'white';
   };

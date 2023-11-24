@@ -130,7 +130,7 @@ export const useGameLogic = <T>(
   }, [isNextButtonClicked]);
 
   const initButtonStyle = (el: HTMLElement) => {
-    el.style.backgroundColor = 'var(--button-bg-color)';
+    el.style.backgroundColor = 'var(--main-color)';
     if (isButtonBorderBlack) {
       el.style.border = '0.2rem solid var(--black-color)';
     } else {

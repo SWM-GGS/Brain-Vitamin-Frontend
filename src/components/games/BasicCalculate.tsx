@@ -29,7 +29,7 @@ const Expression = styled.div`
 const Box = styled.div`
   width: 150px;
   height: 150px;
-  border: 0.4rem dashed var(--button-bg-color);
+  border: 0.4rem dashed var(--main-color);
   border-radius: 1rem;
   display: flex;
   justify-content: center;
@@ -41,11 +41,11 @@ const Box = styled.div`
   @media screen and (max-width: 767px) {
     width: 70px;
     height: 70px;
-    border: 0.2rem dashed var(--button-bg-color);
+    border: 0.2rem dashed var(--main-color);
   }
 `;
 const Quiz = styled.span`
-  color: var(--button-bg-color);
+  color: var(--main-color);
 `;
 
 interface Props {
