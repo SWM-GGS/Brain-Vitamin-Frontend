@@ -206,7 +206,7 @@ const GameWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 900px;
     height: 500px;
@@ -223,7 +223,7 @@ const Image = styled.img`
   object-fit: contain;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 500px;
-    height: 180px;
+    height: 260px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
