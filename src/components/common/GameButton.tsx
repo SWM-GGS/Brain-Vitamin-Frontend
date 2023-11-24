@@ -18,6 +18,7 @@ const Button = styled.button<{
   $isSmall?: boolean;
   $isLongMobileSmall?: boolean;
   $isML?: boolean;
+  $isVitamin?: boolean;
 }>`
   padding: 3rem 4rem;
   font-size: 6rem;
@@ -30,6 +31,9 @@ const Button = styled.button<{
   ${(props) => props.$isMedium && `width: 220px; height: 220px;`}
   ${(props) => props.$isSmall && `width: 130px; height: 130px;`}
   ${(props) => props.$isLongMobileSmall && `min-width: 365px;`}
+  ${(props) =>
+    props.$isVitamin &&
+    `min-width: 365px; max-width: 550px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 3rem;
     padding: 1.5rem 2rem;
@@ -38,6 +42,9 @@ const Button = styled.button<{
     ${(props) => props.$isMedium && `width: 130px; height: 130px;`}
     ${(props) => props.$isSmall && `width: 70px; height: 70px;`}
     ${(props) => props.$isLongMobileSmall && `min-width: 180px;`}
+    ${(props) =>
+      props.$isVitamin &&
+      `min-width: 180px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
@@ -47,6 +54,9 @@ const Button = styled.button<{
     ${(props) => props.$isMedium && `width: 100px; height: 100px;`}
     ${(props) => props.$isSmall && `width: 60px; height: 60px;`}
     ${(props) => props.$isLongMobileSmall && `min-width: 130px;`}
+    ${(props) =>
+      props.$isVitamin &&
+      `min-width: 130px; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
   }
 `;
 const PictureButton = styled(Button)<{ $imgUrl: string }>`
