@@ -11,6 +11,9 @@ import LayerPopup from '../components/common/LayerPopup';
 import Splash from './Splash';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import Header from '../components/common/Header';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function VitaminAlbum() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -21,6 +24,15 @@ function VitaminAlbum() {
   };
   const [images, setImages] = useState<ImageProp[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const settings = {
+    arrow: true,
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -57,13 +69,13 @@ function VitaminAlbum() {
       <Header label="추억 보러 가기" />
       <Container2>
         <ImageContainer>
-          {images.length === 0 ? (
-            <Empty>아직 만들어진 비타민이 없어요.</Empty>
-          ) : (
-            images.map((v) => (
-              <Image key={v.pictureId} alt="" src={v.imgUrl}></Image>
-            ))
-          )}
+          <StyledSlider {...settings}>
+            {images.length === 0 ? (
+              <Empty>아직 만들어진 비타민이 없어요.</Empty>
+            ) : (
+              images.map((v) => <img key={v.pictureId} alt="" src={v.imgUrl} />)
+            )}
+          </StyledSlider>
         </ImageContainer>
         <Button
           text="사진 등록하기"
@@ -115,21 +127,13 @@ const ImageContainer = styled.div`
   width: 1400px;
   height: 900px;
   border-radius: 2.1rem;
-  display: flex;
-  justify-content: space-between;
-  gap: 2.8rem;
-  overflow: auto;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 770px;
-    height: 460px;
-    gap: 2rem;
+    width: 750px;
+    height: 550px;
   }
   @media screen and (max-width: 767px) {
-    flex-direction: column;
-    padding: 0;
-    gap: 1rem;
     width: 100%;
-    height: 620px;
+    height: 550px;
   }
 `;
 const Empty = styled.div`
@@ -144,11 +148,50 @@ const Empty = styled.div`
     font-size: 1.6rem;
   }
 `;
-const Image = styled.img`
-  border-radius: 2rem;
-  object-fit: cover;
-  @media screen and (max-width: 767px) {
-    width: 100%;
+const StyledSlider = styled(Slider)`
+  height: 100%;
+  .slick-list {
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    align-items: center; // 이미지가 정방향이 아닐 경우 가운데 위치
+    border-radius: 2rem;
+  }
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+  .slick-prev {
+    left: 6px;
+    z-index: 999;
+    &::before {
+      font-size: 6rem;
+      @media screen and (min-width: 768px) and (max-height: 1079px) {
+        font-size: 4rem;
+      }
+      @media screen and (max-width: 767px) {
+        font-size: 2rem;
+      }
+    }
+  }
+  .slick-next {
+    right: 60px;
+    z-index: 999;
+    @media screen and (min-width: 768px) and (max-height: 1079px) {
+      right: 35px;
+    }
+    @media screen and (max-width: 767px) {
+      right: 10px;
+    }
+    &::before {
+      font-size: 6rem;
+      @media screen and (min-width: 768px) and (max-height: 1079px) {
+        font-size: 4rem;
+      }
+      @media screen and (max-width: 767px) {
+        font-size: 2rem;
+      }
+    }
   }
 `;
 
