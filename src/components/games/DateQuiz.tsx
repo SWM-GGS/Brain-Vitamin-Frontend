@@ -55,7 +55,7 @@ const Form = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--button-bg-color);
+  background: var(--main-color);
   color: white;
   margin: 1rem 0 0 0;
   font-size: 3rem;

@@ -23,7 +23,7 @@ const Button = styled.button<{
   padding: 3rem 4rem;
   font-size: 6rem;
   border-radius: 1rem;
-  background-color: var(--button-bg-color);
+  background-color: var(--main-color);
   color: white;
   border: 0.2rem solid var(--gray-bg-color);
   ${(props) => props.$isLong && `min-width: 365px;`}

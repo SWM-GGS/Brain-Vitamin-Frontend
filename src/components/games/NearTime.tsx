@@ -185,7 +185,7 @@ const Button = styled.button`
   padding: 3rem 4rem;
   font-size: 6rem;
   border-radius: 1rem;
-  background: var(--button-bg-color);
+  background: var(--main-color);
   color: white;
   border: 0.2rem solid var(--gray-bg-color);
   @media screen and (min-width: 768px) and (max-height: 1079px) {

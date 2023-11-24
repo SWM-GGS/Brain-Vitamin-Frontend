@@ -20,7 +20,7 @@ const ImageBox = styled.img`
 const Box = styled.div`
   width: 220px;
   height: 220px;
-  border: 0.4rem dashed var(--button-bg-color);
+  border: 0.4rem dashed var(--main-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,11 +31,11 @@ const Box = styled.div`
   @media screen and (max-width: 767px) {
     width: 100px;
     height: 100px;
-    border: 0.2rem dashed var(--button-bg-color);
+    border: 0.2rem dashed var(--main-color);
   }
 `;
 const Quiz = styled.span`
-  color: var(--button-bg-color);
+  color: var(--main-color);
 `;
 const PresentedImg = ({ $presented }: { $presented: string }) => {
   return (
