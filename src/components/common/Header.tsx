@@ -3,9 +3,10 @@ import { styled } from 'styled-components';
 
 interface Props {
   label: string;
+  onClick?: () => void;
 }
 
-function Header({ label }: Readonly<Props>) {
+function Header({ label, onClick }: Readonly<Props>) {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -13,7 +14,7 @@ function Header({ label }: Readonly<Props>) {
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <Back
         onClick={goBack}
         alt="뒤로가기 버튼"

@@ -294,6 +294,22 @@ function ScreeningTest() {
     }
   };
 
+  const exitTest = async () => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/patient/vitamins/screening-test`,
+        { score: totalScore },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const convertNewlineToJSX = (inputString: string) => {
     const lines = inputString.split('\n');
     const jsxLines = lines.map((line, index) => (
@@ -427,7 +443,7 @@ function ScreeningTest() {
   if (loading) return <Splash />;
   return (
     <Container>
-      <Header label="검사 종료" />
+      <Header label="검사 종료" onClick={exitTest} />
       <Wrapper>
         <ProgressBarWrapper>
           {Array.from({ length: stepCnt }, (_, i) => i).map((v, idx) => (
