@@ -39,20 +39,25 @@ function PatternNumber({
     let answer: number;
 
     if (difficulty === 1) {
-      // x + (n-1)*y -> 등차수열, 1 ≤ x ≤ 100, 1 ≤ y ≤ 100
-      x = Math.floor(getRandomFloat() * 99 + 1);
-      y = Math.floor(getRandomFloat() * 99 + 1);
+      // x + (n-1)*y -> 등차수열, 1 ≤ x ≤ 10, 1 ≤ y ≤ 10
+      x = Math.floor(getRandomFloat() * 9 + 1);
+      y = Math.floor(getRandomFloat() * 9 + 1);
       answer = x + (n - 1) * y;
     } else if (difficulty === 2) {
-      // x + (n-1)*y -> 등차수열, 1 ≤ x ≤ 100, -100 ≤ y ≤ -1
-      x = Math.floor(getRandomFloat() * 99 + 1);
-      y = -Math.floor(getRandomFloat() * 99 + 1);
+      // x + (n-1)*y -> 등차수열, 1 ≤ x ≤ 10, -10 ≤ y ≤ -1
+      x = Math.floor(getRandomFloat() * 9 + 1);
+      y = -Math.floor(getRandomFloat() * 9 + 1);
       answer = x + (n - 1) * y;
     } else {
-      // x * y^(n-1) -> 등비수열, 1 ≤ x ≤ 10, 2 ≤ y ≤ 10
-      x = Math.floor(getRandomFloat() * 9 + 1);
-      y = Math.floor(getRandomFloat() * 8 + 2);
-      answer = x * y ** (n - 1);
+      // x * y^(n-1) -> 등비수열, 1 ≤ x ≤ 5, 2 ≤ y ≤ 5
+      // x = Math.floor(getRandomFloat() * 4 + 1);
+      // y = Math.floor(getRandomFloat() * 3 + 2);
+      // answer = x * y ** (n - 1);
+
+      // x + (n-1)*y -> 등차수열, 1 ≤ x ≤ 15, -15 ≤ y ≤ -1
+      x = Math.floor(getRandomFloat() * 14 + 1);
+      y = -Math.floor(getRandomFloat() * 14 + 1);
+      answer = x + (n - 1) * y;
     }
     setAnswer(answer);
     setX(x);

@@ -53,7 +53,7 @@ function CompassDirection({
   const targets = [7, 0, 1, 6, -1, 2, 5, 4, 3];
 
   return (
-    <Container>
+    <Container style={{ gap: '2rem' }}>
       <GameQuestion text={`${selectedDirection}쪽은 어디일까요?`} />
       <Body>
         {targets.map((v) => (
