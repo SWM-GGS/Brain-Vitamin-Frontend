@@ -35,7 +35,7 @@ const Button = styled.button<{
     props.$isVitamin &&
     `min-width: 365px; max-width: 550px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 3rem;
+    font-size: 2.6rem;
     padding: 1.5rem 2rem;
     ${(props) => props.$isLong && `min-width: 230px;`}
     ${(props) => props.$isML && `min-width: 105px; padding: 1rem 1rem;`}
@@ -44,7 +44,7 @@ const Button = styled.button<{
     ${(props) => props.$isLongMobileSmall && `min-width: 180px;`}
     ${(props) =>
       props.$isVitamin &&
-      `min-width: 180px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
+      `min-width: 180px; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;`}
   }
   @media screen and (max-width: 767px) {
     font-size: 2rem;
