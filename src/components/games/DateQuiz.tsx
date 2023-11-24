@@ -58,7 +58,7 @@ const Form = styled.button`
   background: var(--button-bg-color);
   color: white;
   margin: 1rem 0 0 0;
-  font-size: 4rem;
+  font-size: 3rem;
   font-family: 'Pretendard-Medium';
   @media screen and (max-width: 768px) {
     font-size: 1.6rem;

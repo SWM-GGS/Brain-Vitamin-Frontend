@@ -224,8 +224,8 @@ const Box = styled.div`
   justify-content: space-between;
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 60rem;
-    height: 40rem;
+    width: 750px;
+    height: 500px;
     padding: 2rem;
   }
   @media screen and (max-width: 767px) {

@@ -51,7 +51,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 230px;
+    width: 250px;
   }
   @media screen and (max-width: 767px) {
     display: none;

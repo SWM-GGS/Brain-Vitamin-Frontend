@@ -72,7 +72,7 @@ const ShortButton = styled.button`
   color: white;
   font-size: 1.4rem;
   border-radius: 0.8rem;
-  padding: 0 15px;
+  width: 110px;
   @media screen and (max-width: 767px) {
     height: 86px;
   }
@@ -84,12 +84,12 @@ const InputLabel = styled.div`
 `;
 
 const Input = styled.input`
+  width: 100%;
   font-size: 2rem;
   &::placeholder {
     color: #6d6b69;
   }
   @media screen and (max-width: 767px) {
-    width: 100%;
     font-size: 1.6rem;
   }
 `;

@@ -289,7 +289,7 @@ const Popup = styled.div`
   overflow: auto;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 450px;
-    height: 550px;
+    height: 580px;
     padding: 3rem 2rem;
   }
   @media screen and (max-width: 767px) {

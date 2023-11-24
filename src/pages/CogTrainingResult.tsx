@@ -65,7 +65,7 @@ const Box = styled.div`
   margin: 2.55rem 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 900px;
-    height: 450px;
+    height: 500px;
     padding: 2rem;
   }
   @media screen and (max-width: 767px) {

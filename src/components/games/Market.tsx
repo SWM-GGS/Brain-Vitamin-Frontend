@@ -110,9 +110,10 @@ const Container = styled.div`
 const Img = styled.img`
   width: 20rem;
   height: 20rem;
+  border-radius: 10px;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 6rem;
-    height: 6rem;
+    width: 100px;
+    height: 100px;
   }
   @media screen and (max-width: 767px) {
     width: 6rem;

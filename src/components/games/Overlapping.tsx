@@ -51,7 +51,7 @@ const ButtonWrapper = styled.div`
 
 const NumBtn = styled.button`
   padding: 3rem;
-  margin: 1rem;
+  margin: 0.5rem;
   font-size: 5rem;
   border-radius: 0.8rem;
   background: var(--button-bg-color);

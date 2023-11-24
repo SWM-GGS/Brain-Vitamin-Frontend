@@ -229,7 +229,7 @@ const Box = styled.div`
   position: relative;
   gap: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 700px;
+    width: 750px;
     height: 460px;
     padding: 4rem;
   }
@@ -326,7 +326,7 @@ const SubButtonContainer = styled.div`
   gap: 1.2rem;
   margin: 4.5rem 0 0 0;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 700px;
+    width: 750px;
     margin: 2rem 0 0 0;
   }
   @media screen and (max-width: 767px) {
