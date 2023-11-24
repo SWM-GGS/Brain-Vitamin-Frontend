@@ -158,7 +158,7 @@ function VitaminPlay() {
                   onClick={(e) =>
                     onClickButton(i, e.target as HTMLButtonElement)
                   }
-                  $isLongMobileSmall={true}>
+                  $isVitamin={true}>
                   {v}
                 </GameButton>
               ))}
