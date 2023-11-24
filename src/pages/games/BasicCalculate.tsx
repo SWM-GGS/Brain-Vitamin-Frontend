@@ -38,7 +38,6 @@ function BasicCalculate({
   const getValue1l = () => Math.floor(getRandomFloat() * 50 + 50);
   const getValue2 = () => Math.floor(getRandomFloat() * 14 + 1);
   const getValue2s = () => Math.floor(getRandomFloat() * 6 + 1);
-  const getValue2l = () => Math.floor(getRandomFloat() * 8 + 7);
 
   useEffect(() => {
     if (difficulty === 1) {
