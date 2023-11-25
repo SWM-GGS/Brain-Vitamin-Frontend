@@ -81,7 +81,11 @@ function LogIn() {
           },
         );
         if (!data.isSuccess) {
-          openModal(data.message);
+          if (data.code === 3020) {
+            openModal(data.message, '/phoneNumberSet');
+          } else {
+            openModal(data.message);
+          }
           return;
         }
         const {
