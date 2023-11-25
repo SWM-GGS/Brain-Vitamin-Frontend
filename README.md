@@ -74,3 +74,17 @@
 - Design: UI 작업
 - Refactor: 코드 개선
 - Chore: 패키지, gitignore, 자잘한 수정
+
+## 사용 도구
+| 도구 | 도입 이유 |
+|---|---|
+| Vite | 여러 파일을 하나의 파일로 묶어주는 번들러. Go(컴파일 언어) 기반이라 번들링 속도가 JS(인터프리터 언어) 기반의 기존 번들러(Webpack)보다 100배 빠름 |
+| TypeScript | JS에 타입 명시함으로써 에러 미연에 방지 |
+| React | SPA 지원. 페이지 깜빡임 없이 작동해서 UX에 도움 |
+| Redux | 상태관리의 근본. 보일러플레이트 코드가 비교적 많다는 단점이 있긴 한데 경험하고자 씀 |
+| Styled-Components | 컴포넌트 재활용에 용이 |
+| ESLint+Prettier | 가독성을 위해 코드 포맷 통일 |
+| SonarLint+SonarCloud | 보안 위협이나 오류를 야기할 수 있는 코드를 체크해주는 정적분석기 |
+| Google Analytics 4 | 데이터 분석 툴 |
+
+
