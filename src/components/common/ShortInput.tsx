@@ -72,7 +72,7 @@ const ShortButton = styled.button`
   color: white;
   font-size: 1.4rem;
   border-radius: 0.8rem;
-  width: 110px;
+  width: 125px;
   @media screen and (max-width: 767px) {
     height: 86px;
   }

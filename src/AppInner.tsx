@@ -7,22 +7,14 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from './store/index.ts';
 import axios from 'axios';
 import userSlice from './slices/user.ts';
-import { checkIsVersionLatest, setVersion } from './utils/checkVersion.ts';
-import { useModal } from './hooks/useModal.ts';
-import LayerPopup from './components/common/LayerPopup.tsx';
 
 function AppInner() {
   const dispatch = useAppDispatch();
   const fontSize = useSelector((state: RootState) => state.user.fontSize);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
-  const { isModalOpen, modalText, openModal, closeModal } = useModal();
 
   useEffect(() => {
-    const isVersionLatest = checkIsVersionLatest();
-    if (!isVersionLatest) {
-      openModal('최신 버전으로 앱을 업데이트해주세요.');
-    }
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 1500);
@@ -154,21 +146,6 @@ function AppInner() {
           <GlobalStyle fontSize={fontSize} />
           <Router />
         </>
-      )}
-      {isModalOpen && (
-        <LayerPopup
-          label={modalText}
-          centerButtonText="업데이트하기"
-          onClickCenterButton={() => {
-            setVersion();
-            window.open(
-              'https://play.google.com/store/apps/details?id=com.brainvitamin',
-              'WindowName',
-              'noopener',
-            );
-          }}
-          closeModal={closeModal}
-        />
       )}
     </>
   );
