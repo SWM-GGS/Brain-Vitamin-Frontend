@@ -248,8 +248,8 @@ const Board = styled.div`
     border: 2px solid black;
   }
   @media screen and (max-width: 767px) {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     border: 2px solid black;
   }
 `;
@@ -258,10 +258,10 @@ const Dot = styled.div`
   background: black;
   border-radius: 50%;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    padding: 7px;
+    padding: 9px;
   }
   @media screen and (max-width: 767px) {
-    padding: 6px;
+    padding: 8px;
   }
 `;
 
