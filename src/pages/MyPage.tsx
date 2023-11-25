@@ -189,7 +189,7 @@ function MyPage() {
           </LeftContainer>
           <RightContainer>
             <IntroContainer>
-              <ResultDate>{data?.screeningTestHistoryDto.testDate}</ResultDate>
+              <ResultDate>{data?.screeningTestHistoryDto?.testDate}</ResultDate>
               <Intro>지난 검사 결과</Intro>
             </IntroContainer>
             <ResultBox>
