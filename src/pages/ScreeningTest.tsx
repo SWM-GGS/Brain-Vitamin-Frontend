@@ -635,7 +635,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 500px;
+    height: 530px;
     padding: 1.6rem;
     margin: 1.3rem 0;
   }
@@ -729,6 +729,7 @@ const QuestionWrapper = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     padding: 1rem 0;
+    gap: 1rem;
   }
 `;
 
@@ -779,6 +780,9 @@ const Step6Container = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 767px) {
+    gap: 1rem;
+  }
 `;
 const Step6Image = styled.img`
   width: 600px;
@@ -788,8 +792,8 @@ const Step6Image = styled.img`
     height: 270px;
   }
   @media screen and (max-width: 767px) {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
   }
 `;
 const Step7Container = styled.div`
@@ -798,6 +802,9 @@ const Step7Container = styled.div`
   gap: 2rem;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 767px) {
+    gap: 1rem;
+  }
 `;
 const Step7Image = styled.img`
   width: 1700px;
