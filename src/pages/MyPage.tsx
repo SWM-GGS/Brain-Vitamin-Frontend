@@ -306,7 +306,7 @@ const RightContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 210px;
+    height: 230px;
     padding: 1.4rem;
     gap: 0.5rem;
   }
