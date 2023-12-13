@@ -737,7 +737,6 @@ const Question = styled.p`
   font-size: 4rem;
   word-break: keep-all;
   font-family: 'Pretendard-Medium';
-  text-align: center;
   line-height: 6rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     font-size: 2.2rem;
