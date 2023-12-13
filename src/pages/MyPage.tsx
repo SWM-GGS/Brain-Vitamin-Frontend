@@ -167,23 +167,31 @@ function MyPage() {
             <StatusContainer>
               <StatusBox>
                 <Intro>잘하고 있어요!</Intro>
-                {Object.entries(positiveValues).map(([k, v]) => (
-                  <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}
-                    <br />
-                    <PercentUp>+{Math.round(v)}% </PercentUp>
-                  </InfoText>
-                ))}
+                {Object.keys(positiveValues).length === 0 ? (
+                  <InfoText>지난주 혹은 이번주의 활동기록이 없어요.</InfoText>
+                ) : (
+                  Object.entries(positiveValues).map(([k, v]) => (
+                    <InfoText key={k}>
+                      {ability[k as keyof typeof ability]}
+                      <br />
+                      <PercentUp>+{Math.round(v)}% </PercentUp>
+                    </InfoText>
+                  ))
+                )}
               </StatusBox>
               <StatusBox>
                 <Intro>더 신경쓰면 좋아요</Intro>
-                {Object.entries(negativeValues).map(([k, v]) => (
-                  <InfoText key={k}>
-                    {ability[k as keyof typeof ability]}
-                    <br />
-                    <PercentDown>{Math.round(v)}% </PercentDown>
-                  </InfoText>
-                ))}
+                {Object.keys(negativeValues).length === 0 ? (
+                  <InfoText>지난주 혹은 이번주의 활동기록이 없어요.</InfoText>
+                ) : (
+                  Object.entries(negativeValues).map(([k, v]) => (
+                    <InfoText key={k}>
+                      {ability[k as keyof typeof ability]}
+                      <br />
+                      <PercentDown>{Math.round(v)}% </PercentDown>
+                    </InfoText>
+                  ))
+                )}
               </StatusBox>
             </StatusContainer>
           </LeftContainer>
@@ -193,21 +201,27 @@ function MyPage() {
               <Intro>지난 검사 결과</Intro>
             </IntroContainer>
             <ResultBox>
-              <Align>
-                <ResultCircle
-                  style={{
-                    background:
-                      data?.screeningTestHistoryDto?.state === '의심'
-                        ? '#FF3F3F'
-                        : 'forestgreen',
-                  }}>
-                  {data?.screeningTestHistoryDto?.state}
-                </ResultCircle>
-                <ResultScore>
-                  {data?.screeningTestHistoryDto?.totalScore}점
-                </ResultScore>
-              </Align>
-              <Desc>{data?.screeningTestHistoryDto?.description}</Desc>
+              {!data?.screeningTestHistoryDto ? (
+                <InfoText>검사를 완료해주세요.</InfoText>
+              ) : (
+                <>
+                  <Align>
+                    <ResultCircle
+                      style={{
+                        background:
+                          data?.screeningTestHistoryDto?.state === '의심'
+                            ? '#FF3F3F'
+                            : 'forestgreen',
+                      }}>
+                      {data?.screeningTestHistoryDto?.state}
+                    </ResultCircle>
+                    <ResultScore>
+                      {data?.screeningTestHistoryDto?.totalScore}점
+                    </ResultScore>
+                  </Align>
+                  <Desc>{data?.screeningTestHistoryDto?.description}</Desc>
+                </>
+              )}
             </ResultBox>
           </RightContainer>
         </Container3>
