@@ -440,6 +440,30 @@ function ScreeningTest() {
     }
   };
 
+  const renderBottomButton = () => {
+    if (currentStep === 0) {
+      return (
+        <Button text="다음" onClick={handleNextStep} loading={submitLoading} />
+      );
+    } else if (currentStep > stepCnt) {
+      return (
+        <Button
+          text="검사 종료"
+          onClick={onSubmit}
+          loading={finalSubmitLoading}
+        />
+      );
+    } else {
+      return (
+        <Button
+          text="답변제출 / 다음"
+          onClick={handleNextStep}
+          loading={submitLoading}
+        />
+      );
+    }
+  };
+
   if (loading) return <Splash />;
   return (
     <Container>
@@ -583,21 +607,7 @@ function ScreeningTest() {
             </QuestionWrapper>
           ) : null}
         </Box>
-        <ButtonWrapper>
-          {currentStep > stepCnt ? (
-            <Button
-              text="검사 종료"
-              onClick={onSubmit}
-              loading={finalSubmitLoading}
-            />
-          ) : (
-            <Button
-              text="다음"
-              onClick={handleNextStep}
-              loading={submitLoading}
-            />
-          )}
-        </ButtonWrapper>
+        <ButtonWrapper>{renderBottomButton()}</ButtonWrapper>
       </Wrapper>
       {isModalOpen && (
         <LayerPopup
