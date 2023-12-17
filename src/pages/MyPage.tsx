@@ -124,10 +124,6 @@ function MyPage() {
     return weekNumber;
   }
 
-  const toSetting = () => {
-    navigate('/setting');
-  };
-
   if (loading) return <Splash />;
   return (
     <Container>

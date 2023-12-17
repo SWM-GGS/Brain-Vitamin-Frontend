@@ -352,20 +352,5 @@ const LogoutButton = styled.button`
     font-size: 1.6rem;
   }
 `;
-const PrivacyButton = styled.button`
-  display: flex;
-  justify-content: space-between;
-  background: var(--main-bg-color);
-  padding: 1rem;
-  border-radius: 1rem;
-  font-size: 2rem;
-  align-items: center;
-  @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 1.4rem;
-  }
-  @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
-  }
-`;
 
 export default Setting;
