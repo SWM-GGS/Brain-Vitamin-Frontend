@@ -21,20 +21,22 @@ export default function NumberTouch({
     () => Array.from({ length: maxNum }, (_, i) => i + 1),
     [],
   );
-  const { handleCorrect, containerRef, topRef, randomPositions } =
-    useGameLogic<number>(
-      {
-        gameData,
-        onGameEnd,
-        saveGameResult,
-        isNextButtonClicked,
-        setAnswerState,
-        answerState,
-      },
-      current === maxNum,
-      false,
-      maxNum,
-    );
+  const isCorrect = () => {
+    return current - 1 === maxNum;
+  };
+  const { containerRef, topRef, randomPositions } = useGameLogic<number>(
+    {
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    },
+    isCorrect(),
+    false,
+    maxNum,
+  );
 
   // 숫자 랜덤 색상 부여
   useEffect(() => {
@@ -51,11 +53,6 @@ export default function NumberTouch({
 
   const clickNum = async (el: HTMLElement, num: number) => {
     if (num === current) {
-      if (current === maxNum) {
-        // 정답
-        handleCorrect();
-        return;
-      }
       setCurrent((prev) => prev + 1);
       el.style.display = 'none';
     }

@@ -41,7 +41,7 @@ export default function CardMatch({
   const isCorrect = () => {
     return mixedCards.every((card) => card.status);
   };
-  const { checkAnswer } = useGameLogic<number>(
+  useGameLogic<number>(
     {
       gameData,
       onGameEnd,
@@ -77,10 +77,6 @@ export default function CardMatch({
       } else {
         // 매칭 성공
         console.log('매칭에 성공하셨습니다!');
-        // 카드가 모두 매칭된 경우 자동 정답 처리
-        if (isCorrect()) {
-          checkAnswer();
-        }
       }
       setClickedCards([]);
       setClickable(true);
