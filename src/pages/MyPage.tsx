@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 import LeftTapBar from '../components/common/LeftTabBar';
-import Button from '../components/common/Button';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import Splash from './Splash';
@@ -180,7 +179,7 @@ function MyPage() {
                 )}
               </StatusBox>
               <StatusBox>
-                <Intro>더 신경쓰면 좋아요</Intro>
+                <Intro>더 신경써주세요</Intro>
                 {Object.keys(negativeValues).length === 0 ? (
                   <InfoText>지난주 혹은 이번주의 활동기록이 없어요.</InfoText>
                 ) : (
@@ -225,11 +224,6 @@ function MyPage() {
             </ResultBox>
           </RightContainer>
         </Container3>
-        <Button
-          text="회원정보 수정하기"
-          style={{ alignSelf: 'flex-end' }}
-          onClick={toSetting}
-        />
       </Container2>
       {isModalOpen && (
         <LayerPopup
@@ -265,7 +259,7 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 5rem 1.6rem 1.6rem 1.6rem;
+    padding: 4rem 1.6rem 1.6rem 1.6rem;
     gap: 1rem;
     align-content: flex-start;
   }
@@ -277,6 +271,7 @@ const Container3 = styled.div`
     gap: 2rem;
   }
   @media screen and (max-width: 768px) {
+    width: 100%;
     align-items: center;
     flex-direction: column;
     gap: 1rem;
@@ -292,7 +287,7 @@ const LeftContainer = styled.div`
     height: 800px;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 540px;
+    width: 518px;
     height: 500px;
     gap: 2rem;
   }
@@ -313,14 +308,14 @@ const RightContainer = styled.div`
   justify-content: space-between;
   gap: 3rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 210px;
+    width: 200px;
     height: 500px;
     padding: 2rem;
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 230px;
+    height: 200px;
     padding: 1.4rem;
     gap: 0.5rem;
   }
@@ -400,7 +395,7 @@ const IntroContainer = styled.div`
     gap: 0.5rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const ResultDate = styled.p`
@@ -427,6 +422,7 @@ const ResultBox = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
+    height: 110px;
     padding: 1rem;
     flex-direction: row;
     gap: 1rem;
@@ -439,7 +435,7 @@ const DayContainer = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const DayBox = styled.div`
@@ -526,7 +522,7 @@ const ResultScore = styled.span`
     font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 `;
 const Desc = styled.span`
@@ -549,7 +545,7 @@ const Align = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const PercentUp = styled.span`

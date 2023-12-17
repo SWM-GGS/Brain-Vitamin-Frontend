@@ -124,26 +124,7 @@ function Setting() {
       <SideContainer>
         <Container3>
           <Box>
-            <Version>
-              <PrivacyButton
-                onClick={() =>
-                  window.open(
-                    'https://dqr7en7diq4ph.cloudfront.net/privacy',
-                    '개인정보처리방침',
-                    'noopener',
-                  )
-                }>
-                <span>개인정보처리방침 보기</span>
-                <span
-                  style={{
-                    color: 'gray',
-                    fontWeight: 'bold',
-                    margin: '0 0 0 1rem',
-                  }}>
-                  {'>'}
-                </span>
-              </PrivacyButton>
-            </Version>
+            <Version>v1.4</Version>
             <ProfileContainer>
               {profileImgUrl ? (
                 <ProfileImage alt="" src={profileImgUrl} />
@@ -235,8 +216,8 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 575px;
-    padding: 6rem 2rem;
+    height: 500px;
+    padding: 1.6rem;
     flex-direction: column;
   }
 `;
@@ -300,6 +281,7 @@ const EditButton = styled.button`
   color: #433d3a;
   background: white;
   @media screen and (max-width: 767px) {
+    height: 60px;
     font-size: 1.8rem;
   }
 `;
@@ -331,7 +313,7 @@ const SubButtonContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    margin: 2rem 0 0 0;
+    margin: 1rem 0 0 0;
     justify-content: center;
   }
 `;

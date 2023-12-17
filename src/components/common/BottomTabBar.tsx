@@ -33,6 +33,14 @@ function BottomTapBar() {
           color: path === '/myPage' ? 'var(--main-color)' : '#433D3A',
         }}
         onClick={() => onClickTap('/myPage')}>
+        활동
+      </Tap>
+      <Tap
+        style={{
+          background: path === '/setting' ? 'var(--main-bg-color)' : 'none',
+          color: path === '/setting' ? 'var(--main-color)' : '#433D3A',
+        }}
+        onClick={() => onClickTap('/setting')}>
         My
       </Tap>
     </Container>
@@ -58,7 +66,7 @@ const Container = styled.div`
 const Tap = styled.div`
   border-radius: 2.6rem;
   font-size: 1.6rem;
-  padding: 1rem 3rem;
+  padding: 1rem;
   font-family: 'Pretendard-Medium';
 `;
 

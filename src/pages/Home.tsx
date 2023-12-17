@@ -143,12 +143,12 @@ const BigBox = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 450px;
+    width: 430px;
     height: 500px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 375px;
+    height: 330px;
     margin: 2rem 1.6rem 0 1.6rem;
   }
 `;
@@ -183,11 +183,11 @@ const Box = styled.div`
   align-items: center;
   padding: 2rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    width: 300px;
+    width: 280px;
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 200px;
+    height: 180px;
     padding: 1rem;
     word-break: keep-all;
     text-align: center;
