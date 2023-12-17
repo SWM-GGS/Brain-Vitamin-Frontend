@@ -19,14 +19,15 @@ function BasicCalculate({
 }: Readonly<GameProps>) {
   const difficulty = gameData.difficulty;
   const [candidates, setCandidates] = useState<number[]>([]);
-  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
-    gameData,
-    onGameEnd,
-    saveGameResult,
-    isNextButtonClicked,
-    setAnswerState,
-    answerState,
-  });
+  const { onClickButton, setAnswer, buttonRefs, currentTarget } =
+    useGameLogic<number>({
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    });
   const [number1, setNumber1] = useState<number | null>(null);
   const [number2, setNumber2] = useState<number | null>(null);
   const [number3, setNumber3] = useState<number | null>(null);
@@ -585,19 +586,19 @@ function BasicCalculate({
       <Expression>
         {difficulty === 3 ? (
           <>
-            <Num $num={number1} />
+            <Num $num={number1} $target={currentTarget} />
             <div>{operation1}</div>
-            <Num $num={number2} />
+            <Num $num={number2} $target={currentTarget} />
             <div>{operation2}</div>
-            <Num $num={number3} />
+            <Num $num={number3} $target={currentTarget} />
             <div>=</div>
-            <Num $num={number4} />
+            <Num $num={number4} $target={currentTarget} />
           </>
         ) : (
           <>
-            <Num $num={number1} />
+            <Num $num={number1} $target={currentTarget} />
             <div>{operation1}</div>
-            <Num $num={number2} />
+            <Num $num={number2} $target={currentTarget} />
             <div>=</div>
             <div>{number3}</div>
           </>

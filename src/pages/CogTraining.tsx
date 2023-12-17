@@ -271,7 +271,7 @@ function CogTraining() {
             </GameWrapper>
             <ButtonWrapper>
               <Button
-                text="다음"
+                text="답변제출 / 다음"
                 disabled={isNextButtonClicked}
                 onClick={handleNextButtonClick}
               />

@@ -9,7 +9,7 @@ const ButtonContainer = styled.div`
     gap: 2rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 2rem;
+    gap: 1rem;
   }
 `;
 const Button = styled.button<{

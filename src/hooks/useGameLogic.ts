@@ -33,6 +33,7 @@ export const useGameLogic = <T>(
   const [randomPositions, setRandomPositions] = useState<
     RandomPositionsProps[]
   >([]);
+  const [currentTarget, setCurrentTarget] = useState<T | null>(null);
 
   const handleCorrect = async () => {
     saveGameResult(gameData.problemId, duration.current, 'SUCCESS', 10);
@@ -183,6 +184,7 @@ export const useGameLogic = <T>(
       activateButtonStyle(el);
       clickedTarget.current = target;
     }
+    setCurrentTarget(clickedTarget.current);
   };
 
   // 숫자가 처음 흩뿌려질 위치 배열 초기화
@@ -247,5 +249,6 @@ export const useGameLogic = <T>(
     topRef,
     randomPositions,
     checkAnswer,
+    currentTarget,
   };
 };

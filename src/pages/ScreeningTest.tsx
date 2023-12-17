@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import Button from '../components/common/Button';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 import axios, { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
@@ -60,8 +60,9 @@ function ScreeningTest() {
   const { isModalOpen, modalText, openModal, closeModal } = useModal();
   const [submitLoading, setSubmitLoading] = useState(false);
   const [finalSubmitLoading, setFinalSubmitLoading] = useState(false);
+  const [recordingWaitingTime, setRecordingWaitingTime] = useState(3);
+  const recordingTimerRef = useRef<number | null>(null);
   const {
-    listening,
     transcript,
     startListening,
     stopListening,
@@ -230,6 +231,7 @@ function ScreeningTest() {
     // 0. 이전 오디오 멈춤
     stopAudio();
     stopRecording();
+    stopRecordingTimer();
 
     // 1. 답안 제출
     if (questions[currentIndex].mikeOn && !audioTimer.current) {
@@ -253,8 +255,21 @@ function ScreeningTest() {
       const audio = new Audio(nextAudioUrl);
       audio.crossOrigin = 'use-credentials';
       audio.play();
+      audio.addEventListener('loadedmetadata', (e) => {
+        if (e.target) {
+          const duration = (e.target as HTMLAudioElement).duration;
+          setRecordingWaitingTime(Math.ceil(duration));
+
+          const timer = setInterval(() => {
+            setRecordingWaitingTime((prevTime) => prevTime - 1);
+          }, 1000);
+          recordingTimerRef.current = timer;
+        }
+      });
       setCurrentAudio(audio);
       setRetryCoolTime(audio);
+    } else {
+      recordAgain();
     }
 
     // 3. 다시 듣기 횟수 갱신
@@ -268,6 +283,31 @@ function ScreeningTest() {
     // 5. 현재 문제 인덱스 갱신
     setCurrentIndex((prev) => prev + 1);
     setSubmitLoading(false);
+  };
+
+  useEffect(() => {
+    if (recordingWaitingTime === 0) {
+      startListening();
+      stopRecordingTimer();
+    }
+  }, [recordingWaitingTime]);
+
+  const stopRecordingTimer = () => {
+    if (recordingTimerRef.current) {
+      clearTimeout(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+  };
+
+  const recordAgain = () => {
+    stopListening();
+    resetTranscript();
+    setRecordingWaitingTime(3);
+
+    const timer = setInterval(() => {
+      setRecordingWaitingTime((prevTime) => prevTime - 1);
+    }, 1000);
+    recordingTimerRef.current = timer;
   };
 
   const onSubmit = async () => {
@@ -358,7 +398,7 @@ function ScreeningTest() {
   };
 
   const initButtonStyle = (el: HTMLElement) => {
-    el.style.backgroundColor = 'var(--button-bg-color)';
+    el.style.backgroundColor = 'var(--main-color)';
     if (questions[currentIndex].step === 9) {
       el.style.border = '0.2rem solid var(--gray-bg-color)';
     } else {
@@ -414,6 +454,7 @@ function ScreeningTest() {
           initButtonStyle(el);
         }
       });
+      activateButtonStyle(el);
       setClickedTargets9([target, '']);
       return;
     }
@@ -435,8 +476,36 @@ function ScreeningTest() {
       } else if (step === 12) {
         return '제가 말씀드리는 대로 행동으로 따라해 주세요.';
       }
+    } else if (step === 2) {
+      return convertNewlineToJSX(
+        questions[currentIndex].description.replace('살고계시는', '살고있는'),
+      );
     } else {
       return convertNewlineToJSX(questions[currentIndex].description);
+    }
+  };
+
+  const renderBottomButton = () => {
+    if (currentStep === 0) {
+      return (
+        <Button text="다음" onClick={handleNextStep} loading={submitLoading} />
+      );
+    } else if (currentStep > stepCnt) {
+      return (
+        <Button
+          text="검사 종료"
+          onClick={onSubmit}
+          loading={finalSubmitLoading}
+        />
+      );
+    } else {
+      return (
+        <Button
+          text="답변제출 / 다음"
+          onClick={handleNextStep}
+          loading={submitLoading}
+        />
+      );
     }
   };
 
@@ -465,23 +534,12 @@ function ScreeningTest() {
               <Question>
                 {renderQuestion(questions[currentIndex].step)}
               </Question>
-              {questions[currentIndex].step !== 11 && (
-                <ListenAgainButton
-                  disabled={!trialCount || !isRetryAvailable}
-                  onClick={handleListenAgain}>
-                  다시 듣기
-                </ListenAgainButton>
-              )}
               {questions[currentIndex].mikeOn && (
                 <>
-                  {listening ? (
-                    <RecordStopButton onClick={stopListening}>
-                      녹음 종료
-                    </RecordStopButton>
+                  {recordingWaitingTime > 0 ? (
+                    <RecordingTime>{recordingWaitingTime}</RecordingTime>
                   ) : (
-                    <RecordButton onClick={startListening}>
-                      녹음 시작
-                    </RecordButton>
+                    <RecordingStateText>녹음중</RecordingStateText>
                   )}
                   <RecordingText>{transcript}</RecordingText>
                 </>
@@ -580,24 +638,28 @@ function ScreeningTest() {
               {questions[currentIndex].step === 11 && (
                 <Step11Image alt="" src={questions[currentIndex].imgUrl} />
               )}
+              <BottomButtonContainer>
+                {questions[currentIndex].step !== 11 && (
+                  <ListenAgainButton
+                    disabled={
+                      !trialCount || !isRetryAvailable || !!recordingWaitingTime
+                    }
+                    onClick={handleListenAgain}>
+                    다시 듣기
+                  </ListenAgainButton>
+                )}
+                {questions[currentIndex].mikeOn && (
+                  <ListenAgainButton
+                    disabled={!!recordingWaitingTime}
+                    onClick={recordAgain}>
+                    다시 녹음하기
+                  </ListenAgainButton>
+                )}
+              </BottomButtonContainer>
             </QuestionWrapper>
           ) : null}
         </Box>
-        <ButtonWrapper>
-          {currentStep > stepCnt ? (
-            <Button
-              text="검사 종료"
-              onClick={onSubmit}
-              loading={finalSubmitLoading}
-            />
-          ) : (
-            <Button
-              text="다음"
-              onClick={handleNextStep}
-              loading={submitLoading}
-            />
-          )}
-        </ButtonWrapper>
+        <ButtonWrapper>{renderBottomButton()}</ButtonWrapper>
       </Wrapper>
       {isModalOpen && (
         <LayerPopup
@@ -711,6 +773,7 @@ const QuestionWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 130rem;
+  height: 100%;
   margin: 0 auto;
   align-items: center;
   border-bottom: 0.2rem solid #c6c6c6;
@@ -726,10 +789,9 @@ const QuestionWrapper = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1rem 0;
-    gap: 1rem;
+    justify-content: space-between;
+    padding: 0;
+    gap: 0.5rem;
   }
 `;
 
@@ -754,7 +816,12 @@ const ButtonWrapper = styled.div`
   gap: 2rem;
   justify-content: center;
 `;
+const BottomButtonContainer = styled.div`
+  display: flex;
+  gap: 2rem;
+`;
 const ListenAgainButton = styled.button`
+  width: 400px;
   background: var(--main-color);
   color: white;
   border-radius: 1.1rem;
@@ -765,10 +832,12 @@ const ListenAgainButton = styled.button`
     background: #c6c6c6;
   }
   @media screen and (min-width: 768px) and (max-height: 1079px) {
+    width: 250px;
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
   }
   @media screen and (max-width: 767px) {
+    width: 100%;
     font-size: 1.6rem;
     padding: 1.4rem 2rem;
   }
@@ -851,36 +920,38 @@ const RecordingText = styled.span`
     font-size: 2rem;
   }
 `;
-const RecordStopButton = styled.button`
-  color: red;
-  font-size: 5rem;
-  font-family: Pretendard-Medium;
-  border-radius: 60px;
-  padding: 3rem;
+const RecordingTime = styled.span`
+  line-height: 3rem;
+  font-family: Pretendard-bold;
+  font-size: 7rem;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 2.4rem;
-    padding: 2rem;
-    border-radius: 40px;
+    font-size: 4rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 2.2rem;
-    padding: 1.6rem;
+    font-size: 3rem;
   }
 `;
-const RecordButton = styled.button`
-  color: green;
-  font-size: 5rem;
-  font-family: Pretendard-Medium;
-  border-radius: 60px;
-  padding: 3rem;
+const blinkAnimation = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+const RecordingStateText = styled.span`
+  line-height: 3rem;
+  font-size: 4rem;
+  color: red;
+  animation: ${blinkAnimation} 2s infinite;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
-    font-size: 2.4rem;
-    padding: 2rem;
-    border-radius: 40px;
+    font-size: 2rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 2.2rem;
-    padding: 1.6rem;
+    font-size: 1.6rem;
   }
 `;
 

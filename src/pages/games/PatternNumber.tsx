@@ -23,14 +23,15 @@ function PatternNumber({
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [candidates, setCandidates] = useState<number[]>([]);
-  const { onClickButton, setAnswer, buttonRefs } = useGameLogic<number>({
-    gameData,
-    onGameEnd,
-    saveGameResult,
-    isNextButtonClicked,
-    setAnswerState,
-    answerState,
-  });
+  const { onClickButton, setAnswer, buttonRefs, currentTarget } =
+    useGameLogic<number>({
+      gameData,
+      onGameEnd,
+      saveGameResult,
+      isNextButtonClicked,
+      setAnswerState,
+      answerState,
+    });
 
   useEffect(() => {
     const n = Math.floor(getRandomFloat() * 4 + 1);
@@ -77,9 +78,15 @@ function PatternNumber({
         {Array.from({ length: 5 }, (_, i) => i + 1).map((v) => (
           <div key={v}>
             {difficulty === 3 ? (
-              <Num $num={quizPosition !== v ? x * y ** (v - 1) : null} />
+              <Num
+                $num={quizPosition !== v ? x * y ** (v - 1) : null}
+                $target={currentTarget}
+              />
             ) : (
-              <Num $num={quizPosition !== v ? x + (v - 1) * y : null} />
+              <Num
+                $num={quizPosition !== v ? x + (v - 1) * y : null}
+                $target={currentTarget}
+              />
             )}
           </div>
         ))}
