@@ -57,7 +57,7 @@ const Wrapper = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 5rem 1.6rem 1.6rem 1.6rem;
+    padding: 4rem 1.6rem 1.6rem 1.6rem;
     gap: 2rem;
     align-content: flex-start;
   }
@@ -80,7 +80,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 300px;
+    height: 280px;
   }
 `;
 
@@ -94,7 +94,7 @@ const VitaminImage = styled.img`
   @media screen and (max-width: 767px) {
     width: 10rem;
     height: 10rem;
-    margin: 0 0 2rem 0;
+    margin: 0 0 1rem 0;
   }
 `;
 
@@ -113,7 +113,7 @@ const Sub = styled.p`
   }
   @media screen and (max-width: 767px) {
     font-size: 1.4rem;
-    margin: 2rem 0 0 0;
+    margin: 1rem 0 0 0;
   }
 `;
 

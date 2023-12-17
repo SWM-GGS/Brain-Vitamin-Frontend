@@ -147,12 +147,12 @@ const Box = styled.div`
   justify-content: space-between;
   @media screen and (min-width: 768px) and (max-height: 1079px) {
     width: 750px;
-    height: 500px;
+    height: 550px;
     padding: 2rem;
   }
   @media screen and (max-width: 767px) {
-    width: 35rem;
-    height: 50rem;
+    width: 100%;
+    height: 500px;
     padding: 1.6rem;
   }
 `;

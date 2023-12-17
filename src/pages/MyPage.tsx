@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 import LeftTapBar from '../components/common/LeftTabBar';
-import Button from '../components/common/Button';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import Splash from './Splash';
@@ -260,7 +259,7 @@ const Container2 = styled.div`
   }
   @media screen and (max-width: 767px) {
     flex-wrap: wrap;
-    padding: 5rem 1.6rem 1.6rem 1.6rem;
+    padding: 4rem 1.6rem 1.6rem 1.6rem;
     gap: 1rem;
     align-content: flex-start;
   }
@@ -272,6 +271,7 @@ const Container3 = styled.div`
     gap: 2rem;
   }
   @media screen and (max-width: 768px) {
+    width: 100%;
     align-items: center;
     flex-direction: column;
     gap: 1rem;
@@ -315,7 +315,7 @@ const RightContainer = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 230px;
+    height: 200px;
     padding: 1.4rem;
     gap: 0.5rem;
   }
@@ -395,7 +395,7 @@ const IntroContainer = styled.div`
     gap: 0.5rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const ResultDate = styled.p`
@@ -422,6 +422,7 @@ const ResultBox = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
+    height: 110px;
     padding: 1rem;
     flex-direction: row;
     gap: 1rem;
@@ -434,7 +435,7 @@ const DayContainer = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const DayBox = styled.div`
@@ -521,7 +522,7 @@ const ResultScore = styled.span`
     font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 `;
 const Desc = styled.span`
@@ -544,7 +545,7 @@ const Align = styled.div`
     gap: 1rem;
   }
   @media screen and (max-width: 767px) {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 `;
 const PercentUp = styled.span`

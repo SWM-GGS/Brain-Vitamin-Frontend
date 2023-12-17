@@ -148,7 +148,7 @@ const BigBox = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 375px;
+    height: 330px;
     margin: 2rem 1.6rem 0 1.6rem;
   }
 `;
@@ -187,7 +187,7 @@ const Box = styled.div`
   }
   @media screen and (max-width: 767px) {
     width: 100%;
-    height: 200px;
+    height: 180px;
     padding: 1rem;
     word-break: keep-all;
     text-align: center;
