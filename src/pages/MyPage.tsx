@@ -5,7 +5,6 @@ import axios, { AxiosError } from 'axios';
 import Splash from './Splash';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
-import { useNavigate } from 'react-router';
 import { useModal } from '../hooks/useModal';
 import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
@@ -43,7 +42,6 @@ function MyPage() {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const weekOfMonth = getWeekOfMonth(currentDate);
-  const navigate = useNavigate();
   const [positiveValues, setPositiveValues] = useState<{
     [key: string]: number;
   }>({});
