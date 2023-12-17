@@ -50,13 +50,14 @@ const Quiz = styled.span`
 
 interface Props {
   $num: number | null;
+  $target: number | null;
 }
 
-function Num({ $num }: Readonly<Props>) {
+function Num({ $num, $target }: Readonly<Props>) {
   if ($num) return <span>{$num}</span>;
   return (
     <Box>
-      <Quiz>?</Quiz>
+      <Quiz>{$target ?? '?'}</Quiz>
     </Box>
   );
 }
