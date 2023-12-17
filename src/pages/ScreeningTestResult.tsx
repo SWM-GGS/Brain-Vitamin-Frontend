@@ -107,8 +107,8 @@ const Result = styled.div<{ $cogLevel: string }>`
     font-size: 2.4rem;
   }
   @media screen and (max-width: 767px) {
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
     font-size: 2rem;
   }
 `;
