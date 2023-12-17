@@ -37,6 +37,14 @@ function LeftTapBar() {
           onClick={() => onClickTap('/myPage')}>
           내 활동 보기
         </Tap>
+        <Tap
+          style={{
+            background: path === '/setting' ? 'var(--main-bg-color)' : 'none',
+            color: path === '/setting' ? 'var(--main-color)' : '#433D3A',
+          }}
+          onClick={() => onClickTap('/setting')}>
+          회원정보
+        </Tap>
       </TapWrapper>
     </Container>
   );
