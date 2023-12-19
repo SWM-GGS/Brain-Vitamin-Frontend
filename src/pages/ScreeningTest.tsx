@@ -19,6 +19,11 @@ import LayerPopup from '../components/common/LayerPopup';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import useSpeechToText from '../hooks/useSpeechToText';
 import Header from '../components/common/Header';
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 function ScreeningTest() {
   const { accessToken } = useSelector((state: RootState) => state.user);
@@ -62,6 +67,7 @@ function ScreeningTest() {
   const [finalSubmitLoading, setFinalSubmitLoading] = useState(false);
   const [recordingWaitingTime, setRecordingWaitingTime] = useState(3);
   const recordingTimerRef = useRef<number | null>(null);
+  const recordingWaitingDuration = useRef(3);
   const {
     transcript,
     startListening,
@@ -258,7 +264,9 @@ function ScreeningTest() {
       audio.addEventListener('loadedmetadata', (e) => {
         if (e.target) {
           const duration = (e.target as HTMLAudioElement).duration;
-          setRecordingWaitingTime(Math.ceil(duration));
+          const integerTime = Math.ceil(duration);
+          setRecordingWaitingTime(integerTime);
+          recordingWaitingDuration.current = integerTime;
 
           const timer = setInterval(() => {
             setRecordingWaitingTime((prevTime) => prevTime - 1);
@@ -303,6 +311,7 @@ function ScreeningTest() {
     stopListening();
     resetTranscript();
     setRecordingWaitingTime(3);
+    recordingWaitingDuration.current = 3;
 
     const timer = setInterval(() => {
       setRecordingWaitingTime((prevTime) => prevTime - 1);
@@ -537,7 +546,18 @@ function ScreeningTest() {
               {questions[currentIndex].mikeOn && (
                 <>
                   {recordingWaitingTime > 0 ? (
-                    <RecordingTime>{recordingWaitingTime}</RecordingTime>
+                    <div style={{ width: '150px' }}>
+                      <CircularProgressbarWithChildren
+                        value={recordingWaitingTime}
+                        maxValue={recordingWaitingDuration.current}
+                        styles={buildStyles({
+                          pathColor: 'var(--main-color)',
+                          trailColor: 'var(--main-bg-color)',
+                        })}
+                        counterClockwise>
+                        <RecordingTime>{recordingWaitingTime}</RecordingTime>
+                      </CircularProgressbarWithChildren>
+                    </div>
                   ) : (
                     <RecordingStateText>녹음중</RecordingStateText>
                   )}
